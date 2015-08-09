@@ -1,4 +1,0 @@
-BestTests Db
-
-тесты: индексы, сумма индексов
-indeces, answer_index_inc, test_answers, pass_answers, pass_indeces, test_index_result, test_result_template

@@ -23,6 +23,10 @@ installation:
 	pip install "pyramid==1.5.7"
     pip install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy
 
+https://pypi.python.org/pypi/sqlacodegen:
+
+    pip install psycopg2 sqlacodegen
+
 http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffolds.html
 
 	hash -r

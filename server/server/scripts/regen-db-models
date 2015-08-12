@@ -1,0 +1,12 @@
+#!/bin/bash
+
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
+
+DB_USER=d9k
+DB_PASSWORD=azaz15
+DB_NAME=BestTests
+OUTPUT_FILE_NAME=_models.py
+
+. ${SERVER_DIR}/../venv/bin/activate
+sqlacodegen postgresql://${DB_USER}:${DB_PASSWORD}@localhost/BestTests > ${SERVER_DIR}/${OUTPUT_FILE_NAME}

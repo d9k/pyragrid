@@ -1,0 +1,5 @@
+DB_USER=d9k
+DB_PASSWORD=azaz15
+DB_NAME=BestTests
+MODEL_OUTPUT_FILE_NAME=_models.py
+DB_BACKUP_FILE_NAME=BestTests.sql

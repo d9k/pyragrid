@@ -10,14 +10,14 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -30,7 +30,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: test_index_result; Type: TABLE; Schema: public; Owner: d9k; Tablespace: 
+-- Name: test_index_result; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE test_index_result (
@@ -41,10 +41,8 @@ CREATE TABLE test_index_result (
 );
 
 
-ALTER TABLE public.test_index_result OWNER TO d9k;
-
 --
--- Name: test_index_result_id_seq; Type: SEQUENCE; Schema: public; Owner: d9k
+-- Name: test_index_result_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE test_index_result_id_seq
@@ -55,17 +53,15 @@ CREATE SEQUENCE test_index_result_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.test_index_result_id_seq OWNER TO d9k;
-
 --
--- Name: test_index_result_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: d9k
+-- Name: test_index_result_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE test_index_result_id_seq OWNED BY test_index_result.id;
 
 
 --
--- Name: tests; Type: TABLE; Schema: public; Owner: d9k; Tablespace: 
+-- Name: tests; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE tests (
@@ -75,10 +71,8 @@ CREATE TABLE tests (
 );
 
 
-ALTER TABLE public.tests OWNER TO d9k;
-
 --
--- Name: tests_id_seq; Type: SEQUENCE; Schema: public; Owner: d9k
+-- Name: tests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE tests_id_seq
@@ -89,17 +83,15 @@ CREATE SEQUENCE tests_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.tests_id_seq OWNER TO d9k;
-
 --
--- Name: tests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: d9k
+-- Name: tests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE tests_id_seq OWNED BY tests.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE users (
@@ -109,10 +101,8 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE public.users OWNER TO postgres;
-
 --
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE users_id_seq
@@ -123,38 +113,36 @@ CREATE SEQUENCE users_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_id_seq OWNER TO postgres;
-
 --
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: d9k
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY test_index_result ALTER COLUMN id SET DEFAULT nextval('test_index_result_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: d9k
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tests ALTER COLUMN id SET DEFAULT nextval('tests_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Data for Name: test_index_result; Type: TABLE DATA; Schema: public; Owner: d9k
+-- Data for Name: test_index_result; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY test_index_result (id, user_id, test_id, index_id) FROM stdin;
@@ -162,14 +150,14 @@ COPY test_index_result (id, user_id, test_id, index_id) FROM stdin;
 
 
 --
--- Name: test_index_result_id_seq; Type: SEQUENCE SET; Schema: public; Owner: d9k
+-- Name: test_index_result_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('test_index_result_id_seq', 1, false);
 
 
 --
--- Data for Name: tests; Type: TABLE DATA; Schema: public; Owner: d9k
+-- Data for Name: tests; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY tests (id, name, description) FROM stdin;
@@ -177,14 +165,14 @@ COPY tests (id, name, description) FROM stdin;
 
 
 --
--- Name: tests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: d9k
+-- Name: tests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('tests_id_seq', 1, false);
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY users (id, vk_id, name) FROM stdin;
@@ -192,14 +180,22 @@ COPY users (id, vk_id, name) FROM stdin;
 
 
 --
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('users_id_seq', 1, false);
 
 
 --
--- Name: tests_pkey; Type: CONSTRAINT; Schema: public; Owner: d9k; Tablespace: 
+-- Name: test_index_result_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY test_index_result
+    ADD CONSTRAINT test_index_result_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tests_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY tests
@@ -207,7 +203,7 @@ ALTER TABLE ONLY tests
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY users
@@ -215,7 +211,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: postgres
+-- Name: public; Type: ACL; Schema: -; Owner: -
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;

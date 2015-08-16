@@ -2,8 +2,8 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
+SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/best_tests_server)
 
 source ${THIS_DIR}/db-params.inc.sh
 
-. ${SERVER_DIR}/../venv/bin/activate
-sqlacodegen postgresql://${DB_USER}:${DB_PASSWORD}@localhost/BestTests > ${SERVER_DIR}/${MODEL_OUTPUT_FILE_NAME}
+pg_dump --oids --no-owner BestTests > ${SERVER_PACKAGE_DIR}/data/${DB_BACKUP_FILE_NAME}

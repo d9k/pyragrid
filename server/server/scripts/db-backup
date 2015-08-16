@@ -1,9 +1,0 @@
-#!/bin/bash
-
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SERVER_INNER_DIR=$(readlink -f ${THIS_DIR}/..)
-SERVER_OUTER_DIR=$(readlink -f ${SERVER_INNER_DIR}/..)
-
-source ${THIS_DIR}/db-params.inc.sh
-
-pg_dump --oids --no-owner BestTests > ${SERVER_OUTER_DIR}/data/${DB_BACKUP_FILE_NAME}

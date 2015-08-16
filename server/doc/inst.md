@@ -27,6 +27,11 @@ https://pypi.python.org/pypi/sqlacodegen:
 
     pip install psycopg2 sqlacodegen
 
+alembic (https://alembic.readthedocs.org/en/latest/tutorial.html) :
+
+    pip install alembic
+    alembic init --template pylons alembic
+
 http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffolds.html
 
 	hash -r

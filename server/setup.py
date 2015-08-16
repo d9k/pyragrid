@@ -11,7 +11,6 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 requires = [
     'pyramid',
     'pyramid_chameleon',
-    'pyramid_jinja2',
     'pyramid_debugtoolbar',
     'pyramid_tm',
     'SQLAlchemy',
@@ -20,9 +19,9 @@ requires = [
     'waitress',
     ]
 
-setup(name='server',
+setup(name='best_tests_server',
       version='0.0',
-      description='server',
+      description='best_tests_server',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -37,12 +36,12 @@ setup(name='server',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='server',
+      test_suite='best_tests_server',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = server:main
+      main = best_tests_server:main
       [console_scripts]
-      initialize_server_db = server.scripts.initializedb:main
+      initialize_best_tests_server_db = best_tests_server.scripts.initializedb:main
       """,
       )

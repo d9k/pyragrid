@@ -17,6 +17,8 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'pyramid_jinja2',
+    'pyramid_beaker'
     ]
 
 setup(name='best_tests_server',

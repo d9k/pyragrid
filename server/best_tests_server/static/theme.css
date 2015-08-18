@@ -2,8 +2,9 @@
 body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
+  font-size: 18px;
   color: #ffffff;
-  background: #bc2131;
+  background: #223875;
 }
 h1,
 h2,
@@ -69,7 +70,7 @@ p {
   margin-right: 0;
 }
 .starter-template .links ul li.current-version {
-  color: #f2b7bd;
+  color: #9EC8F8;
   font-weight: 400;
 }
 .starter-template .links ul li a {
@@ -79,7 +80,7 @@ p {
   text-decoration: underline;
 }
 .starter-template .links ul li .icon-muted {
-  color: #eb8b95;
+  color: #0DA1FF;
   margin-right: 5px;
 }
 .starter-template .links ul li:hover .icon-muted {
@@ -88,7 +89,7 @@ p {
 .starter-template .copyright {
   margin-top: 10px;
   font-size: 0.9em;
-  color: #f2b7bd;
+  color: #9EC8F8;
   text-transform: lowercase;
   float: right;
   right: 0;

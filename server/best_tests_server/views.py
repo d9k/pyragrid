@@ -9,14 +9,25 @@ from sqlalchemy.exc import DBAPIError
     # )
 
 
-@view_config(route_name='home', renderer='templates/mytemplate.jinja2')
-def my_view(request):
+@view_config(route_name='home', renderer='templates/index.jinja2')
+def home_view(request):
     try:
         # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
         one = []
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'best_tests_server'}
+
+
+@view_config(route_name='test', renderer='templates/test.jinja2')
+def test_view(request):
+    try:
+        # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
+        one = []
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    return {'one': one, 'project': 'best_tests_server'}
+
 
 
 conn_err_msg = """\

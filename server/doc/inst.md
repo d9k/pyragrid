@@ -21,7 +21,10 @@ installation:
 	//easy_install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy
 
 	pip install "pyramid==1.5.7"
-    pip install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy
+    pip install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy pyramid_beaker
+
+pyramid_beaker - сессии
+
 
 https://pypi.python.org/pypi/sqlacodegen:
 

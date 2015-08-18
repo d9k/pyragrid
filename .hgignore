@@ -1,2 +1,3 @@
 regexp:^server/venv/.+
 regexp:^server/.+/__pycache__/.+
+regexp:^server/data/session/.+

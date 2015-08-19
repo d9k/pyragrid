@@ -3,7 +3,7 @@
     <h1>Index</h1>
     <p>Here will be</p>
     <ul>
-       <li>actions</li>
-       <li>list</li>
+       <li><a href="{{ request.route_url('add_user') }}">add user</a></li>
+       <li><a href="{{ request.route_url('delete_user', user_id=1) }}">delete users</a></li>
     </ul>
 {% endblock %}

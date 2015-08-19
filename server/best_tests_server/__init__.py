@@ -3,7 +3,7 @@ from sqlalchemy import engine_from_config
 from pyramid_beaker import session_factory_from_settings
 
 from .models import (
-    # DBSession,
+    DBSession,
     Base,
     )
 
@@ -20,6 +20,8 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('test', '/t')
+    config.add_route('add_user', '/users/add')
+    config.add_route('delete_user', '/users/delete/{vk_id}')
     config.set_session_factory(session_factory)
     config.scan()
     return config.make_wsgi_app()

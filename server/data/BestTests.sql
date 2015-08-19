@@ -30,6 +30,15 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+--
 -- Name: test_index_result; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -97,7 +106,8 @@ ALTER SEQUENCE tests_id_seq OWNED BY tests.id;
 CREATE TABLE users (
     id integer NOT NULL,
     vk_id bigint,
-    name text
+    name text,
+    password_hash text
 );
 
 
@@ -142,6 +152,15 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY alembic_version (version_num) FROM stdin;
+32846275520
+\.
+
+
+--
 -- Data for Name: test_index_result; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -175,7 +194,7 @@ SELECT pg_catalog.setval('tests_id_seq', 1, false);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY users (id, vk_id, name) FROM stdin;
+COPY users (id, vk_id, name, password_hash) FROM stdin;
 \.
 
 
@@ -183,7 +202,7 @@ COPY users (id, vk_id, name) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_id_seq', 1, false);
+SELECT pg_catalog.setval('users_id_seq', 6, true);
 
 
 --
@@ -208,6 +227,14 @@ ALTER TABLE ONLY tests
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_vk_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_vk_id_key UNIQUE (vk_id);
 
 
 --

@@ -3,11 +3,16 @@ from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
-# from .models import (
-    # DBSession,
-    # MyModel,
-    # )
+from .models import (
+    DBSession,
+    User
+    )
 
+from pyramid.httpexceptions import (
+    HTTPBadRequest
+)
+
+import transaction
 
 @view_config(route_name='home', renderer='templates/index.jinja2')
 def home_view(request):
@@ -28,6 +33,34 @@ def test_view(request):
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'best_tests_server'}
 
+
+@view_config(route_name='add_user', renderer='templates/default_page.jinja2')
+def add_user_view(request):
+    try:
+        with transaction.manager:
+            new_user = User(vk_id=1, name='Павел Дуров')
+            DBSession.add(new_user)
+
+        # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    return {'content': 'user added'}
+
+
+@view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
+def delete_user_view(request):
+    vk_id = request.matchdict['vk_id']
+    if not vk_id:
+        return HTTPBadRequest('vk_id must be specified')
+
+    try:
+        with transaction.manager:
+            DBSession.query(User).filter(User.vk_id == vk_id).delete()
+        # transaction.commit()
+
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    return {'content': 'user deleted'}
 
 
 conn_err_msg = """\

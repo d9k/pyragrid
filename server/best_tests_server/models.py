@@ -36,4 +36,6 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     vk_id = Column(BigInteger, unique=True)
     name = Column(Text)
+    group = Column(Text)
     password_hash = Column(Text)
+

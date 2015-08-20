@@ -8,5 +8,5 @@ fi
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
 cd ${SERVER_DIR}
-. ${SERVER_DIR}/../venv/bin/activate
+. ${SERVER_DIR}/venv/bin/activate
 alembic revision --autogenerate -m $1

@@ -9,7 +9,14 @@ from .models import (
     )
 
 from pyramid.httpexceptions import (
-    HTTPBadRequest
+    HTTPBadRequest,
+    HTTPNotFound,
+    HTTPFound
+)
+
+from pyramid.security import (
+    remember,
+    forget
 )
 
 import transaction
@@ -78,4 +85,6 @@ might be caused by one of the following things:
 After you fix the problem, please restart the Pyramid application to
 try it again.
 """
+
+# TODO login/logout http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
 

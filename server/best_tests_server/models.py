@@ -14,7 +14,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-
+GROUPS = {'admin': ['group:admins']}
 
 
 class TestIndexResult(Base):
@@ -63,5 +63,5 @@ class User(Base):
         hashed_password_only, salt = self.password_hash.split(':')
         return hashed_password_only == create_hashed_password(user_password, salt)
 
-
-
+    # @staticmethod
+    # TODO def groupfinder(user_id):

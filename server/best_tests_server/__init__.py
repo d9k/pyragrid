@@ -1,6 +1,8 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 from pyramid_beaker import session_factory_from_settings
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 
 from .models import (
     DBSession,
@@ -11,9 +13,13 @@ from .models import (
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    engine = engine_from_config(settings, 'sqlalchemy.')
+    sql_engine = engine_from_config(settings, 'sqlalchemy.')
+    # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
+    # TODO http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
+    authn_policy = AuthTktAuthenticationPolicy(secret='43ser0sroova', hashalg='sha512')
+    authz_policy = ACLAuthorizationPolicy()
     # DBSession.configure(bind=engine)
-    Base.metadata.bind = engine
+    Base.metadata.bind = sql_engine
     session_factory = session_factory_from_settings(settings)
     config = Configurator(settings=settings)
     config.include('pyramid_chameleon')

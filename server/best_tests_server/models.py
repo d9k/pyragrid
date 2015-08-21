@@ -1,6 +1,8 @@
 # coding: utf-8
 from sqlalchemy import BigInteger, Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
+from hashlib import sha256
+import uuid
 
 from sqlalchemy.orm import (
     scoped_session,
@@ -11,6 +13,8 @@ from zope.sqlalchemy import ZopeTransactionExtension
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
+
+
 
 
 class TestIndexResult(Base):
@@ -30,6 +34,14 @@ class Test(Base):
     description = Column(Text)
 
 
+def create_hashed_password(password, salt):
+    return sha256(salt.encode() + password.encode()).hexdigest()
+
+
+def create_salt():
+    return uuid.uuid4().hex
+
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -37,5 +49,19 @@ class User(Base):
     vk_id = Column(BigInteger, unique=True)
     name = Column(Text)
     group = Column(Text)
+
+    # stores password hash and salt separated by colon
     password_hash = Column(Text)
+
+    # TODO proper docstrings
+    # thx 2 @see http://pythoncentral.io/hashing-strings-with-python/
+    def set_password(self, password):
+        salt = create_salt()
+        self.password_hash = create_hashed_password(password, salt) + ':' + salt
+
+    def check_password(self, user_password):
+        hashed_password_only, salt = self.password_hash.split(':')
+        return hashed_password_only == create_hashed_password(user_password, salt)
+
+
 

@@ -35,13 +35,18 @@ alembic (https://alembic.readthedocs.org/en/latest/tutorial.html) :
     pip install alembic
     alembic init --template pylons alembic
 
+
+password hashing (http://www.cyberciti.biz/python-tutorials/securely-hash-passwords-in-python/)
+
+	pip install passlib
+
 http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffolds.html
 
 	hash -r
 	pcreate --scaffold starter scaffolds
 	cd scaffolds
 	python setup.py develop
-	pserve development.ini --reload
 
 #Server run (after /venv/bin/activate !):
-#python flaskr.py
+
+	pserve development.ini --reload

@@ -7,7 +7,8 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from .models import (
     DBSession,
     Base,
-    )
+    User
+)
 
 
 def main(global_config, **settings):
@@ -16,7 +17,7 @@ def main(global_config, **settings):
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
     # TODO http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
-    authn_policy = AuthTktAuthenticationPolicy(secret='43ser0sroova', hashalg='sha512')
+    authn_policy = AuthTktAuthenticationPolicy(secret='43ser0sroova', hashalg='sha512', callback=User.get_groups)
     authz_policy = ACLAuthorizationPolicy()
     # DBSession.configure(bind=engine)
     Base.metadata.bind = sql_engine
@@ -28,6 +29,8 @@ def main(global_config, **settings):
     config.add_route('test', '/t')
     config.add_route('add_user', '/users/add')
     config.add_route('delete_user', '/users/delete/{vk_id}')
+    config.add_route('login', '/login')
+    config.add_route('logout', '/logout}')
     config.set_session_factory(session_factory)
     config.scan()
     return config.make_wsgi_app()

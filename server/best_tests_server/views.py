@@ -14,25 +14,23 @@ from pyramid.httpexceptions import (
     HTTPFound
 )
 
-from pyramid.security import (
-    remember,
-    forget
-)
+import pyramid.security as security
 
 import transaction
 
 @view_config(route_name='home', renderer='templates/index.jinja2')
 def home_view(request):
-    try:
-        # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
-        one = []
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'best_tests_server'}
+    userid = security.authenticated_userid(request)
+    username = User.by_id(userid).
+    return {'username': username}
+
+@view_config(route_name='login', renderer='templates/login.jinja2')
+def login_view(request):
+    return {}
 
 
-@view_config(route_name='test', renderer='templates/test.jinja2')
-def test_view(request):
+@view_config(route_name='logout', renderer='templates/logout.jinja2')
+def logout_view(request):
     try:
         # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
         one = []

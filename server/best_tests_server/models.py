@@ -74,9 +74,9 @@ class User(Base):
 
 
     @staticmethod
-    def by_id(user_id):
+    def by_id(user_id: int):
         """
-        :param user_id: int
-        :return: User
+        :param user_id:int
+        :return Test
         """
         return DBSession.query(User).filter(User.id == user_id).first()

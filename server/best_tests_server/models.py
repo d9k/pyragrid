@@ -34,6 +34,7 @@ class Test(Base):
     description = Column(Text)
 
 
+
 def create_hashed_password(password, salt):
     return sha256(salt.encode() + password.encode()).hexdigest()
 
@@ -65,7 +66,7 @@ class User(Base):
     @staticmethod
     def get_groups(user_id):
         user = User.by_id(user_id)
-        """:type: User"""
+        """:type user:User"""
         if not user:
             return []
         if user.group not in GROUPS:
@@ -76,7 +77,7 @@ class User(Base):
     @staticmethod
     def by_id(user_id: int):
         """
-        :param user_id:int
-        :return Test
+        :return User
         """
         return DBSession.query(User).filter(User.id == user_id).first()
+

@@ -1,6 +1,6 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-
+from pyramid.url import route_url
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
@@ -20,12 +20,30 @@ import transaction
 
 @view_config(route_name='home', renderer='templates/index.jinja2')
 def home_view(request):
-    userid = security.authenticated_userid(request)
-    username = User.by_id(userid).
-    return {'username': username}
+    user_id = security.authenticated_userid(request)
+    user = User.by_id(user_id)
+    """:type User"""
+    return {'username': user.name}
 
 @view_config(route_name='login', renderer='templates/login.jinja2')
 def login_view(request):
+    if 'login_form_submit' in request.params:
+        login = request.params['login']
+        password = request.params['password']
+        #TODO no by_username, but by_email or by_login!
+        user = User.by_username(login)
+        """:type User"""
+        if user:
+            if user.check_password(password):
+                headers = security.remember(request, user.id)
+                home = route_url('home', request)
+                return HTTPFound(location=home, headers=headers)
+            else:
+                message = 'wrong password'
+        else:
+            message = 'no user with such username'
+    else:
+        return {'login':'', 'password':'', 'message':''}
     return {}
 
 

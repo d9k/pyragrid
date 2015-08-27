@@ -10,6 +10,7 @@ from .models import (
     User
 )
 
+# from best_tests_server.models import RootFactory
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -22,7 +23,9 @@ def main(global_config, **settings):
     # DBSession.configure(bind=engine)
     Base.metadata.bind = sql_engine
     session_factory = session_factory_from_settings(settings)
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings, root_factory='best_tests_server.models.RootFactory')
+    config.set_authentication_policy(authn_policy)
+    config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')

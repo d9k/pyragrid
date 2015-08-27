@@ -8,13 +8,26 @@ from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
 )
+from pyramid.security import (
+    Allow,
+    Everyone
+)
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
 
 Base = declarative_base()
 
-GROUPS = {'admin': ['group:admins']}
+GROUPS = {'admin': ['group:admins'],
+          None: ['group:users']}
+
+
+class RootFactory(object):
+    __acl__ = [(Allow, 'group:users', 'view'),
+               (Allow, 'group:admins', 'admin')]
+
+    def __init__(self, request):
+        pass
 
 
 class TestIndexResult(Base):
@@ -48,7 +61,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     vk_id = Column(BigInteger, unique=True)
+    login = Column(Text)
     name = Column(Text)
+    email = Column(Text)
     group = Column(Text)
 
     # stores password hash and salt separated by colon
@@ -64,7 +79,7 @@ class User(Base):
         return hashed_password_only == create_hashed_password(user_password, salt)
 
     @staticmethod
-    def get_groups(user_id):
+    def get_groups(user_id, request):
         user = User.by_id(user_id)
         """:type user:User"""
         if not user:
@@ -80,4 +95,46 @@ class User(Base):
         :return User
         """
         return DBSession.query(User).filter(User.id == user_id).first()
+
+    @staticmethod
+    def by_login(user_login: str):
+        """
+        :return User
+        """
+        return DBSession.query(User).filter(User.login == user_login).first()
+
+    @staticmethod
+    def by_vk_id(vk_id: int):
+        """
+        :return User
+        """
+        return DBSession.query(User).filter(User.vk_id == vk_id).first()
+
+    @staticmethod
+    def by_email(email: str):
+        """
+        :return User
+        """
+        return DBSession.query(User).filter(User.email == email).first()
+
+
+    @staticmethod
+    def by_any(any):
+        """
+        :return User
+        """
+        if isinstance(any, int):
+            user = User.by_vk_id(any)
+            if user:
+                return user
+        else:
+            user = User.by_login(any)
+            if user:
+                return user
+
+            user = User.by_email(any)
+            if user:
+                return user
+
+        return None
 

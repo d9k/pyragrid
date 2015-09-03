@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-bower": "*",
+    "gulp-notify": "*",
+    "gulp-ruby-sass": "*",
+    "gulp-coffee": "*",
+    "gulp-util": "*"
+  }
+}

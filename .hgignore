@@ -1,3 +1,6 @@
 regexp:^server/venv/.+
 regexp:^server/.+/__pycache__/.+
 regexp:^server/data/session/.+
+regexp:^server/\.sass-cache/.+
+regexp:^server/bower_components/.+
+regexp:^server/node_modules/.+

@@ -24,7 +24,7 @@ gulp.task('icons', function() { 
 
 gulp.task('css', function() { 
 	// thx http://stackoverflow.com/questions/28140012
-    return sass(config.sassPath + '/style.scss', {
+    return sass(config.sassPath + '/style.sass', {
              //style: 'compressed',
              loadPath: [
                  config.sassPath,

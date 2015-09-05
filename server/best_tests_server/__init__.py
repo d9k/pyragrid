@@ -28,6 +28,7 @@ def main(global_config, **settings):
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
     config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_static_view('resources', 'resources', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('test', '/t')
     config.add_route('add_user', '/users/add')

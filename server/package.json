@@ -5,6 +5,7 @@
     "gulp-notify": "*",
     "gulp-ruby-sass": "*",
     "gulp-coffee": "*",
-    "gulp-util": "*"
+    "gulp-util": "*",
+    "gulp-sourcemaps": "*"
   }
 }

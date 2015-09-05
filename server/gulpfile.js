@@ -3,7 +3,8 @@ var gulp    = require('gulp'), 
     notify  = require('gulp-notify') ,
     bower   = require('gulp-bower'),
     coffee  = require('gulp-coffee'),
-    gutil   = require('gulp-util');
+    gutil   = require('gulp-util'),
+    sourcemaps = require('gulp-sourcemaps');
 
 var config = {
     coffeePath: './best_tests_server/resources/coffee',
@@ -25,6 +26,7 @@ gulp.task('icons', function() { 
 gulp.task('css', function() { 
 	// thx http://stackoverflow.com/questions/28140012
     return sass(config.sassPath + '/style.sass', {
+            sourcemap: true,
              //style: 'compressed',
              loadPath: [
                  config.sassPath,
@@ -33,8 +35,16 @@ gulp.task('css', function() { 
              ]
          }) .on("error", notify.onError(function (error) {
                  return "Error: " + error.message;
-             })) 
-         .pipe(gulp.dest(config.staticDir + '/css')); 
+             }))
+
+        .pipe(sourcemaps.write(//{addComment: true, includeContent: true/*, debug: true*/}
+        //TODO url prefix
+        //uncomment for separate file:
+        'maps', {
+            includeContent: false,
+            sourceRoot: 'source'
+        }))
+        .pipe(gulp.dest(config.staticDir + '/css')); 
 });
 
 gulp.task('coffee', function(){

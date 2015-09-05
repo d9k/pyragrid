@@ -56,6 +56,7 @@ gulp.task('coffee', function(){
 // Rerun the task when a file changes
  gulp.task('watch', function() {
      gulp.watch(config.sassPath + '/**/*.scss', ['css']);
+     gulp.watch(config.sassPath + '/**/*.sass', ['css']);
     gulp.watch(config.coffeePath + '/**/*.coffee', ['coffee']);
  });
 

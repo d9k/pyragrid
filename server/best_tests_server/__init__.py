@@ -27,6 +27,8 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
+    config.add_static_view('static/tst11', 'tst11', cache_max_age=3600)
+    config.add_static_view('static/bower_components/bootstrap-sass-official', '../bower_components/bootstrap-sass-official', cache_max_age=3600)
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('resources', 'resources', cache_max_age=3600)
     config.add_route('home', '/')

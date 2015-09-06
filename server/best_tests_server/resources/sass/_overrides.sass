@@ -1,0 +1,123 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700)
+
+//$background: #223875
+$background: #FFF
+
+body
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+  font-weight: 300
+  font-size: 18px
+  //color: #ffffff
+  //background: $background
+
+h1, h2, h3, h4, h5, h6
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+  font-weight: 300
+
+p
+  font-weight: 300
+
+.font-normal
+  font-weight: 400
+
+.font-semi-bold
+  font-weight: 600
+
+.font-bold
+  font-weight: 700
+
+.starter-template
+  margin-top: 250px
+  .content
+    margin-left: 10px
+    h1
+      margin-top: 10px
+      font-size: 60px
+      .smaller
+        font-size: 40px
+        //color: #f2b7bd
+    .lead
+      font-size: 25px
+      //color: #f2b7bd
+      .font-normal
+        //color: #ffffff
+  .links
+    float: right
+    right: 0
+    margin-top: 125px
+    ul
+      display: block
+      padding: 0
+      margin: 0
+      li
+        list-style: none
+        display: inline
+        margin: 0 10px
+        &:first-child
+          margin-left: 0
+        &:last-child
+          margin-right: 0
+        &.current-version
+          //color: #9EC8F8
+          font-weight: 400
+        a
+          //color: #ffffff
+          &:hover
+            text-decoration: underline
+        .icon-muted
+          //color: #0DA1FF
+          margin-right: 5px
+        &:hover .icon-muted
+          //color: #ffffff
+  .copyright
+    margin-top: 10px
+    font-size: 0.9em
+    //color: #9EC8F8
+    text-transform: lowercase
+    float: right
+    right: 0
+
+@media (max-width: 1199px)
+  .starter-template .content
+    h1
+      font-size: 45px
+      .smaller
+        font-size: 30px
+    .lead
+      font-size: 20px
+
+@media (max-width: 991px)
+  .starter-template
+    margin-top: 0
+    .logo
+      margin: 40px auto
+    .content
+      margin-left: 0
+      text-align: center
+      h1
+        margin-bottom: 20px
+    .links
+      float: none
+      text-align: center
+      margin-top: 60px
+    .copyright
+      float: none
+      text-align: center
+
+@media (max-width: 767px)
+  .starter-template
+    .content
+      h1 .smaller
+        font-size: 25px
+        display: block
+      .lead
+        font-size: 16px
+    .links
+      margin-top: 40px
+      ul li
+        display: block
+        margin: 0
+        .icon-muted
+          display: none
+    .copyright
+      margin-top: 20px

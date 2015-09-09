@@ -4,9 +4,11 @@ README.txt
 alembic.ini
 development.ini
 production.ini
+readme-gulp.txt
 setup.py
 best_tests_server/__init__.py
 best_tests_server/models.py
+best_tests_server/models__.py
 best_tests_server/tests.py
 best_tests_server/views.py
 best_tests_server.egg-info/PKG-INFO
@@ -21,12 +23,5 @@ best_tests_server/scripts/initializedb.py
 best_tests_server/static/pyramid-16x16.png
 best_tests_server/static/pyramid.png
 best_tests_server/static/theme.css
-best_tests_server/static/theme.min.css
-best_tests_server/templates/mytemplate.pt
-server/__init__.py
-server/models.py
-server/models_.py
-server/tests.py
-server/views.py
-server/scripts/__init__.py
-server/scripts/initializedb.py
+best_tests_server/static/css/style.css
+best_tests_server/static/js/test.js

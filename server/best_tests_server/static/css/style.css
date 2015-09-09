@@ -1,10 +1,5 @@
 @charset "UTF-8";
 @import url(http://fonts.googleapis.com/css?family=Raleway:400,700,300);
-/*!
- * Bootstrap v3.3.5 (http://getbootstrap.com)
- * Copyright 2011-2015 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 @import url(//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700);
 html {
@@ -7911,6 +7906,11 @@ p {
         display: none; }
   .starter-template .copyright {
     margin-top: 20px; } }
+#pDebug a#pShowToolBarButton {
+  opacity: 0.5 !important; }
+
+#pDebug #pDebugToolbarHandle {
+  border: 1px solid #E399A0 !important; }
 
 
 

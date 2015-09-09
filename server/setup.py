@@ -18,7 +18,8 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'pyramid_jinja2',
-    'pyramid_beaker'
+    'pyramid_beaker',
+    'deform==2.0a2'
     ]
 
 setup(name='best_tests_server',

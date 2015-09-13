@@ -53,11 +53,20 @@ gulp.task('coffee', function(){
         .pipe(gulp.dest(config.staticDir + '/js'));
 });
 
+gulp.task('js-copy', function(){
+    gulp.src([
+            config.bowerDir + '/jquery/dist/jquery.*',
+            config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap.*',
+        ]).pipe(gulp.dest(config.staticDir));
+});
+
+
 // Rerun the task when a file changes
  gulp.task('watch', function() {
+    //TODO try group in one array
      gulp.watch(config.sassPath + '/**/*.scss', ['css']);
      gulp.watch(config.sassPath + '/**/*.sass', ['css']);
     gulp.watch(config.coffeePath + '/**/*.coffee', ['coffee']);
  });
 
-  gulp.task('default', ['bower', 'icons', 'css', 'coffee']);
+  gulp.task('default', ['icons', 'css', 'coffee', 'js-copy']);

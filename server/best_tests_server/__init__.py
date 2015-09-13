@@ -33,6 +33,7 @@ def main(global_config, **settings):
     config.add_static_view('static/bower_components', '../bower_components', cache_max_age=static_cache_max_age)
     config.add_static_view('static', 'static', cache_max_age=static_cache_max_age)
     config.add_static_view('resources', 'resources', cache_max_age=static_cache_max_age)
+    config.add_static_view('static_deform', 'deform:static')
     config.add_route('home', '/')
     config.add_route('test', '/t')
     config.add_route('add_user', '/users/add')

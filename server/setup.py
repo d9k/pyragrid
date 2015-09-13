@@ -10,7 +10,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'pyramid',
-    'pyramid_chameleon',
+    # 'pyramid_chameleon',
     'pyramid_debugtoolbar',
     'pyramid_tm',
     'SQLAlchemy',
@@ -19,8 +19,9 @@ requires = [
     'waitress',
     'pyramid_jinja2',
     'pyramid_beaker',
-    'deform==2.0a2'
-    ]
+    'deform==2.0a2',
+    'colander',
+]
 
 setup(name='best_tests_server',
       version='0.0',

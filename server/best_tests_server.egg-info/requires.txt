@@ -1,5 +1,4 @@
 pyramid
-pyramid_chameleon
 pyramid_debugtoolbar
 pyramid_tm
 SQLAlchemy
@@ -9,3 +8,4 @@ waitress
 pyramid_jinja2
 pyramid_beaker
 deform==2.0a2
+colander

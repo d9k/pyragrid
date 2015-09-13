@@ -9,6 +9,7 @@ setup.py
 best_tests_server/__init__.py
 best_tests_server/models.py
 best_tests_server/models__.py
+best_tests_server/schemas.py
 best_tests_server/tests.py
 best_tests_server/views.py
 best_tests_server.egg-info/PKG-INFO

@@ -9,4 +9,9 @@
         <input id="login_form_password" type="password" name="password" value="{{password}}" /><br />
         <input type="submit" name="login_form_submit" value="Login" />
     </form>
+
+    {{ rendered_login_form|safe }}
+    <script type="text/javascript">
+        deform.load()
+    </script>
 {% endblock %}

@@ -19,6 +19,12 @@ from pyramid.httpexceptions import (
     HTTPFound
 )
 
+from .schemas import (
+    LoginSchema
+)
+
+import deform
+
 import pyramid.security as security
 
 import transaction
@@ -79,7 +85,10 @@ class AuthViews(BaseViews):
             else:
                 message = 'no user with such username'
 
-        return {'login': login, 'password': password, 'message': message}
+        login_schema = LoginSchema()
+        login_form = deform.Form(login_schema, buttons=('Вход',))
+        rendered_login_form = login_form.render()
+        return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):

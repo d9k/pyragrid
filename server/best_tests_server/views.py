@@ -19,11 +19,13 @@ from pyramid.httpexceptions import (
     HTTPFound
 )
 
-from .schemas import (
-    LoginForm
+from .forms import (
+    LoginSchema
 )
 
 import deform
+import colander
+from deform import Form, Button
 
 import pyramid.security as security
 
@@ -66,32 +68,80 @@ class AuthViews(BaseViews):
     @view_config(route_name='login', renderer='templates/login.jinja2')
     @forbidden_view_config(renderer='templates/login.jinja2')
     def login_view(self):
-        login = ''
-        password = ''
-        message = ''
-        if 'login_form_submit' in self.request.params:
-            login = self.request.params['login']
-            password = self.request.params['password']
+
+        # login = ''
+        # password = ''
+        # message = ''
+
+        authed_user = None
+
+        # TODO deferred validator doesn't work!
+        # @colander.deferred
+        # @staticmethod
+        def validate_auth(form, values):
+            nonlocal authed_user
+
+            login = values.get('login')
+            password = values.get('password')
             user = User.by_any(login)
-            """:type User"""
             if user:
                 if user.check_password(password):
-                    headers = security.remember(self.request, user.id)
-                    home = self.request.route_url('home')
-                    return HTTPFound(location=home, headers=headers)
+                    authed_user = user
                 else:
-                    message = 'wrong password'
+                    exc = colander.Invalid(form, 'Wrong password')
+                    raise exc
             else:
-                message = 'no user with such username'
+                exc = colander.Invalid(form, 'User not found')
+                raise exc
 
-        rendered_login_form = LoginForm().render()
-        return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
+        # if user:
+        #     if user.check_password(password):
+        #         headers = security.remember(self.request, user.id)
+        #         home = self.request.route_url('home')
+        #         return HTTPFound(location=home, headers=headers)
+        #     else:
+        #         message = 'wrong password'
+        # else:
+        #     message = 'no user with such username'
+
+        login_form = Form(
+            LoginSchema(validator=validate_auth),
+            buttons=[Button(name='login_form_submit', title='Вход')]
+        )
+
+        if 'login_form_submit' in self.request.params:
+            controls = self.request.POST.items()
+            try:
+                appstruct = login_form.validate(controls)
+            except deform.ValidationFailure as e:
+                return dict(rendered_login_form=e.render())
+
+            if authed_user is not None:
+                headers = security.remember(self.request, authed_user.id)
+                home = self.request.route_url('home')
+                return HTTPFound(location=home, headers=headers)
+
+            # headers = security.remember(self.request, user.id)
+            # home = self.request.route_url('home')
+            # return HTTPFound(location=home, headers=headers)
+
+            # login = self.request.params['login']
+            # password = self.request.params['password']
+            # user = User.by_any(login)
+            # """:type User"""
+
+
+        # rendered_
+        # ).render(self.request.params)
+
+        return dict(rendered_login_form=login_form.render())
+        # return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):
         headers = security.forget(self.request)
-        loginpage = self.request.route_url('login', self.request)
-        return HTTPFound(location=loginpage, headers=headers)
+        login_page = self.request.route_url('login')
+        return HTTPFound(location=login_page, headers=headers)
 
     @view_config(route_name='add_user', renderer='templates/default_page.jinja2')
     def add_user_view(self):

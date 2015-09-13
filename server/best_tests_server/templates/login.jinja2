@@ -2,16 +2,5 @@
 {% block content %}
     <h1>Login</h1>
 
-    <form name="login_form" method="POST" action="{{ request.route_url('login') }}">
-        <label for="login_form_login">Login:</label>
-        <input id="login_form_login" type="text" name="login" value="{{login}}" /><br />
-        <label for="login_form_password">Password:</label>
-        <input id="login_form_password" type="password" name="password" value="{{password}}" /><br />
-        <input type="submit" name="login_form_submit" value="Login" />
-    </form>
-
     {{ rendered_login_form|safe }}
-    <script type="text/javascript">
-        deform.load()
-    </script>
 {% endblock %}

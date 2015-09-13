@@ -1,4 +1,5 @@
 import deform
+import colander
 from colander import (
     Schema,
     SchemaNode,
@@ -9,7 +10,6 @@ from deform import (
     widget,
     Button
 )
-
 
 class TextInputPlaceHolderWidget(widget.TextInputWidget):
     placeholder = ''
@@ -33,7 +33,17 @@ class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
     redisplay = False
 
 
+
+
+
 class LoginSchema(Schema):
+    # validator = self.validate_user_exists
+    # def __init__(self):
+    #     super(LoginSchema, self).__init__(validator=self.validate_auth)
+
+    user = None
+
+    # validator = validate_user_exists
 
     login = SchemaNode(
         String(),
@@ -44,17 +54,11 @@ class LoginSchema(Schema):
         ),
     )
 
+
+
     password = SchemaNode(
         String(),
         title='Пароль',
         placeholder='*****',
         widget=PasswordPlaceholderWidget(placeholder='*****'),
     )
-
-
-class LoginForm(deform.Form):
-    def __init__(self):
-        super(LoginForm, self).__init__(
-            LoginSchema(),
-            buttons=[Button(name='login_form_submit', title='Вход')]
-        )

@@ -20,7 +20,7 @@ from pyramid.httpexceptions import (
 )
 
 from .schemas import (
-    LoginSchema
+    LoginForm
 )
 
 import deform
@@ -72,7 +72,6 @@ class AuthViews(BaseViews):
         if 'login_form_submit' in self.request.params:
             login = self.request.params['login']
             password = self.request.params['password']
-            #TODO no by_username, but by_email or by_login!
             user = User.by_any(login)
             """:type User"""
             if user:
@@ -85,9 +84,7 @@ class AuthViews(BaseViews):
             else:
                 message = 'no user with such username'
 
-        login_schema = LoginSchema()
-        login_form = deform.Form(login_schema, buttons=('Вход',))
-        rendered_login_form = login_form.render()
+        rendered_login_form = LoginForm().render()
         return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')

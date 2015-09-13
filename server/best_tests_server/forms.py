@@ -5,10 +5,13 @@ from colander import (
     String,
     null
 )
-from deform import widget
+from deform import (
+    widget,
+    Button
+)
 
 
-class PlaceHolderTextInput(widget.TextInputWidget):
+class TextInputPlaceHolderWidget(widget.TextInputWidget):
     placeholder = ''
     template = 'best_tests_server:templates/deform_mod/textinputplaceholder.pt'
 
@@ -22,8 +25,12 @@ class PlaceHolderTextInput(widget.TextInputWidget):
         values['placeholder'] = self.placeholder
         return field.renderer(template, **values)
 
-    def deserialize(self, field, pstruct):
-        return super(PlaceHolderTextInput, self).deserialize(field, pstruct)
+
+class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
+    placeholder = ''
+    template = 'best_tests_server:templates/deform_mod/passwordplaceholder.pt'
+    readonly_template = 'readonly/password'
+    redisplay = False
 
 
 class LoginSchema(Schema):
@@ -32,14 +39,22 @@ class LoginSchema(Schema):
         String(),
         title='Логин',
         # subject='Login'
-        widget=PlaceHolderTextInput(
-            placeholder='email, id вконтакте или ник',
+        widget=TextInputPlaceHolderWidget(
+            placeholder='email, id вконтакте или ник'
         ),
     )
 
     password = SchemaNode(
         String(),
         title='Пароль',
-        widget=deform.widget.PasswordWidget(size=20),
-        description='Пароль к аккаунту',
+        placeholder='*****',
+        widget=PasswordPlaceholderWidget(placeholder='*****'),
     )
+
+
+class LoginForm(deform.Form):
+    def __init__(self):
+        super(LoginForm, self).__init__(
+            LoginSchema(),
+            buttons=[Button(name='login_form_submit', title='Вход')]
+        )

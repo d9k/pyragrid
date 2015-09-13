@@ -11,7 +11,6 @@ from deform import widget
 class PlaceHolderTextInput(widget.TextInputWidget):
     placeholder = ''
     template = 'best_tests_server:templates/deform_mod/textinputplaceholder.pt'
-    readonly_template = 'readonly/textinputplaceholder'
 
     def serialize(self, field, cstruct, **kw):
         if cstruct in (null, None):
@@ -24,13 +23,7 @@ class PlaceHolderTextInput(widget.TextInputWidget):
         return field.renderer(template, **values)
 
     def deserialize(self, field, pstruct):
-        if pstruct is null:
-            return null
-        if self.strip:
-            pstruct = pstruct.strip()
-        if not pstruct:
-            return null
-        return pstruct
+        return super(PlaceHolderTextInput, self).deserialize(field, pstruct)
 
 
 class LoginSchema(Schema):

@@ -11,6 +11,7 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 from zope.sqlalchemy import ZopeTransactionExtension
+import deform.widget
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
@@ -84,7 +85,8 @@ class User(Base):
                    }})
     # stores password hash and salt separated by colon
     password_hash = Column(Text, info={'colanderalchemy': {
-                        'title': 'Пароль'
+                        'title': 'Пароль',
+                        'widget': deform.widget.CheckedPasswordWidget()
                    }})
 
     def set_password(self, password):

@@ -68,7 +68,7 @@ def create_edit_user_schema():
 
 def create_register_schema():
     return SQLAlchemySchemaNode(models.User,
-            includes=['login', 'name', 'email', 'password'],
+            includes=['login', 'name', 'email', 'password_hash'],
             # overrides={
             #     'id': {
             #         'exclude': True

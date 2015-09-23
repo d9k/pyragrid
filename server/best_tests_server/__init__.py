@@ -10,6 +10,11 @@ from .models import (
     User
 )
 
+from pyramid.i18n import get_localizer
+from pyramid.threadlocal import get_current_request
+from pkg_resources import resource_filename
+import deform
+
 # from best_tests_server.models import RootFactory
 
 def main(global_config, **settings):
@@ -27,6 +32,22 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
+    config.add_translation_dirs(
+        'colander:locale',
+        'deform:locale'
+    )
+
+    def translator(term):
+        # return get_localizer(get_current_request()).translate(term)
+        return get_current_request().localizer.translate(term)
+
+    deform_template_dir = resource_filename('deform', 'templates/')
+    zpt_renderer = deform.ZPTRendererFactory(
+        [deform_template_dir],
+        translator=translator
+    )
+    deform.Form.set_default_renderer(zpt_renderer)
+
     static_cache_max_age = 3600
     # TODO hacky. maybe better copy resources with gulp task?
     config.add_static_view('static/fonts/bootstrap', '../bower_components/bootstrap-sass-official/assets/fonts/bootstrap', cache_max_age=static_cache_max_age)

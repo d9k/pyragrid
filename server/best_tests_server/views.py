@@ -13,6 +13,8 @@ from .models import (
     User
 )
 
+from colanderalchemy import SQLAlchemySchemaNode
+
 from pyramid.httpexceptions import (
     HTTPBadRequest,
     HTTPNotFound,
@@ -20,7 +22,7 @@ from pyramid.httpexceptions import (
 )
 
 from .forms import (
-    LoginSchema
+    LoginSchema, create_register_schema
 )
 
 import deform
@@ -47,7 +49,6 @@ class BaseViews:
         if not self.user:
             return False
         return True
-
 
 @view_defaults(route_name='home', permission='view')
 class SiteViews(BaseViews):
@@ -136,6 +137,17 @@ class AuthViews(BaseViews):
 
         return dict(rendered_login_form=login_form.render())
         # return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
+
+    @view_config(route_name='register', renderer='templates/register.jinja2')
+    def register_view(self):
+        register_schema = create_register_schema()
+        # TODO validator
+        # register_schema = SQLAlchemySchemaNode(User)
+        register_form = Form(
+            register_schema,
+            buttons=[Button(name='register_form_submit', title='Зарегистрировать')]
+        )
+        return dict(rendered_register_form=register_form.render())
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):

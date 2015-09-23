@@ -12,3 +12,10 @@ Getting Started
 
 - $VENV/bin/pserve development.ini
 
+
+TODO: how to install ColanderAlchemy simplier?
+
+pip install ColanderAlchemy
+cd venv/lib/python3.4/site-packages
+unzip ColanderAlchemy-0.3.3-py3.4.egg
+rm -r EGG-INFO

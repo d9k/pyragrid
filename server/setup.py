@@ -21,6 +21,7 @@ requires = [
     'pyramid_beaker',
     'deform==2.0a2',
     'colander',
+    'ColanderAlchemy'
 ]
 
 setup(name='best_tests_server',

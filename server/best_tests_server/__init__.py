@@ -40,6 +40,7 @@ def main(global_config, **settings):
     config.add_route('delete_user', '/users/delete/{vk_id}')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
+    config.add_route('register', '/register')
     config.set_session_factory(session_factory)
     config.scan()
     return config.make_wsgi_app()

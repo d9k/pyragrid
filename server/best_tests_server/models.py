@@ -1,17 +1,16 @@
 import uuid
+
+from hashlib import sha256
+from pyramid.security import (
+    Allow
+)
 from sqlalchemy import BigInteger, Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
-from hashlib import sha256
-from zope.sqlalchemy import ZopeTransactionExtension
-
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
 )
-from pyramid.security import (
-    Allow,
-    Everyone
-)
+from zope.sqlalchemy import ZopeTransactionExtension
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
@@ -59,15 +58,34 @@ def create_salt():
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
-    vk_id = Column(BigInteger, unique=True)
-    login = Column(Text)
-    name = Column(Text)
-    email = Column(Text)
-    group = Column(Text)
-
+    id = Column(Integer, primary_key=True,
+                info={'colanderalchemy': {
+                    'title': 'id пользователя'
+                }})
+    vk_id = Column(BigInteger, unique=True,
+                   info={'colanderalchemy': {
+                       'title': 'id вконтакте'
+                   }})
+    login = Column(Text,
+                   info={'colanderalchemy': {
+                       'title': 'Логин пользователя'
+                   }})
+    name = Column(Text,
+                  info={'colanderalchemy': {
+                      'title': 'Имя пользователя'
+                  }})
+    email = Column(Text,
+                   info={'colanderalchemy': {
+                       'title': 'E-mail'
+                   }})
+    group = Column(Text,
+                   info={'colanderalchemy': {
+                       'title': 'Группа пользователя'
+                   }})
     # stores password hash and salt separated by colon
-    password_hash = Column(Text)
+    password_hash = Column(Text, info={'colanderalchemy': {
+                        'title': 'Пароль'
+                   }})
 
     def set_password(self, password):
         """thx 2 http://pythoncentral.io/hashing-strings-with-python"""

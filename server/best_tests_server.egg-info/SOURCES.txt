@@ -7,9 +7,9 @@ production.ini
 readme-gulp.txt
 setup.py
 best_tests_server/__init__.py
+best_tests_server/forms.py
 best_tests_server/models.py
 best_tests_server/models__.py
-best_tests_server/schemas.py
 best_tests_server/tests.py
 best_tests_server/views.py
 best_tests_server.egg-info/PKG-INFO
@@ -21,8 +21,14 @@ best_tests_server.egg-info/requires.txt
 best_tests_server.egg-info/top_level.txt
 best_tests_server/scripts/__init__.py
 best_tests_server/scripts/initializedb.py
+best_tests_server/static/bootstrap.js
+best_tests_server/static/bootstrap.min.js
+best_tests_server/static/jquery.js
+best_tests_server/static/jquery.min.js
 best_tests_server/static/pyramid-16x16.png
 best_tests_server/static/pyramid.png
 best_tests_server/static/theme.css
 best_tests_server/static/css/style.css
 best_tests_server/static/js/test.js
+best_tests_server/templates/deform_mod/passwordplaceholder.pt
+best_tests_server/templates/deform_mod/textinputplaceholder.pt

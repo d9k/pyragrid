@@ -1,5 +1,7 @@
 import deform
 import colander
+from colanderalchemy import SQLAlchemySchemaNode
+
 from colander import (
     Schema,
     SchemaNode,
@@ -10,6 +12,7 @@ from deform import (
     widget,
     Button
 )
+import best_tests_server.models as models
 
 class TextInputPlaceHolderWidget(widget.TextInputWidget):
     placeholder = ''
@@ -33,9 +36,6 @@ class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
     redisplay = False
 
 
-
-
-
 class LoginSchema(Schema):
     # validator = self.validate_user_exists
     # def __init__(self):
@@ -54,11 +54,29 @@ class LoginSchema(Schema):
         ),
     )
 
-
-
     password = SchemaNode(
         String(),
         title='Пароль',
         placeholder='*****',
         widget=PasswordPlaceholderWidget(placeholder='*****'),
     )
+
+
+def create_edit_user_schema():
+    return SQLAlchemySchemaNode(models.User)
+
+
+def create_register_schema():
+    return SQLAlchemySchemaNode(models.User,
+            includes=['login', 'name', 'email', 'password'],
+            # overrides={
+            #     'id': {
+            #         'exclude': True
+            #     },
+            #     'password': {
+            #
+            #     }
+            # }
+    )
+
+

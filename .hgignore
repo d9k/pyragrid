@@ -4,3 +4,5 @@ regexp:^server/data/session/.+
 regexp:^server/\.sass-cache/.+
 regexp:^server/bower_components/.+
 regexp:^server/node_modules/.+
+regexp:^server/dist/.+
+regexp:^server/build/.+

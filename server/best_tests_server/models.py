@@ -12,6 +12,7 @@ from sqlalchemy.orm import (
 )
 from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
+import colander
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
@@ -77,7 +78,12 @@ class User(Base):
                   }})
     email = Column(Text,
                    info={'colanderalchemy': {
-                       'title': 'E-mail'
+                       'title': 'E-mail',
+                       'validator': colander.Email(),
+                       # 'widget': deform.widget.CheckedInputWidget(
+                       #     subject='E-mail',
+                       #     confirm_subject='Подтвердите E-mail'
+                       # )
                    }})
     group = Column(Text,
                    info={'colanderalchemy': {
@@ -86,7 +92,7 @@ class User(Base):
     # stores password hash and salt separated by colon
     password_hash = Column(Text, info={'colanderalchemy': {
                         'title': 'Пароль',
-                        'widget': deform.widget.CheckedPasswordWidget()
+                        'widget': deform.widget.CheckedPasswordWidget(),
                    }})
 
     def set_password(self, password):

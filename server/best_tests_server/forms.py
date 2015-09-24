@@ -54,6 +54,7 @@ class RegisterSchema(SQLAlchemySchemaNode):
         self.add(colander.SchemaNode(
             colander.String(),
             title='Капча',
-            widget=RecaptchaWidget(),
+            # widget=RecaptchaWidget(lang='ru', theme='clean'),
+            widget=RecaptchaWidget(lang='ru', theme='clean'),
             order=1000
         ))

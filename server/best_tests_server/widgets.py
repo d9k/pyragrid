@@ -39,17 +39,16 @@ class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
 
 
 class RecaptchaWidget(CheckedInputWidget):
-    template = 'recaptcha_widget'
+    # template = 'recaptcha_widget'
     template = 'best_tests_server:templates/deform_mod/recaptcha_widget.pt'
     readonly_template = 'recaptcha_widget'
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
     # google_url = "http://www.google.com/recaptcha/api/verify"
     headers = {'Content-type': 'application/x-www-form-urlencoded'}
-
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-    #     self.request = kwargs['request']
+    # TODO lang from request localizer
+    lang = 'en'
+    theme = 'red'
 
     def serialize(self, field, cstruct, readonly=False):
         if cstruct in (null, None):
@@ -60,6 +59,8 @@ class RecaptchaWidget(CheckedInputWidget):
         settings = request.registry.settings
         return field.renderer(template, field=field, cstruct=cstruct,
                               public_key=settings['google_api_public_key'],
+                              lang=self.lang,
+                              theme=self.theme
                               )
 
     def deserialize(self, field, pstruct):

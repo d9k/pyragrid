@@ -1,5 +1,6 @@
 import colander
 import deform
+import deform.widget
 from deform.widget import CheckedInputWidget
 from colander import null, Invalid
 from pyramid.threadlocal import get_current_request
@@ -14,8 +15,32 @@ import http.client
 # from https://gist.github.com/reedobrien/701444
 # TODO https://docs.python.org/3.2/library/http.client.html
 
+
+class TextInputPlaceHolderWidget(deform.widget.TextInputWidget):
+    placeholder = ''
+    template = 'best_tests_server:templates/deform_mod/textinputplaceholder.pt'
+
+    def serialize(self, field, cstruct, **kw):
+        if cstruct in (null, None):
+            cstruct = ''
+        readonly = kw.get('readonly', self.readonly)
+        template = readonly and self.readonly_template or self.template
+        values = self.get_template_values(field, cstruct, kw)
+        # hack for placeholder working
+        values['placeholder'] = self.placeholder
+        return field.renderer(template, **values)
+
+
+class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
+    placeholder = ''
+    template = 'best_tests_server:templates/deform_mod/passwordplaceholder.pt'
+    readonly_template = 'readonly/password'
+    redisplay = False
+
+
 class RecaptchaWidget(CheckedInputWidget):
     template = 'recaptcha_widget'
+    template = 'best_tests_server:templates/deform_mod/recaptcha_widget.pt'
     readonly_template = 'recaptcha_widget'
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
@@ -32,7 +57,7 @@ class RecaptchaWidget(CheckedInputWidget):
         confirm = getattr(field, 'confirm', '')
         template = readonly and self.readonly_template or self.template
         request = get_current_request()
-        settings = request.settings
+        settings = request.registry.settings
         return field.renderer(template, field=field, cstruct=cstruct,
                               public_key=settings['google_api_public_key'],
                               )
@@ -47,7 +72,7 @@ class RecaptchaWidget(CheckedInputWidget):
         if not challenge:
             raise Invalid(field.schema, 'Missing challenge')
         request = get_current_request()
-        settings = request.settings
+        settings = request.registry.settings
         privatekey = settings['private_key']
         # remoteip = self.request.remote_addr
         remoteip = request.remote_addr

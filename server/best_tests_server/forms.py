@@ -13,28 +13,7 @@ from deform import (
     Button
 )
 import best_tests_server.models as models
-
-class TextInputPlaceHolderWidget(widget.TextInputWidget):
-    placeholder = ''
-    template = 'best_tests_server:templates/deform_mod/textinputplaceholder.pt'
-
-    def serialize(self, field, cstruct, **kw):
-        if cstruct in (null, None):
-            cstruct = ''
-        readonly = kw.get('readonly', self.readonly)
-        template = readonly and self.readonly_template or self.template
-        values = self.get_template_values(field, cstruct, kw)
-        # hack for placeholder working
-        values['placeholder'] = self.placeholder
-        return field.renderer(template, **values)
-
-
-class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
-    placeholder = ''
-    template = 'best_tests_server:templates/deform_mod/passwordplaceholder.pt'
-    readonly_template = 'readonly/password'
-    redisplay = False
-
+from .widgets import TextInputPlaceHolderWidget, PasswordPlaceholderWidget, RecaptchaWidget
 
 class LoginSchema(Schema):
     # validator = self.validate_user_exists
@@ -66,17 +45,15 @@ def create_edit_user_schema():
     return SQLAlchemySchemaNode(models.User)
 
 
-def create_register_schema():
-    return SQLAlchemySchemaNode(models.User,
-            includes=['login', 'name', 'email', 'password_hash'],
-            # overrides={
-            #     'id': {
-            #         'exclude': True
-            #     },
-            #     'password': {
-            #
-            #     }
-            # }
-    )
+class RegisterSchema(SQLAlchemySchemaNode):
 
-
+    def __init__(self, **kwargs):
+        super().__init__(models.User,
+                         includes=['login', 'name', 'email', 'password_hash'],
+                         **kwargs)
+        self.add(colander.SchemaNode(
+            colander.String(),
+            title='Капча',
+            widget=RecaptchaWidget(),
+            order=1000
+        ))

@@ -22,7 +22,7 @@ from pyramid.httpexceptions import (
 )
 
 from .forms import (
-    LoginSchema, create_register_schema
+    LoginSchema, RegisterSchema
 )
 
 import deform
@@ -140,7 +140,8 @@ class AuthViews(BaseViews):
 
     @view_config(route_name='register', renderer='templates/register.jinja2')
     def register_view(self):
-        register_schema = create_register_schema()
+        # register_schema = create_register_schema()
+        register_schema = RegisterSchema()
         # TODO validator
         # register_schema = SQLAlchemySchemaNode(User)
         register_form = Form(

@@ -70,11 +70,12 @@ class User(Base):
                    }})
     login = Column(Text,
                    info={'colanderalchemy': {
-                       'title': 'Логин пользователя'
+                       'title': 'Логин пользователя',
                    }})
     name = Column(Text,
                   info={'colanderalchemy': {
-                      'title': 'Имя пользователя'
+                      'title': 'Имя пользователя',
+                      'missing': None,
                   }})
     email = Column(Text,
                    info={'colanderalchemy': {

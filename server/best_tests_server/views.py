@@ -70,10 +70,6 @@ class AuthViews(BaseViews):
     @forbidden_view_config(renderer='templates/login.jinja2')
     def login_view(self):
 
-        # login = ''
-        # password = ''
-        # message = ''
-
         authed_user = None
 
         # TODO deferred validator doesn't work!
@@ -95,16 +91,6 @@ class AuthViews(BaseViews):
                 exc = colander.Invalid(form, 'User not found')
                 raise exc
 
-        # if user:
-        #     if user.check_password(password):
-        #         headers = security.remember(self.request, user.id)
-        #         home = self.request.route_url('home')
-        #         return HTTPFound(location=home, headers=headers)
-        #     else:
-        #         message = 'wrong password'
-        # else:
-        #     message = 'no user with such username'
-
         login_form = Form(
             LoginSchema(validator=validate_auth),
             buttons=[Button(name='login_form_submit', title='Вход')]
@@ -122,33 +108,37 @@ class AuthViews(BaseViews):
                 home = self.request.route_url('home')
                 return HTTPFound(location=home, headers=headers)
 
-            # headers = security.remember(self.request, user.id)
-            # home = self.request.route_url('home')
-            # return HTTPFound(location=home, headers=headers)
-
-            # login = self.request.params['login']
-            # password = self.request.params['password']
-            # user = User.by_any(login)
-            # """:type User"""
-
-
-        # rendered_
-        # ).render(self.request.params)
-
         return dict(rendered_login_form=login_form.render())
-        # return {'login': login, 'password': password, 'message': message, 'rendered_login_form': rendered_login_form}
 
     @view_config(route_name='register', renderer='templates/register.jinja2')
     def register_view(self):
-        # register_schema = create_register_schema()
-        register_schema = RegisterSchema()
-        # TODO validator
-        # register_schema = SQLAlchemySchemaNode(User)
+
+        def validate_registry(form, values):
+            pass
+
         register_form = Form(
-            register_schema,
+            RegisterSchema(validator=validate_registry),
             buttons=[Button(name='register_form_submit', title='Зарегистрировать')]
         )
+
+        if 'register_form_submit' in self.request.params:
+            controls = self.request.POST.items()
+            try:
+                appstruct = register_form.validate(controls)
+            except deform.ValidationFailure as e:
+                r = e.render()
+                return dict(rendered_register_form=r)
+
+            # TODO create new user
+            success_location = self.request.route_url('successfull_register')
+            return HTTPFound(location=success_location)
+
         return dict(rendered_register_form=register_form.render())
+
+    @view_config(route_name='register_success', renderer='templates/register_success.jinja2')
+    def register_success_view(self):
+        # TODO show user name and email
+        return dict()
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):

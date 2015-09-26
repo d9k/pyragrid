@@ -1,0 +1,8 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1>Добро пожаловать!</h1>
+
+    <p>Регистрация прошла успешно. Вы можете<a href="{{ request.route_url('login') }}">войти на сайт</a></p>
+
+    {# TODO fun picure with greeting mascot #}
+{% endblock %}

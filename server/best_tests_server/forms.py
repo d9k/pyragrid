@@ -1,4 +1,3 @@
-import deform
 import colander
 from colanderalchemy import SQLAlchemySchemaNode
 
@@ -8,12 +7,9 @@ from colander import (
     String,
     null
 )
-from deform import (
-    widget,
-    Button
-)
 import best_tests_server.models as models
 from .widgets import TextInputPlaceHolderWidget, PasswordPlaceholderWidget, RecaptchaWidget
+
 
 class LoginSchema(Schema):
     # validator = self.validate_user_exists

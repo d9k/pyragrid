@@ -1,0 +1,12 @@
+#!/bin/bash
+
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
+SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/best_tests_server)
+
+cd ${SERVER_PACKAGE_DIR}/locale
+
+#WTF? why output in the pwd directory
+#msgfmt locale/*/LC_MESSAGES/*.po
+
+find . -name \*.po -execdir sh -c 'msgfmt "$0" -o `basename $0 .po`.mo' '{}' \;

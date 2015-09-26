@@ -34,7 +34,8 @@ def main(global_config, **settings):
     config.include('pyramid_chameleon')
     config.add_translation_dirs(
         'colander:locale',
-        'deform:locale'
+        'deform:locale',
+        'best_tests_server:locale'
     )
 
     def translator(term):

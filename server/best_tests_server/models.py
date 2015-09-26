@@ -56,6 +56,11 @@ def create_hashed_password(password, salt):
 def create_salt():
     return uuid.uuid4().hex
 
+@colander.deferred
+def user_login_validator(node, kw):
+    return colander.All(
+        colander.Regex('^[a-z0-9_]+$', 'логин должен содержать только цифры и английские буквы')
+    )
 
 class User(Base):
     __tablename__ = 'users'
@@ -71,6 +76,8 @@ class User(Base):
     login = Column(Text,
                    info={'colanderalchemy': {
                        'title': 'Логин пользователя',
+                       'validator': user_login_validator,
+                       'missing': colander.required
                    }})
     name = Column(Text,
                   info={'colanderalchemy': {
@@ -81,6 +88,7 @@ class User(Base):
                    info={'colanderalchemy': {
                        'title': 'E-mail',
                        'validator': colander.Email(),
+                       'missing': colander.required
                        # 'widget': deform.widget.CheckedInputWidget(
                        #     subject='E-mail',
                        #     confirm_subject='Подтвердите E-mail'

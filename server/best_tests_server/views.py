@@ -116,8 +116,18 @@ class AuthViews(BaseViews):
         def validate_registry(form, values):
             pass
 
+        register_schema = RegisterSchema(validator=validate_registry)
+
+        # try:
+            #if 'register_form_submit' in self.request.params:
+            #TODO can't use bind->clone: __init__ crashes
+                # register_schema._bind()
+        register_schema = register_schema.bind()
+        # except Exception as e:
+        #     pass
+
         register_form = Form(
-            RegisterSchema(validator=validate_registry),
+            register_schema,
             buttons=[Button(name='register_form_submit', title='Зарегистрировать')]
         )
 
@@ -130,7 +140,7 @@ class AuthViews(BaseViews):
                 return dict(rendered_register_form=r)
 
             # TODO create new user
-            success_location = self.request.route_url('successfull_register')
+            success_location = self.request.route_url('register_success')
             return HTTPFound(location=success_location)
 
         return dict(rendered_register_form=register_form.render())

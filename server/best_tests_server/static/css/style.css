@@ -7906,6 +7906,11 @@ p {
         display: none; }
   .starter-template .copyright {
     margin-top: 20px; } }
+form .required::after {
+  color: #E32;
+  content: "*";
+  display: inline; }
+
 #pDebug a#pShowToolBarButton {
   opacity: 0.5 !important; }
 

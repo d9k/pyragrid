@@ -43,10 +43,13 @@ def create_edit_user_schema():
 
 class RegisterSchema(SQLAlchemySchemaNode):
 
-    def __init__(self, **kwargs):
+    def __init__(self, class_=models.User, includes=None,
+                 excludes=None, overrides=None, unknown='ignore', **kw):
+        if includes is None:
+            includes = ['login', 'name', 'email', 'password_hash']
         super().__init__(models.User,
-                         includes=['login', 'name', 'email', 'password_hash'],
-                         **kwargs)
+                         includes=includes,
+                         **kw)
         self.add(colander.SchemaNode(
             colander.String(),
             title='Капча',

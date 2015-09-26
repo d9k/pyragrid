@@ -12,7 +12,7 @@ from .models import (
     DBSession,
     User
 )
-
+from .widgets import exception_for_form_field
 from colanderalchemy import SQLAlchemySchemaNode
 
 from pyramid.httpexceptions import (
@@ -27,6 +27,7 @@ from .forms import (
 
 import deform
 import colander
+from colander import SchemaNode
 from deform import Form, Button
 
 import pyramid.security as security
@@ -81,20 +82,26 @@ class AuthViews(BaseViews):
             login = values.get('login')
             password = values.get('password')
             user = User.by_any(login)
-            if user:
-                if user.check_password(password):
-                    authed_user = user
-                else:
-                    exc = colander.Invalid(form, 'Wrong password')
-                    raise exc
-            else:
-                exc = colander.Invalid(form, 'User not found')
-                raise exc
+
+            # TODO check
+            # -cdunklau- : d9k_ so i'm thinking you just need to do
+            # form['login'].error = colander.Invalid(form['login'], 'Unknown login')
+            # and then raise deform.ValidationFailure(form, form.cstruct, None) or something
+
+            if not user:
+                raise exception_for_form_field(form, 'login', 'Пользователь не найден')
+            if not user.check_password(password):
+                raise exception_for_form_field(form, 'password', 'Неверный пароль')
+
+            authed_user = user
 
         login_form = Form(
-            LoginSchema(validator=validate_auth),
-            buttons=[Button(name='login_form_submit', title='Вход')]
+            LoginSchema(validator=validate_auth).bind(),
+            buttons=[Button(name='login_form_submit', title='Вход')],
+            # css_class='no-red-stars'
         )
+
+        login_form.css_class += ' no-red-stars'
 
         if 'login_form_submit' in self.request.params:
             controls = self.request.POST.items()

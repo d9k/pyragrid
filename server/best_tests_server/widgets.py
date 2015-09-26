@@ -34,6 +34,7 @@ class TextInputPlaceHolderWidget(deform.widget.TextInputWidget):
 class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
     placeholder = ''
     template = 'best_tests_server:templates/deform_mod/passwordplaceholder.pt'
+    # TODO fix readonly
     readonly_template = 'readonly/password'
     redisplay = False
 
@@ -111,3 +112,11 @@ class RecaptchaWidget(CheckedInputWidget):
             raise Invalid(field.schema, reason.replace('\\n', ' ').strip("'") )
         # return pstruct
         return pstruct['recaptcha_response_field']
+
+
+def exception_for_form_field(form, field_name, text):
+    exc = colander.Invalid(form)
+    """:type : SchemaNode"""
+    field = form.get(field_name)
+    exc.add(colander.Invalid(field, text), field._order)
+    return exc

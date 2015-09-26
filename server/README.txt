@@ -19,3 +19,8 @@ pip install ColanderAlchemy
 cd venv/lib/python3.4/site-packages
 unzip ColanderAlchemy-0.3.3-py3.4.egg
 rm -r EGG-INFO
+
+Type hinting
+------------
+
+https://www.jetbrains.com/pycharm/help/type-hinting-in-pycharm.html

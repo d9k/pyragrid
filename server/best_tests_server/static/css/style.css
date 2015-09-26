@@ -7907,9 +7907,12 @@ p {
   .starter-template .copyright {
     margin-top: 20px; } }
 form .required::after {
-  color: #E32;
+  color: #F67979;
   content: "*";
   display: inline; }
+
+form.no-red-stars .required::after {
+  content: none; }
 
 #pDebug a#pShowToolBarButton {
   opacity: 0.5 !important; }

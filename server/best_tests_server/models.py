@@ -56,10 +56,16 @@ def create_hashed_password(password, salt):
 def create_salt():
     return uuid.uuid4().hex
 
+def user_login_unique_validator(node, kwargs):
+    found = User.by_login(kwargs.get('login'))
+    if found is not None:
+        pass
+
 @colander.deferred
-def user_login_validator(node, kw):
+def user_login_validator(node, kwargs):
     return colander.All(
-        colander.Regex('^[a-z0-9_]+$', 'логин должен содержать только цифры и английские буквы')
+        colander.Regex('^[a-z0-9_]+$', 'логин должен содержать только цифры и английские буквы'),
+        user_login_unique_validator(node, kwargs),
     )
 
 class User(Base):

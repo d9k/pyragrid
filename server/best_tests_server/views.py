@@ -191,21 +191,34 @@ class AuthViews(BaseViews):
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user added'}
 
+
+@view_defaults(permission='admin')
+class AdminViews(BaseViews):
     @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
     def delete_user_view(self):
-        vk_id = self.request.matchdict['vk_id']
-        if not vk_id:
-            return HTTPBadRequest('vk_id must be specified')
 
         try:
             with transaction.manager:
-                DBSession.query(User).filter(User.vk_id == vk_id).delete()
+                any_data = self.request.matchdict.get('any_data')
+                id_ = self.request.matchdict.get('id')
+                """:type : User"""
+                user = None
+                if any_data:
+                    # DBSession.query(User).filter(User.vk_id == vk_id).delete()
+                    user = User.by_any(any_data)
+                elif id_:
+                    user = User.by_id(id_)
+                else:
+                    return HTTPBadRequest('can\'t find user: no data specified')
+
+                if not user:
+                    return HTTPBadRequest('can\'t find user')
+                DBSession.delete(user)
                 # transaction.commit()
 
         except DBAPIError:
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
-        return {'content': 'user deleted'}
-
+        return {'content': 'user ' + user.name + ' deleted'}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

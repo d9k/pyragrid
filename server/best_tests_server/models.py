@@ -26,7 +26,7 @@ GROUPS = {'admin': ['group:admins'],
 
 class RootFactory(object):
     __acl__ = [(Allow, 'group:users', 'view'),
-               (Allow, 'group:admins', 'admin')]
+               (Allow, 'group:admins', ['view','admin'])]
 
     def __init__(self, request):
         pass
@@ -131,7 +131,6 @@ class User(Base):
         if user.group not in GROUPS:
             return []
         return GROUPS[user.group]
-
 
     @staticmethod
     def by_id(user_id: int):

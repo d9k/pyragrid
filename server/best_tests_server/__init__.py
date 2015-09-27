@@ -59,7 +59,7 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('test', '/t')
     config.add_route('add_user', '/users/add')
-    config.add_route('delete_user', '/users/delete/{vk_id}')
+    config.add_route('delete_user', '/users/delete/{any_data}')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
     config.add_route('register', '/register')

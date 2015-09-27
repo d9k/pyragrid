@@ -1,2 +1,32 @@
 // TODO sass docstrings?
 // @see /home/d9k/cr/BestTests/server/bower_components/bootstrap-sass-official/assets/stylesheets/bootstrap/_variables.scss
+
+// Add custom font
+
+//@import url(http://fonts.googleapis.com/css?family=Raleway:400,700,300)
+
+//from http://fonts4web.ru/raleway.html
+
+@font-face
+  font-family: "Raleway"
+  font-style: normal
+  font-weight: 300
+  src: url("../fonts/RalewayLight.woff") format("woff")
+
+@font-face
+  font-family: "Raleway"
+  font-style: normal
+  font-weight: 400
+  src: url("../fonts/RalewayRegular.woff") format("woff")
+
+@font-face
+  font-family: "Raleway"
+  font-style: normal
+  font-weight: 700
+  src: url("../fonts/RalewayBold.woff") format("woff")
+
+//src: url("../fonts/RalewayLight/RalewayLight.eot?#iefix")format("embedded-opentype"), url("../fonts/RalewayLight/RalewayLight.woff") format("woff"),
+//url("../fonts/RalewayLight/RalewayLight.ttf") format("truetype");
+
+$font-family-base: "Raleway", sans-serif
+

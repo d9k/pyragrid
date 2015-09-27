@@ -13,11 +13,12 @@ from sqlalchemy.orm import (
 from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
 import colander
+from dictalchemy import DictableModel
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
 
-Base = declarative_base()
+Base = declarative_base(cls=DictableModel)
 
 GROUPS = {'admin': ['group:admins'],
           None: ['group:users']}
@@ -48,7 +49,6 @@ class Test(Base):
     description = Column(Text)
 
 
-
 def create_hashed_password(password, salt):
     return sha256(salt.encode() + password.encode()).hexdigest()
 
@@ -56,17 +56,20 @@ def create_hashed_password(password, salt):
 def create_salt():
     return uuid.uuid4().hex
 
-def user_login_unique_validator(node, kwargs):
-    found = User.by_login(kwargs.get('login'))
+
+def user_login_unique_validator(node, value):
+    found = User.by_login(value)
     if found is not None:
-        pass
+        raise colander.Invalid(node, 'Пользователь с таким логином уже существует')
+
 
 @colander.deferred
 def user_login_validator(node, kwargs):
     return colander.All(
-        colander.Regex('^[a-z0-9_]+$', 'логин должен содержать только цифры и английские буквы'),
-        user_login_unique_validator(node, kwargs),
+        colander.Regex('^[a-z0-9_]+$', 'Логин должен содержать только цифры и английские буквы'),
+        user_login_unique_validator,
     )
+
 
 class User(Base):
     __tablename__ = 'users'

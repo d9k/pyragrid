@@ -33,7 +33,8 @@ from deform import Form, Button
 import pyramid.security as security
 
 import transaction
-
+import dictalchemy.utils
+import best_tests_server.helpers as helpers
 
 class BaseViews:
     def __init__(self, request):
@@ -106,11 +107,12 @@ class AuthViews(BaseViews):
         if 'login_form_submit' in self.request.params:
             controls = self.request.POST.items()
             try:
-                appstruct = login_form.validate(controls)
+                login_form.validate(controls)
             except deform.ValidationFailure as e:
                 return dict(rendered_login_form=e.render())
 
             if authed_user is not None:
+                self.request.session.pop('new_password', None)
                 headers = security.remember(self.request, authed_user.id)
                 home = self.request.route_url('home')
                 return HTTPFound(location=home, headers=headers)
@@ -120,33 +122,43 @@ class AuthViews(BaseViews):
     @view_config(route_name='register', renderer='templates/register.jinja2')
     def register_view(self):
 
-        def validate_registry(form, values):
-            pass
-
-        register_schema = RegisterSchema(validator=validate_registry)
-
-        # try:
-            #if 'register_form_submit' in self.request.params:
-            #TODO can't use bind->clone: __init__ crashes
-                # register_schema._bind()
-        register_schema = register_schema.bind()
-        # except Exception as e:
+        # def validate_register(form, values):
         #     pass
 
         register_form = Form(
-            register_schema,
+            RegisterSchema(
+                # validator=validate_register
+            ).bind(),
             buttons=[Button(name='register_form_submit', title='Зарегистрировать')]
         )
 
         if 'register_form_submit' in self.request.params:
             controls = self.request.POST.items()
             try:
-                appstruct = register_form.validate(controls)
+                data = register_form.validate(controls)
             except deform.ValidationFailure as e:
                 r = e.render()
                 return dict(rendered_register_form=r)
 
             # TODO create new user
+
+            # new_user = User(login='d9kd9k', name='Дмитрий Комаров', email='d9k@ya.ru')
+
+            new_user = User()
+            new_user.fromdict(data)
+            if not new_user.name:
+                new_user.name = new_user.login
+            password = data.get('password')
+            if not password:
+                password = helpers.generate_password()
+                self.request.session['new_password'] = password
+
+            new_user.set_password(password)
+            try:
+                with transaction.manager:
+                    DBSession.add(new_user)
+            except DBAPIError:
+                return Response(conn_err_msg, content_type='text/plain', status_int=500)
             success_location = self.request.route_url('register_success')
             return HTTPFound(location=success_location)
 
@@ -155,7 +167,8 @@ class AuthViews(BaseViews):
     @view_config(route_name='register_success', renderer='templates/register_success.jinja2')
     def register_success_view(self):
         # TODO show user name and email
-        return dict()
+        new_password = self.request.session.get('new_password')
+        return dict(new_password=new_password)
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):

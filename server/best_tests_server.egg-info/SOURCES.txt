@@ -9,9 +9,9 @@ setup.py
 best_tests_server/__init__.py
 best_tests_server/forms.py
 best_tests_server/models.py
-best_tests_server/models__.py
 best_tests_server/tests.py
 best_tests_server/views.py
+best_tests_server/widgets.py
 best_tests_server.egg-info/PKG-INFO
 best_tests_server.egg-info/SOURCES.txt
 best_tests_server.egg-info/dependency_links.txt
@@ -31,4 +31,5 @@ best_tests_server/static/theme.css
 best_tests_server/static/css/style.css
 best_tests_server/static/js/test.js
 best_tests_server/templates/deform_mod/passwordplaceholder.pt
+best_tests_server/templates/deform_mod/recaptcha_widget.pt
 best_tests_server/templates/deform_mod/textinputplaceholder.pt

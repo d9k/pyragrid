@@ -2,7 +2,14 @@
 {% block content %}
     <h1>Добро пожаловать!</h1>
 
-    <p>Регистрация прошла успешно. Вы можете<a href="{{ request.route_url('login') }}">войти на сайт</a></p>
+    <p>Регистрация прошла успешно.</p>
 
-    {# TODO fun picure with greeting mascot #}
+    {% if new_password %}
+        {# TODO только при наведении мыши #}
+        <p>Вы не указали пароль при регистрации, поэтому он был сгенирирован: {{ new_password }}</p>
+        <p>Сохраните значение пароля.</p>
+    {% endif %}
+
+    {# TODO fun picture with greeting mascot #}
+    <p>Вы можете <a href="{{ request.route_url('login') }}">войти на сайт</a></p>
 {% endblock %}

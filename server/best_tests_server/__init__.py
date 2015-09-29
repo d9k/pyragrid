@@ -14,12 +14,21 @@ from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
 from pkg_resources import resource_filename
 import deform
+import best_tests_server.helpers as helpers
 
-# from best_tests_server.models import RootFactory
+from pyramid_mailer.mailer import Mailer
+import os.path
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    package_path = os.path.dirname(os.path.realpath(__file__))
+    project_path = os.path.abspath(os.path.join(package_path, os.pardir))
+    passwords_config_path = os.path.abspath(os.path.join(project_path, 'passwords.ini'))
+    d = helpers.load_config(passwords_config_path)
+
+    settings = helpers.dicts_merge(settings, d.get('app:main', {}))
+
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
     # TODO http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
@@ -65,5 +74,6 @@ def main(global_config, **settings):
     config.add_route('register', '/register')
     config.add_route('register_success', '/register_success')
     config.set_session_factory(session_factory)
+    config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()
     return config.make_wsgi_app()

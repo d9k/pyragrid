@@ -22,7 +22,10 @@ requires = [
     'deform==2.0a2',
     'colander',
     'ColanderAlchemy',
-    'dictalchemy'
+    'dictalchemy',
+    'pyramid_mailer',
+    # 'ConfigParser',
+    'configparser',
 ]
 
 setup(name='best_tests_server',

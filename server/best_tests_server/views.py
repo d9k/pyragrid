@@ -25,6 +25,9 @@ from .forms import (
     LoginSchema, RegisterSchema
 )
 
+from pyramid_mailer.mailer import Mailer
+from pyramid_mailer.message import Message
+
 import deform
 import colander
 from colander import SchemaNode
@@ -219,6 +222,24 @@ class AdminViews(BaseViews):
         except DBAPIError:
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user ' + user.name + ' deleted'}
+
+    @view_config(route_name='test_mail', renderer='templates/default_page.jinja2')
+    def test_mail_view(self):
+        # try:
+            # with transaction.manager:
+        """ :type : Mailer """
+        mailer = self.request.registry['mailer']
+        message = Message(subject="test pyramid email send",
+                          sender="d9kd9k@gmail.com",
+                          recipients=['d9k@ya.ru'],
+                          body="test body")
+        mailer.send(message)
+        transaction.commit()
+        # except:
+        #     return {'content': 'Error on email sending'}
+        return {'content': 'Email sent (?)'}
+
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

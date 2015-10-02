@@ -19,15 +19,16 @@ import best_tests_server.helpers as helpers
 from pyramid_mailer.mailer import Mailer
 import os.path
 
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     package_path = os.path.dirname(os.path.realpath(__file__))
     project_path = os.path.abspath(os.path.join(package_path, os.pardir))
     passwords_config_path = os.path.abspath(os.path.join(project_path, 'passwords.ini'))
-    d = helpers.load_config(passwords_config_path)
+    passwords_settings = helpers.load_config(passwords_config_path)
 
-    settings = helpers.dicts_merge(settings, d.get('app:main', {}))
+    settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
 
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
@@ -73,6 +74,7 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('register', '/register')
     config.add_route('register_success', '/register_success')
+    config.add_route('test_mail', '/test/mail')
     config.set_session_factory(session_factory)
     config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()

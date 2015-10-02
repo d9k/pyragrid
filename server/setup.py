@@ -23,9 +23,11 @@ requires = [
     'colander',
     'ColanderAlchemy',
     'dictalchemy',
+    'repoze.sendmail==4.1',
     'pyramid_mailer',
     # 'ConfigParser',
     'configparser',
+
 ]
 
 setup(name='best_tests_server',

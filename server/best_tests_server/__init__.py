@@ -76,6 +76,6 @@ def main(global_config, **settings):
     config.add_route('register_success', '/register_success')
     config.add_route('test_mail', '/test/mail')
     config.set_session_factory(session_factory)
-    config.registry['mailer'] = Mailer.from_settings(settings)
+    # config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()
     return config.make_wsgi_app()

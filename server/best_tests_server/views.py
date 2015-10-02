@@ -26,6 +26,7 @@ from .forms import (
 )
 
 from pyramid_mailer.mailer import Mailer
+from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 
 import deform
@@ -228,7 +229,8 @@ class AdminViews(BaseViews):
         # try:
             # with transaction.manager:
         """ :type : Mailer """
-        mailer = self.request.registry['mailer']
+        # mailer = self.request.registry['mailer']
+        mailer = get_mailer(self.request)
         message = Message(subject="test pyramid email send",
                           sender="d9kd9k@gmail.com",
                           recipients=['d9k@ya.ru'],

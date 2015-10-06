@@ -241,6 +241,10 @@ class AdminViews(BaseViews):
         #     return {'content': 'Error on email sending'}
         return {'content': 'Email sent (?)'}
 
+    @view_config(route_name='test_render', renderer='templates/default_page.jinja2')
+    def test_render_view(self):
+        rendered_view = helpers.render_to_string('templates/test.jinja2', self.request, {})
+        return {'code_block': rendered_view}
 
 
 conn_err_msg = """\

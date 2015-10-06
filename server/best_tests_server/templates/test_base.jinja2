@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale_name }}">
+<head>
+    <meta charset="utf-8">
+
+    <title>Test render</title>
+</head>
+
+<body>
+
+<div class="content">
+    {% block content %}
+        <p>Content to override</p>
+    {% endblock %}
+</div>
+
+</body>
+</html>

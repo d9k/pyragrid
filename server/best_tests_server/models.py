@@ -4,7 +4,9 @@ from hashlib import sha256
 from pyramid.security import (
     Allow
 )
-from sqlalchemy import BigInteger, Column, Integer, Text
+from sqlalchemy import (
+    BigInteger, Column, Integer, Text, Boolean
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     scoped_session,
@@ -107,6 +109,9 @@ class User(Base):
                    info={'colanderalchemy': {
                        'title': 'Группа пользователя'
                    }})
+    email_check_code = Column(Text)
+    email_checked = Column(Boolean, default=False, server_default='false', nullable=False)
+    active = Column(Boolean, default=False, server_default='false', nullable=False)
     # stores password hash and salt separated by colon
     password_hash = Column(Text, info={'colanderalchemy': {
                         'title': 'Пароль',

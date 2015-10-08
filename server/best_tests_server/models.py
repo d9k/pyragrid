@@ -16,6 +16,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
 import colander
 from dictalchemy import DictableModel
+import best_tests_server.helpers as helpers
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 """:type: sqlalchemy.orm.Session """
@@ -186,3 +187,12 @@ class User(Base):
 
         return None
 
+    @staticmethod
+    def generate_password():
+        length = int(helpers.get_setting('generate_password_length', 8))
+        return helpers.generate_password(length)
+
+    @staticmethod
+    def generate_email_check_code():
+        length = int(helpers.get_setting('generate_email_check_code_length', 10))
+        return helpers.generate_password(length, True)

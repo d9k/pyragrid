@@ -154,7 +154,7 @@ class AuthViews(BaseViews):
                 new_user.name = new_user.login
             password = data.get('password')
             if not password:
-                password = helpers.generate_password()
+                password = User.generate_password()
                 self.request.session['new_password'] = password
 
             new_user.set_password(password)

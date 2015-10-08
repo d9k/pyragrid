@@ -9,6 +9,7 @@ import pyramid.renderers
 import pyramid.interfaces
 import pyramid.traversal
 
+
 def get_setting(key, default_value=None):
     request = get_current_request()
     settings = request.registry.settings
@@ -19,10 +20,12 @@ def check_dev_mode():
     return get_setting('dev_mode', False)
 
 
-def generate_password(length=None):
+def generate_password(length=None, include_upper_case=False):
     if not length:
         length = int(get_setting('generate_password_length', 8))
     chars = string.ascii_lowercase + string.digits
+    if include_upper_case:
+        chars += string.ascii_uppercase
     return ''.join(random.choice(chars) for _ in range(length))
 
 

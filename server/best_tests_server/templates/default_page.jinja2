@@ -2,7 +2,5 @@
 {% block content %}
     {{ content }}
     {{ non_filtered_content | safe }}
-    <pre>
-        {{ code_block }}
-    </pre>
+    <pre>{{ code_block }}</pre>
 {% endblock %}

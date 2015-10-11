@@ -1,0 +1,7 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1>Добро пожаловать, {{ user_name }}!</h1>
+    <p>Подтверждение адреса почты прошло успешно.</p>
+    {# TODO fun picture with greeting mascot #}
+    <p>вы можете <a href="{{ request.route_url('login') }}">войти на сайт</a></p>
+{% endblock %}

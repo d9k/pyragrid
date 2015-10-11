@@ -86,6 +86,7 @@ class AuthViews(BaseViews):
 
             login = values.get('login')
             password = values.get('password')
+            """:type : User"""
             user = User.by_any(login)
 
             # TODO check
@@ -97,7 +98,10 @@ class AuthViews(BaseViews):
                 raise exception_for_form_field(form, 'login', 'Пользователь не найден')
             if not user.check_password(password):
                 raise exception_for_form_field(form, 'password', 'Неверный пароль')
-
+            if not user.email_checked:
+                raise exception_for_form_field(form, 'login', 'Email пользователя не подтверждён. Проверьте почтовый ящик') #TODO показывать email "в звёздочках"
+            if not user.active:
+                raise exception_for_form_field(form, 'login', 'Аккаунт пользователя заблокирован')
             authed_user = user
 
         login_form = Form(
@@ -164,9 +168,15 @@ class AuthViews(BaseViews):
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
             
-            helpers.send_mail(new_user.email, 'registered',
-                              {'user_name': new_user.name, 'password': password})
+            helpers.send_html_mail(new_user.email, 'registered',
+                                   {'user_name': new_user.name, 'password': password})
+
             new_user.initiate_email_check()
+            try:
+                with transaction.manager:
+                    DBSession.add(new_user)
+            except DBAPIError:
+                return Response(conn_err_msg, content_type='text/plain', status_int=500)
 
             self.request.session['new_user_id'] = new_user.id
             success_location = self.request.route_url('register_success')
@@ -207,9 +217,24 @@ class AuthViews(BaseViews):
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user added'}
 
-    @view_config(route_name='email_check_code', renderer='templates/default_page.jinja2')
+    @view_config(route_name='email_check_code', renderer='templates/email_check_success.jinja2')
     def email_check_code(self):
-        pass
+        # TODO как-то обернуть все методы в проверку DBAPIError (м. б. мету какую добавить)
+        email_check_code = self.request.matchdict.get('code')
+        if not email_check_code:
+            return HTTPBadRequest('Код не указан')
+        user = DBSession.query(User).filter(
+            User.email_check_code == email_check_code,
+            User.email_checked == False
+        ).first()
+        if not user:
+            return HTTPNotFound('Срок действия кода истёк либо код указан неверно')
+        with transaction.manager:
+            user.email_check_code = None
+            user.email_checked = True
+            user.active = True
+            DBSession.add(user)
+        return {'user_name': user.name}
 
 
 @view_defaults(permission='admin')

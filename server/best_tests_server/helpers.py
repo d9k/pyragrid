@@ -76,7 +76,7 @@ def render_to_string(template_name, request, template_params):
     return renderer.render(template_params, None, request)
 
 
-def send_mail(recipient, template_short_name, template_params, subject=None):
+def send_html_mail(recipient, template_short_name, template_params, subject=None):
     template_short_name = 'templates/mail/' + template_short_name + '.jinja2'
     request = get_current_request()
     rendered = render_to_string(template_short_name, request, template_params)
@@ -91,7 +91,7 @@ def send_mail(recipient, template_short_name, template_params, subject=None):
         mailer = get_mailer(request)
         message = Message(subject=subject,
                           recipients=[recipient],
-                          body=rendered)
+                          html=rendered)
         mailer.send(message)
 
 

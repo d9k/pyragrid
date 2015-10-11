@@ -213,7 +213,7 @@ class User(Base):
 
     def initiate_email_check(self):
         self.email_check_code = self.generate_email_check_code()
-        helpers.send_mail(self.email, 'email_check_code',
-                          {'email_check_code': self.email_check_code})
+        helpers.send_html_mail(self.email, 'email_check_code',
+                               {'email_check_code': self.email_check_code})
         self.email_checked = False
         self.active = False

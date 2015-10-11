@@ -18,7 +18,7 @@ import colander
 from dictalchemy import DictableModel
 import best_tests_server.helpers as helpers
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """
 
 Base = declarative_base(cls=DictableModel)
@@ -74,6 +74,20 @@ def user_login_validator(node, kwargs):
     )
 
 
+def email_unique_validator(node, value):
+    found = User.by_email(value)
+    if found is not None:
+        raise colander.Invalid(node, 'Пользователь с таким адресом уже существует')
+
+
+@colander.deferred
+def email_validator(node, kwargs):
+    return colander.All(
+        colander.Email(),
+        email_unique_validator
+    )
+
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -99,7 +113,7 @@ class User(Base):
     email = Column(Text,
                    info={'colanderalchemy': {
                        'title': 'E-mail',
-                       'validator': colander.Email(),
+                       'validator': email_validator,
                        'missing': colander.required
                        # 'widget': deform.widget.CheckedInputWidget(
                        #     subject='E-mail',
@@ -196,3 +210,10 @@ class User(Base):
     def generate_email_check_code():
         length = int(helpers.get_setting('generate_email_check_code_length', 10))
         return helpers.generate_password(length, True)
+
+    def initiate_email_check(self):
+        self.email_check_code = self.generate_email_check_code()
+        helpers.send_mail(self.email, 'email_check_code',
+                          {'email_check_code': self.email_check_code})
+        self.email_checked = False
+        self.active = False

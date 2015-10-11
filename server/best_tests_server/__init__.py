@@ -76,6 +76,7 @@ def main(global_config, **settings):
     config.add_route('register_success', '/register_success')
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
+    config.add_route('email_check_code', '/checkEmail/{code}')
     config.set_session_factory(session_factory)
     # config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()

@@ -116,7 +116,7 @@ class AuthViews(BaseViews):
                 return dict(rendered_login_form=e.render())
 
             if authed_user is not None:
-                self.request.session.pop('new_password', None)
+                self.request.session.invalidate()
                 headers = security.remember(self.request, authed_user.id)
                 home = self.request.route_url('home')
                 return HTTPFound(location=home, headers=headers)
@@ -150,19 +150,25 @@ class AuthViews(BaseViews):
 
             new_user = User()
             new_user.fromdict(data)
+            self.request.session.invalidate()
             if not new_user.name:
                 new_user.name = new_user.login
             password = data.get('password')
             if not password:
                 password = User.generate_password()
                 self.request.session['new_password'] = password
-
             new_user.set_password(password)
             try:
                 with transaction.manager:
                     DBSession.add(new_user)
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
+            
+            helpers.send_mail(new_user.email, 'registered',
+                              {'user_name': new_user.name, 'password': password})
+            new_user.initiate_email_check()
+
+            self.request.session['new_user_id'] = new_user.id
             success_location = self.request.route_url('register_success')
             return HTTPFound(location=success_location)
 
@@ -171,8 +177,14 @@ class AuthViews(BaseViews):
     @view_config(route_name='register_success', renderer='templates/register_success.jinja2')
     def register_success_view(self):
         # TODO show user name and email
-        new_password = self.request.session.get('new_password')
-        return dict(new_password=new_password)
+        new_user_id = self.request.session.get('new_user_id')
+        if new_user_id is None:
+            return HTTPBadRequest('Регистрация не была произведена или завершилась ошибкой')
+        user = User.by_id(new_user_id)
+        if not User:
+            return HTTPNotFound('Пользователь не найден')
+        new_password = self.request.session.get('new_password', None)
+        return dict(user_name=user.name, new_password=new_password)
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
     def logout_view(self):
@@ -194,6 +206,10 @@ class AuthViews(BaseViews):
         except DBAPIError:
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user added'}
+
+    @view_config(route_name='email_check_code', renderer='templates/default_page.jinja2')
+    def email_check_code(self):
+        pass
 
 
 @view_defaults(permission='admin')
@@ -243,7 +259,7 @@ class AdminViews(BaseViews):
 
     @view_config(route_name='test_render', renderer='templates/default_page.jinja2')
     def test_render_view(self):
-        rendered_view = helpers.render_to_string('templates/test.jinja2', self.request, {})
+        rendered_view = helpers.render_to_string('templates/test/test.jinja2', self.request, {})
         return {'code_block': rendered_view}
 
 

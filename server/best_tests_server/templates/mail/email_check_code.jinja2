@@ -1,0 +1,7 @@
+{% extends "mail_base.jinja2" %}
+
+{% block content %}
+    <h1>Проверка email, указанного при регистрации</h1>
+    <p>Код для проверки: {{ email_check_code }}</p>
+    Для окончания проверки перейдите по <a href="{{ request.route_url('email_check_code', code=email_check_code) }}">этой ссылке</a>
+{% endblock %}

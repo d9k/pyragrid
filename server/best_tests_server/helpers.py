@@ -8,7 +8,10 @@ import pyramid.path
 import pyramid.renderers
 import pyramid.interfaces
 import pyramid.traversal
-
+from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
+import transaction
+from bs4 import BeautifulSoup
 
 def get_setting(key, default_value=None):
     request = get_current_request()
@@ -69,6 +72,26 @@ def render_to_string(template_name, request, template_params):
     tdict = traverser(request)
     context = tdict['context']
     # return renderer.render(template_params, request, context)
-    return renderer.render(template_params, None, context)
+    # return renderer.render(template_params, None, context)
+    return renderer.render(template_params, None, request)
+
+
+def send_mail(recipient, template_short_name, template_params, subject=None):
+    template_short_name = 'templates/mail/' + template_short_name + '.jinja2'
+    request = get_current_request()
+    rendered = render_to_string(template_short_name, request, template_params)
+    if not subject:
+        subject = get_setting('mail_default_subject', 'Default subject')
+        html = BeautifulSoup(rendered, 'html.parser')
+        h1 = html.find('h1')
+        if h1:
+            subject = h1.string
+        # subject = h1[0] if len(h1) > 0 else default_subject
+    with transaction.manager:
+        mailer = get_mailer(request)
+        message = Message(subject=subject,
+                          recipients=[recipient],
+                          body=rendered)
+        mailer.send(message)
 
 

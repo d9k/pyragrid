@@ -1,0 +1,9 @@
+{% extends "mail_base.jinja2" %}
+
+{% block content %}
+    <h1>Регистрация прошла успешно!</h1>
+    <p>Имя пользователя: {{ user_name }}</p>
+    {% if password %}
+        <p>Пароль: {{ password }}</p>
+    {% endif %}
+{% endblock %}

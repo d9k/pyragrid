@@ -23,7 +23,9 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), ex
 
 Base = declarative_base(cls=DictableModel)
 
-GROUPS = {'admin': ['group:admins'],
+
+ADMIN_GROUP = 'admin'
+GROUPS = {ADMIN_GROUP: ['group:admins'],
           None: ['group:users']}
 
 
@@ -217,3 +219,6 @@ class User(Base):
                                {'email_check_code': self.email_check_code})
         self.email_checked = False
         self.active = False
+
+    def is_admin(self):
+        return self.group == ADMIN_GROUP

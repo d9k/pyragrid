@@ -1,0 +1,12 @@
+{% extends "base.jinja2" %}
+{% block content %}
+    <h1>Index</h1>
+    <p>Welcome, {{ username }}!</p>
+    <ul>
+       <li><a href="{{ request.route_url('add_user') }}">add user</a></li>
+       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>
+       <li><a href="{{ request.route_url('test_render') }}">test render</a></li>
+       <li><a href="{{ request.route_url('test_mail') }}">test email</a></li>
+       <li><a href="{{ request.route_url('logout') }}">logout</a></li>
+    </ul>
+{% endblock %}

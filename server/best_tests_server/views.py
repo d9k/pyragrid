@@ -56,16 +56,20 @@ class BaseViews:
             return False
         return True
 
-@view_defaults(route_name='home', permission='view')
+
+@view_defaults(route_name='index', permission='view')
 class SiteViews(BaseViews):
 
     # def __init__(self, request):
     #     super.__init__(request)
 
-    @view_config(route_name='home', renderer='templates/index.jinja2')
-    def home_view(self):
-        """:type User"""
+    @view_config(route_name='index', renderer='templates/index.jinja2')
+    def index_view(self):
         return {'username': self.user.name}
+
+    @view_config(route_name='index', renderer='templates/profile_edit.jinja2')
+    def index_view(self):
+        return {'rendered_profile_edit_form': ''}
 
 
 class AuthViews(BaseViews):
@@ -122,8 +126,8 @@ class AuthViews(BaseViews):
             if authed_user is not None:
                 self.request.session.invalidate()
                 headers = security.remember(self.request, authed_user.id)
-                home = self.request.route_url('home')
-                return HTTPFound(location=home, headers=headers)
+                index = self.request.route_url('admin_index' if authed_user.is_admin() else 'index')
+                return HTTPFound(location=index, headers=headers)
 
         return dict(rendered_login_form=login_form.render())
 
@@ -239,6 +243,12 @@ class AuthViews(BaseViews):
 
 @view_defaults(permission='admin')
 class AdminViews(BaseViews):
+
+    @view_config(route_name='admin_index', renderer='templates/admin_index.jinja2')
+    def admin_index_view(self):
+        """:type User"""
+        return {'username': self.user.name}
+
     @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
     def delete_user_view(self):
 

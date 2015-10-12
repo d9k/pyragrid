@@ -222,3 +222,6 @@ class User(Base):
 
     def is_admin(self):
         return self.group == ADMIN_GROUP
+
+# TODO коррекция полей перед сохраненинем
+# http://docs.sqlalchemy.org/en/latest/orm/events.html ?

@@ -4,16 +4,18 @@ from pyramid.view import (
     view_defaults,
     forbidden_view_config
 )
-from pyramid.security import has_permission
-# from pyramid.url import route_url
-from sqlalchemy.exc import DBAPIError
 
 from .models import (
     DBSession,
     User
 )
-from .widgets import exception_for_form_field
-from colanderalchemy import SQLAlchemySchemaNode
+
+from .base_views import (
+    BaseViews,
+    conn_err_msg
+)
+
+import transaction
 
 from pyramid.httpexceptions import (
     HTTPBadRequest,
@@ -21,55 +23,19 @@ from pyramid.httpexceptions import (
     HTTPFound
 )
 
+from sqlalchemy.exc import DBAPIError
+
+import best_tests_server.helpers as helpers
+
+from .widgets import exception_for_form_field
+
 from .forms import (
     LoginSchema, RegisterSchema
 )
 
-from pyramid_mailer.mailer import Mailer
-from pyramid_mailer import get_mailer
-from pyramid_mailer.message import Message
-
 import deform
-import colander
-from colander import SchemaNode
 from deform import Form, Button
-
 import pyramid.security as security
-
-import transaction
-import dictalchemy.utils
-import best_tests_server.helpers as helpers
-
-class BaseViews:
-    def __init__(self, request):
-        self.request = request
-        self.user_id = None
-        self.user = None
-        self.logined = self.check_logined(self.request)
-
-    def check_logined(self, request):
-        self.user_id = security.authenticated_userid(request)
-        if not self.user_id:
-            return False
-        self.user = User.by_id(self.user_id)
-        if not self.user:
-            return False
-        return True
-
-
-@view_defaults(route_name='index', permission='view')
-class SiteViews(BaseViews):
-
-    # def __init__(self, request):
-    #     super.__init__(request)
-
-    @view_config(route_name='index', renderer='templates/index.jinja2')
-    def index_view(self):
-        return {'username': self.user.name}
-
-    @view_config(route_name='index', renderer='templates/profile_edit.jinja2')
-    def index_view(self):
-        return {'rendered_profile_edit_form': ''}
 
 
 class AuthViews(BaseViews):
@@ -171,7 +137,7 @@ class AuthViews(BaseViews):
                     DBSession.add(new_user)
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
-            
+
             helpers.send_html_mail(new_user.email, 'registered',
                                    {'user_name': new_user.name, 'password': password})
 
@@ -213,7 +179,7 @@ class AuthViews(BaseViews):
                 # new_user = User(vk_id=1, name='Павел Дуров')
                 # DBSession.add(new_user)
                 new_user = User(vk_id=1146494, login='d9kd9k', name='Дмитрий Комаров', email='d9k@ya.ru')
-                new_user.set_password('testpass');
+                new_user.set_password('testpass')
                 DBSession.add(new_user)
 
                 # one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
@@ -239,80 +205,3 @@ class AuthViews(BaseViews):
             user.active = True
             DBSession.add(user)
         return {'user_name': user.name}
-
-
-@view_defaults(permission='admin')
-class AdminViews(BaseViews):
-
-    @view_config(route_name='admin_index', renderer='templates/admin_index.jinja2')
-    def admin_index_view(self):
-        """:type User"""
-        return {'username': self.user.name}
-
-    @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
-    def delete_user_view(self):
-
-        try:
-            with transaction.manager:
-                any_data = self.request.matchdict.get('any_data')
-                id_ = self.request.matchdict.get('id')
-                """:type : User"""
-                user = None
-                if any_data:
-                    # DBSession.query(User).filter(User.vk_id == vk_id).delete()
-                    user = User.by_any(any_data)
-                elif id_:
-                    user = User.by_id(id_)
-                else:
-                    return HTTPBadRequest('can\'t find user: no data specified')
-
-                if not user:
-                    return HTTPBadRequest('can\'t find user')
-                DBSession.delete(user)
-                # transaction.commit()
-
-        except DBAPIError:
-            return Response(conn_err_msg, content_type='text/plain', status_int=500)
-        return {'content': 'user ' + user.name + ' deleted'}
-
-    @view_config(route_name='test_mail', renderer='templates/default_page.jinja2')
-    def test_mail_view(self):
-        # try:
-            # with transaction.manager:
-        """ :type : Mailer """
-        # mailer = self.request.registry['mailer']
-        mailer = get_mailer(self.request)
-        message = Message(subject="test pyramid email send",
-                          sender="d9kd9k@gmail.com",
-                          recipients=['d9k@ya.ru'],
-                          body="test body")
-        mailer.send(message)
-        transaction.commit()
-        # except:
-        #     return {'content': 'Error on email sending'}
-        return {'content': 'Email sent (?)'}
-
-    @view_config(route_name='test_render', renderer='templates/default_page.jinja2')
-    def test_render_view(self):
-        rendered_view = helpers.render_to_string('templates/test/test.jinja2', self.request, {})
-        return {'code_block': rendered_view}
-
-
-conn_err_msg = """\
-Pyramid is having a problem using your SQL database.  The problem
-might be caused by one of the following things:
-
-1.  You may need to run the "initialize_best_tests_server_db" script
-    to initialize your database tables.  Check your virtual
-    environment's "bin" directory for this script and try to run it.
-
-2.  Your database server may not be running.  Check that the
-    database server referred to by the "sqlalchemy.url" setting in
-    your "development.ini" file is running.
-
-After you fix the problem, please restart the Pyramid application to
-try it again.
-"""
-
-# TODO login/logout http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
-

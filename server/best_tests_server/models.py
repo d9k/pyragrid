@@ -225,3 +225,4 @@ class User(Base):
 
 # TODO коррекция полей перед сохраненинем
 # http://docs.sqlalchemy.org/en/latest/orm/events.html ?
+# http://docs.sqlalchemy.org/en/latest/orm/session_events.html

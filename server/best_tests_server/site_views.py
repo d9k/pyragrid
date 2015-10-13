@@ -32,7 +32,13 @@ import transaction
 import dictalchemy.utils
 import best_tests_server.helpers as helpers
 
-from .base_views import BaseViews
+from .forms import (
+    ProfileEditSchema
+)
+
+from .base_views import (
+    BaseViews, conn_err_msg
+)
 
 
 @view_defaults(route_name='index', permission='view')
@@ -47,7 +53,37 @@ class SiteViews(BaseViews):
 
     @view_config(route_name='profile_edit', renderer='templates/profile_edit.jinja2')
     def profile_edit_view(self):
-        return {'rendered_profile_edit_form': ''}
+        schema = ProfileEditSchema()
+        # schema.name = self.user.name
+        profile_edit_form = Form(
+            schema.bind(),
+            buttons=[Button(name='profile_edit_form_submit', title='Изменить')],
+            # css_class='no-red-stars'
+        )
+        if 'profile_edit_form_submit' in self.request.params:
+            controls = self.request.POST.items()
+            try:
+                data = profile_edit_form.validate(controls)
+            except deform.ValidationFailure as e:
+                return dict(rendered_profile_edit_form=e.render())
+
+            name = data.get('name')
+            if name:
+                self.user.name = name
+
+            try:
+                with transaction.manager:
+                    DBSession.add(self.user)
+            except DBAPIError:
+                return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+        appstruct = {'name': self.user.name}
+        # if authed_user is not None:
+            #     self.request.session.invalidate()
+            #     headers = security.remember(self.request, authed_user.id)
+            #     index = self.request.route_url('admin_index' if authed_user.is_admin() else 'index')
+            #     return HTTPFound(location=index, headers=headers)
+        return dict(rendered_profile_edit_form=profile_edit_form.render(appstruct))
 
 
 

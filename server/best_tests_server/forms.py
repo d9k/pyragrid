@@ -61,3 +61,17 @@ class RegisterSchema(SQLAlchemySchemaNode):
                 widget=RecaptchaWidget(lang='ru', theme='clean'),
                 order=1000
             ))
+
+
+class ProfileEditSchema(SQLAlchemySchemaNode):
+
+    def __init__(self, class_=models.User, includes=None,
+                 excludes=None,
+                 overrides=None,
+                 unknown='ignore', **kw):
+        if includes is None:
+            includes = ['name', ]
+        super().__init__(class_,
+                     includes=includes,
+                     overrides=overrides,
+                     **kw)

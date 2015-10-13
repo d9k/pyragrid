@@ -34,7 +34,7 @@ import best_tests_server.helpers as helpers
 @view_defaults(permission='admin')
 class AdminViews(BaseViews):
 
-    @view_config(route_name='admin_index', renderer='templates/admin_index.jinja2')
+    @view_config(route_name='admin_index', renderer='templates/admin/admin_index.jinja2')
     def admin_index_view(self):
         """:type User"""
         return {'username': self.user.name}

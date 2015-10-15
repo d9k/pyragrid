@@ -27,7 +27,8 @@ requires = [
     'pyramid_mailer',
     # 'ConfigParser',
     'configparser',
-
+    # TODO add to requirements.txt:
+    # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
 ]
 
 setup(name='best_tests_server',

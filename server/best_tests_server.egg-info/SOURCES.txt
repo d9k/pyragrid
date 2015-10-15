@@ -8,11 +8,14 @@ production.ini
 readme-gulp.txt
 setup.py
 best_tests_server/__init__.py
+best_tests_server/admin_views.py
+best_tests_server/auth_views.py
+best_tests_server/base_views.py
 best_tests_server/forms.py
 best_tests_server/helpers.py
 best_tests_server/models.py
+best_tests_server/site_views.py
 best_tests_server/tests.py
-best_tests_server/views.py
 best_tests_server/widgets.py
 best_tests_server.egg-info/PKG-INFO
 best_tests_server.egg-info/SOURCES.txt
@@ -25,6 +28,7 @@ best_tests_server/scripts/__init__.py
 best_tests_server/scripts/initializedb.py
 best_tests_server/static/bootstrap.js
 best_tests_server/static/bootstrap.min.js
+best_tests_server/static/jquery.dataTables.js
 best_tests_server/static/jquery.js
 best_tests_server/static/jquery.min.js
 best_tests_server/static/pyramid-16x16.png

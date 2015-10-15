@@ -30,14 +30,37 @@ from sqlalchemy.exc import DBAPIError
 
 import best_tests_server.helpers as helpers
 
+from datatables import ColumnDT, DataTables
+
 
 @view_defaults(permission='admin')
 class AdminViews(BaseViews):
 
     @view_config(route_name='admin_index', renderer='templates/admin/admin_index.jinja2')
     def admin_index_view(self):
-        """:type User"""
         return {'username': self.user.name}
+
+    @view_config(route_name='admin_users', renderer='templates/admin/admin_users.jinja2')
+    def admin_users_view(self):
+        return {'username': self.user.name}
+
+    @view_config(route_name='admin_users_grid', request_method='GET', renderer='json')
+    def admin_users_grid_view(self):
+        columns = [
+            ColumnDT('id'),
+            ColumnDT('login'),
+            ColumnDT('name'),
+            ColumnDT('email'),
+            ColumnDT('email_checked'),
+            ColumnDT('active')
+        ]
+        query = DBSession.query(User)
+        # instantiating a DataTable for the query and table needed
+        row_table = DataTables(self.request, User, query, columns)
+
+        # returns what is needed by DataTable
+        return row_table.output_result()
+
 
     @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
     def delete_user_view(self):

@@ -3,6 +3,7 @@
     <h1>Admin</h1>
     <p>Welcome, {{ username }}!</p>
     <ul>
+       <li><a href="{{ request.route_url('admin_users') }}">users</a></li>
        <li><a href="{{ request.route_url('add_user') }}">add user</a></li>
        <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>
        <li><a href="{{ request.route_url('test_render') }}">test render</a></li>

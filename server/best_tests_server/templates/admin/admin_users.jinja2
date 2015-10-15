@@ -1,0 +1,33 @@
+{% extends "../base.jinja2" %}
+{% block content %}
+    <h1>Пользователи</h1>
+    <p>Welcome, {{ username }}!</p>
+
+    {% include '../_datatables_js.jinja2' %}
+
+    <table class="table" id="usersGrid">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Логин</th>
+            <th>Имя</th>
+            <th>Почта</th>
+            <th>Почта подтв.</th>
+            <th>Включен</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!--do your stuff-->
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+            $('#usersGrid').dataTable({
+                "bProcessing": true,
+                "bServerSide": true,
+                "bFilter" : false,
+                "bLengthChange": false,
+                "sAjaxSource": "{{ request.route_path('admin_users_grid') }}"
+            });
+        });
+    </script>
+{% endblock %}

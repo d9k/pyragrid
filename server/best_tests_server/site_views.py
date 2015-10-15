@@ -81,7 +81,3 @@ class SiteViews(BaseViews):
         #TODO name validator
         appstruct = dictalchemy.utils.asdict(self.user, include=['name'])
         return dict(rendered_profile_edit_form=profile_edit_form.render(appstruct))
-
-
-
-

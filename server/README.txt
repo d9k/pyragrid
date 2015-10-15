@@ -19,6 +19,7 @@ pip install ColanderAlchemy
 cd venv/lib/python3.4/site-packages
 unzip ColanderAlchemy-0.3.3-py3.4.egg
 rm -r EGG-INFO
+pip install "https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"
 
 Type hinting
 ------------

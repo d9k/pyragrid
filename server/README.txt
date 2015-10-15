@@ -24,3 +24,8 @@ Type hinting
 ------------
 
 https://www.jetbrains.com/pycharm/help/type-hinting-in-pycharm.html
+
+ReST docstrings
+---------------
+
+https://www.python.org/dev/peps/pep-0287/

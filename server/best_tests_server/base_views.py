@@ -6,10 +6,12 @@ import pyramid.security as security
 
 
 class BaseViews:
+    """
+    :type user: User
+    """
     def __init__(self, request):
         self.request = request
         self.user_id = None
-        """:type : User"""
         self.user = None
         self.logined = self.check_logined(self.request)
 

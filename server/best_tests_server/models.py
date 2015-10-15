@@ -16,13 +16,13 @@ from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
 import colander
 from dictalchemy import DictableModel
+import dictalchemy.utils
 import best_tests_server.helpers as helpers
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """
 
 Base = declarative_base(cls=DictableModel)
-
 
 ADMIN_GROUP = 'admin'
 GROUPS = {ADMIN_GROUP: ['group:admins'],

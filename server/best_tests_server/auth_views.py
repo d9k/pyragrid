@@ -37,6 +37,8 @@ import deform
 from deform import Form, Button
 import pyramid.security as security
 
+import dictalchemy.utils
+
 
 class AuthViews(BaseViews):
     # def __init__(self, request):
@@ -123,7 +125,7 @@ class AuthViews(BaseViews):
             # new_user = User(login='d9kd9k', name='Дмитрий Комаров', email='d9k@ya.ru')
 
             new_user = User()
-            new_user.fromdict(data)
+            dictalchemy.utils.fromdict(new_user, data)
             self.request.session.invalidate()
             if not new_user.name:
                 new_user.name = new_user.login

@@ -1,10 +1,10 @@
 {
-  "sProcessing": "Подождите...",
+  "sProcessing": "Загрузка данных...",
   "sSearch": "Поиск:",
   "sLengthMenu": "Показать _MENU_ записей",
   "sInfo": "_START_ - _END_ / _TOTAL_",
-  "sInfoEmpty": "Записи с 0 до 0 из 0 записей",
-  "sInfoFiltered": "(отфильтровано из _MAX_ записей)",
+  "sInfoEmpty": "0 - 0 / 0",
+  "sInfoFiltered": "(фильтр) | всего _MAX_",
   "sInfoPostFix": "",
   "sLoadingRecords": "Загрузка записей...",
   "sZeroRecords": "Записи отсутствуют.",

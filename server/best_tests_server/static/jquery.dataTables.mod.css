@@ -166,6 +166,9 @@ div.dataTables_scrollHead table.table-bordered {
 	border-bottom-width: 0;
 }
 
-div.dataTables_wrapper div.dataTables_length {float: left;}
+div.dataTables_wrapper div.dataTables_filter {display:inline; float: none}
+div.dataTables_wrapper div.dataTables_info {display:inline; float: none; margin-left: 20px;}
+div.dataTables_wrapper div.dataTables_length {/*float: left;*/float: none}
+div.dataTables_wrapper div.dataTables_processing {text-align: center; opacity: 0.4}
 div.dataTables_wrapper div.dataTables_paginate {margin-left: 30px; display: inline}
 div.dataTables_wrapper div.dataTables_paginate a {margin-right: 20px}

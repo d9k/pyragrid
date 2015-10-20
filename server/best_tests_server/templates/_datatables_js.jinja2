@@ -3,6 +3,7 @@
 <script>
     $(document).ready(function() {
         $.extend( $.fn.dataTable.defaults, {
+            "sDom": "fiptrl",
             "oLanguage": {
                 "sUrl": "{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}"
             }

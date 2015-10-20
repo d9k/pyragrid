@@ -5805,6 +5805,10 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
+input, select {
+  color: #333;
+  background: #fff; }
+
 /*!
  *  Font Awesome 4.4.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)

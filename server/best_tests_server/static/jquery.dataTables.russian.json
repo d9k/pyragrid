@@ -2,7 +2,7 @@
   "sProcessing": "Подождите...",
   "sSearch": "Поиск:",
   "sLengthMenu": "Показать _MENU_ записей",
-  "sInfo": "Записи с _START_ до _END_ из _TOTAL_ записей",
+  "sInfo": "_START_ - _END_ / _TOTAL_",
   "sInfoEmpty": "Записи с 0 до 0 из 0 записей",
   "sInfoFiltered": "(отфильтровано из _MAX_ записей)",
   "sInfoPostFix": "",
@@ -11,8 +11,8 @@
   "sEmptyTable": "В таблице отсутствуют данные",
   "oPaginate": {
     "sFirst": "Первая",
-    "sPrevious": "Предыдущая",
-    "sNext": "Следующая",
+    "sPrevious": "<< Предыдущая",
+    "sNext": "Следующая >>",
     "sLast": "Последняя"
   },
   "oAria": {

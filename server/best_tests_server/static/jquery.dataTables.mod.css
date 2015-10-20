@@ -168,3 +168,5 @@ div.dataTables_scrollHead table.table-bordered {
 }
 
 div.dataTables_wrapper div.dataTables_paginate a{margin-right: 20px}
+
+div.dataTables_wrapper div.dataTables_length{float: left;}

@@ -24,8 +24,8 @@
             $('#usersGrid').dataTable({
                 "bProcessing": true,
                 "bServerSide": true,
-                "bFilter" : false,
-                "bLengthChange": false,
+{#                "bFilter" : false,#}
+{#                "bLengthChange": false,#}
                 "sAjaxSource": "{{ request.route_path('admin_users_grid') }}"
             });
         });

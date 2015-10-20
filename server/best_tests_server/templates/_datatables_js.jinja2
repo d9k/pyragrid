@@ -1,2 +1,11 @@
 <script src="{{ request.static_url('best_tests_server:static/jquery.dataTables.js') }}"></script>
 <link rel="stylesheet" href="{{ request.static_url('best_tests_server:static/jquery.dataTables.mod.css') }}"/>
+<script>
+    $(document).ready(function() {
+        $.extend( $.fn.dataTable.defaults, {
+            "oLanguage": {
+                "sUrl": "{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}"
+            }
+        } );
+    } );
+</script>

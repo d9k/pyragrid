@@ -1,7 +1,7 @@
 {
   "sProcessing": "Загрузка данных...",
   "sSearch": "Поиск:",
-  "sLengthMenu": "Показать _MENU_ записей",
+  "sLengthMenu": "_MENU_ записей на странице",
   "sInfo": "_START_ - _END_ / _TOTAL_",
   "sInfoEmpty": "0 - 0 / 0",
   "sInfoFiltered": "(фильтр) | всего _MAX_",

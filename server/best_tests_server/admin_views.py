@@ -56,7 +56,7 @@ class AdminViews(BaseViews):
         ]
         query = DBSession.query(User)
         # instantiating a DataTable for the query and table needed
-        row_table = DataTables(self.request, User, query, columns)
+        row_table = DataTables(self.request.GET, User, query, columns)
 
         # returns what is needed by DataTable
         return row_table.output_result()

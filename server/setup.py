@@ -25,9 +25,8 @@ requires = [
     'dictalchemy',
     'repoze.sendmail==4.1',
     'pyramid_mailer',
-    # 'ConfigParser',
     'configparser',
-    # TODO add to requirements.txt:
+    'sqlalchemy-datatables'
     # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
 ]
 

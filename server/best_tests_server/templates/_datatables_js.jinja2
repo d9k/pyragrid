@@ -8,12 +8,27 @@
                 "sUrl": "{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}"
             }
         } );
-    } );
+
+{#        var dataTableBase = $.fn.DataTable;#}
+{##}
+{#        var dataTableMod = function(oInit){#}
+{#            dataTableBase.call(this, oInit);#}
+{#            $('#usersGrid_filter input').attr('placeholder', 'фильтр');#}
+{#        };#}
+{##}
+{#        $.fn.DataTable = dataTableMod;#}
+{#        $.fn.dataTable = dataTableMod;#}
+
+
 {#    TODO placeholder: фильтр #}
-{#    $(document).on('DOMNodeInserted', '.dataTables_filter', function () {#}
-{#    $('body').on('DOMNodeInserted', 'div', function (e) {#}
-{#        if ($(this).find('dataTables_filter')) {#}
-{#            $(this).find('input').attr('placeholder', 'фильтр');#}
-{#        }#}
+{#    $(document).on('DOMNodeInserted', 'input', function () {#}
+        $('body').on('DOMNodeInserted', 'div', function (e) {
+            var filterDiv = $(this).find('.dataTables_filter');
+            if (filterDiv.length) {
+                filterDiv.find('input').attr('placeholder', 'Поиск...');
+            }
+        });
 {#    });#}
+ } );
+
 </script>

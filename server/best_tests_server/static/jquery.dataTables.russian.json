@@ -1,6 +1,6 @@
 {
   "sProcessing": "Загрузка данных...",
-  "sSearch": "Поиск:",
+  "sSearch": "",
   "sLengthMenu": "_MENU_ записей на странице",
   "sInfo": "_START_ - _END_ / _TOTAL_",
   "sInfoEmpty": "0 - 0 / 0",

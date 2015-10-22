@@ -20,8 +20,8 @@
 {#        $.fn.dataTable = dataTableMod;#}
 
 
-{#    TODO placeholder: фильтр #}
 {#    $(document).on('DOMNodeInserted', 'input', function () {#}
+        {# TODO ускорить как-то функцию #}
         $('body').on('DOMNodeInserted', 'div', function (e) {
             var filterDiv = $(this).find('.dataTables_filter');
             if (filterDiv.length) {

@@ -7929,6 +7929,10 @@ form .required::after {
 form.no-red-stars .required::after {
   content: none; }
 
+.table.dataTable td.withButtons .btn {
+  display: inline;
+  margin-right: 7px; }
+
 #pDebug a#pShowToolBarButton {
   opacity: 0.5 !important; }
 

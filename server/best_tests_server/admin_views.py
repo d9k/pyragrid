@@ -59,7 +59,9 @@ class AdminViews(BaseViews):
         row_table = DataTables(self.request.GET, User, query, columns)
 
         # returns what is needed by DataTable
-        return row_table.output_result()
+        result = row_table.output_result()
+        result = helpers.datatables_result_add_fake_column(result)
+        return result
 
 
     @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')

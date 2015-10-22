@@ -95,3 +95,12 @@ def send_html_mail(recipient, template_short_name, template_params, subject=None
         mailer.send(message)
 
 
+def datatables_result_add_fake_column(datatables_result):
+    data = datatables_result.get('aaData')
+    for i in range(len(data)):
+        record_dict = data[i]
+        max_key = int(max(record_dict.keys(), key=int))
+        new_key = max_key + 1
+        record_dict[str(new_key)] = ''
+        data[i] = record_dict
+    return datatables_result

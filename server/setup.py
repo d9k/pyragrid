@@ -26,8 +26,9 @@ requires = [
     'repoze.sendmail==4.1',
     'pyramid_mailer',
     'configparser',
-    'sqlalchemy-datatables'
+    'sqlalchemy-datatables',
     # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
+    'jac', # jinja-assets-compressor
 ]
 
 setup(name='best_tests_server',

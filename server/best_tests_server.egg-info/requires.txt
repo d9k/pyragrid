@@ -14,3 +14,5 @@ dictalchemy
 repoze.sendmail==4.1
 pyramid_mailer
 configparser
+sqlalchemy-datatables
+jac

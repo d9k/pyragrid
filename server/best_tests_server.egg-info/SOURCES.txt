@@ -29,6 +29,7 @@ best_tests_server/scripts/initializedb.py
 best_tests_server/static/bootstrap.js
 best_tests_server/static/bootstrap.min.js
 best_tests_server/static/jquery.dataTables.js
+best_tests_server/static/jquery.dataTables.mod.css
 best_tests_server/static/jquery.js
 best_tests_server/static/jquery.min.js
 best_tests_server/static/pyramid-16x16.png

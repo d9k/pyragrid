@@ -8,3 +8,4 @@ regexp:^server/dist/.+
 regexp:^server/build/.+
 regexp:^server/passwords\.ini
 regexp:^server/mail/.+
+regexp:^server/static/dist/.+

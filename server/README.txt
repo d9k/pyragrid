@@ -29,3 +29,9 @@ ReST docstrings
 ---------------
 
 https://www.python.org/dev/peps/pep-0287/
+
+Jinja asset compiler
+--------------------
+
+sudo npm install -g coffee-script
+sudo npm install -g js2coffee

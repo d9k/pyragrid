@@ -21,37 +21,34 @@
         <tbody></tbody>
     </table>
 
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-            $('#usersGrid').dataTable({
-                "bProcessing": true,
-                "bServerSide": true,
-{#                "bFilter" : false,#}
-{#                "bLengthChange": false,#}
-                "sAjaxSource": "{{ request.route_path('admin_users_grid') }}",
-                "aoColumns": [
-                    {"mData" : 0},
-                    {"mData" : 1},
-                    {"mData" : 2},
-                    {"mData" : 3},
-                    {"mData" : 4},
-                    {"mData" : 5},
-                    {
-                        "mRender": function (value, type, data) {
-                            var id = data[0];
-                            var active = (data[5] == "True");
-                            var rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>';
-                            if (active){
-                                rendered += '<a href="/admin/users/delete/' + id + '" class="btn btn-default btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></a>'
-                            } else {
-                                rendered += '<a href="/admin/users/restore/' + id + '" class="btn btn-default btn-sm btn-success"><span class="glyphicon glyphicon-ok"></a>'
-                            }
-                            return rendered;
-                        },
-                        "sClass": "withButtons"
-                    }
+    {% compress 'js' %}
+        <script type="text/coffeescript">
+            $(document).ready ->
+              $('#usersGrid').dataTable
+                'bProcessing': true
+                'bServerSide': true
+                'sAjaxSource': '{{ request.route_path('admin_users_grid') }}'
+                'aoColumns': [
+                  { 'mData': 0 }
+                  { 'mData': 1 }
+                  { 'mData': 2 }
+                  { 'mData': 3 }
+                  { 'mData': 4 }
+                  { 'mData': 5 }
+                  {
+                    'mRender': (value, type, data) ->
+                      id = data[0]
+                      active = data[5] == 'True'
+                      rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+                      if active
+                        rendered += '<a href="/admin/users/delete/' + id + '" class="btn btn-default btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></a>'
+                      else
+                        rendered += '<a href="/admin/users/restore/' + id + '" class="btn btn-default btn-sm btn-success"><span class="glyphicon glyphicon-ok"></a>'
+                      rendered
+                    'sClass': 'withButtons'
+                  }
                 ]
-            });
-        });
-    </script>
+              return
+        </script>
+    {% endcompress %}
 {% endblock %}

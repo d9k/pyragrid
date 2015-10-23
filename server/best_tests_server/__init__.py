@@ -20,6 +20,9 @@ from pyramid_mailer.mailer import Mailer
 import os.path
 
 
+import pyramid_jinja2
+
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -63,6 +66,7 @@ def main(global_config, **settings):
     # TODO hacky. maybe better copy resources with gulp task?
     config.add_static_view('static/fonts/bootstrap', '../bower_components/bootstrap-sass-official/assets/fonts/bootstrap', cache_max_age=static_cache_max_age)
     config.add_static_view('static/bower_components', '../bower_components', cache_max_age=static_cache_max_age)
+    config.add_static_view('static/dist', '../static/dist', cache_max_age=static_cache_max_age)
     config.add_static_view('static', 'static', cache_max_age=static_cache_max_age)
     config.add_static_view('resources', 'resources', cache_max_age=static_cache_max_age)
     config.add_static_view('static_deform', 'deform:static')
@@ -86,4 +90,7 @@ def main(global_config, **settings):
     config.set_session_factory(session_factory)
     # config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()
-    return config.make_wsgi_app()
+    app = config.make_wsgi_app()
+    jinja2_env = pyramid_jinja2.get_jinja2_environment(config)
+    jinja2_env.compressor_debug = True
+    return app

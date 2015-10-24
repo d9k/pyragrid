@@ -1,34 +1,32 @@
 <script src="{{ request.static_url('best_tests_server:static/jquery.dataTables.js') }}"></script>
 <link rel="stylesheet" href="{{ request.static_url('best_tests_server:static/jquery.dataTables.mod.css') }}"/>
-<script>
-    $(document).ready(function() {
-        $.extend( $.fn.dataTable.defaults, {
-            "sDom": "fiptrl",
-            "oLanguage": {
-                "sUrl": "{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}"
-            }
-        } );
 
-{#        var dataTableBase = $.fn.DataTable;#}
-{##}
-{#        var dataTableMod = function(oInit){#}
-{#            dataTableBase.call(this, oInit);#}
-{#            $('#usersGrid_filter input').attr('placeholder', 'фильтр');#}
-{#        };#}
-{##}
-{#        $.fn.DataTable = dataTableMod;#}
-{#        $.fn.dataTable = dataTableMod;#}
+{% compress 'js' %}
+<script type="text/coffeescript">
+    $(document).ready ->
+        $.extend $.fn.dataTable.defaults,
+            'sDom': 'fiptrl'
+            'oLanguage': 'sUrl': '{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}'
 
+        $('body').on 'DOMNodeInserted', 'div', (e) ->
+            filterDiv = $(this).find('.dataTables_filter')
+            if filterDiv.length
+                filterDiv.find('input').attr 'placeholder', 'Поиск...'
+            return
 
-{#    $(document).on('DOMNodeInserted', 'input', function () {#}
-        {# TODO ускорить как-то функцию #}
-        $('body').on('DOMNodeInserted', 'div', function (e) {
-            var filterDiv = $(this).find('.dataTables_filter');
-            if (filterDiv.length) {
-                filterDiv.find('input').attr('placeholder', 'Поиск...');
-            }
-        });
-{#    });#}
- } );
+        class DataTablesHelper
+            constructor: () ->
+            @renderBool: (value) ->
+                return switch value
+                    when "true" then "да"
+                    when "false" then "нет"
+                    when "True" then "Да"
+                    when "False" then "Нет"
+                    else "?"
+
+        window.DataTablesHelper = DataTablesHelper
+
+        return
 
 </script>
+{% endcompress %}

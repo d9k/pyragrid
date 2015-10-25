@@ -1,0 +1,21 @@
+{% extends "test_base.jinja2" %}
+
+{% block test_header %}
+    <h1>Test notify</h1>
+{% endblock %}
+
+{% block content %}
+    <h1>Test notify</h1>
+    {% compress 'js' %}
+    <script type="text/coffeescript">
+        $ ->
+{#          PNotify.prototype.options.animate_speed = "slow";#}
+          new PNotify(
+              title: 'Regular Notice'
+              text: 'Check me out! I\'m a notice'
+              type: 'info' # 'error'/'success'
+          )
+    </script>
+    {% endcompress %}
+    {{ content }}
+{% endblock %}

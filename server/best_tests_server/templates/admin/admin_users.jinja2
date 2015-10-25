@@ -5,6 +5,8 @@
 
     {% include '../_datatables_js.jinja2' %}
 
+{#    <p><a href="{{ request.route_url('add_user') }}">Добавить пользователя [+]</a></p>#}
+
     <table class="table" id="usersGrid">
         <thead>
         <tr>
@@ -47,11 +49,14 @@
                     'mRender': (value, type, data) ->
                       id = data[0]
                       active = data[5] == 'True'
-                      rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
-                      if active
-                        rendered += '<a href="/admin/users/delete/' + id + '" class="btn btn-default btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></a>'
-                      else
-                        rendered += '<a href="/admin/users/restore/' + id + '" class="btn btn-default btn-sm btn-success"><span class="glyphicon glyphicon-ok"></a>'
+                      rendered = '<a href="#" data-url="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+
+                      button_url = '/admin/users/' + (if active then 'disable' else 'enable') + '/' + id
+                      icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
+                      btn_class = 'btn-' + (if active then 'danger' else 'success')
+
+                      rendered += '<a href="#" data-url="' + button_url + '" class="btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
+
                       rendered
                     'sClass': 'withButtons'
                     'bSortable': false
@@ -60,4 +65,5 @@
               return
         </script>
     {% endcompress %}
+
 {% endblock %}

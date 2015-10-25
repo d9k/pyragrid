@@ -2,12 +2,16 @@
 {% block content %}
     <h1>Admin</h1>
     <p>Welcome, {{ username }}!</p>
+    <p><a href="{{ request.route_url('index') }}">&lt;&dash; back</a></p>
     <ul>
        <li><a href="{{ request.route_url('admin_users') }}">users</a></li>
-       <li><a href="{{ request.route_url('add_user') }}">add user</a></li>
-       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>
-       <li><a href="{{ request.route_url('test_render') }}">test render</a></li>
-       <li><a href="{{ request.route_url('test_mail') }}">test email</a></li>
-       <li><a href="{{ request.route_url('logout') }}">logout</a></li>
+{#       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>#}
+
+    </ul>
+    Tests:
+    <ul>
+        <li><a href="{{ request.route_url('test_render') }}">rendering</a></li>
+        <li><a href="{{ request.route_url('test_mail') }}">email</a></li>
+        <li><a href="{{ request.route_url('test_notify') }}">notify</a></li>
     </ul>
 {% endblock %}

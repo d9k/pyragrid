@@ -16,7 +16,8 @@
   "dependencies": {
     "bootstrap-sass-official": "~3.3.5",
     "fontawesome": "~4.4.0",
-    "datatables": "1.9.4"
+    "datatables": "1.9.4",
+    "pnotify": "~2.1.0"
   },
   "resolutions": {
     "jquery": "~2.1.4"

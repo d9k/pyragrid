@@ -31,7 +31,7 @@ import pyramid.security as security
 
 import transaction
 import dictalchemy.utils
-import best_tests_server.helpers as helpers
+from best_tests_server import helpers
 
 import dictalchemy.utils
 

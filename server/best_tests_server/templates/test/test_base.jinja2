@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html lang="{{ request.locale_name }}">
-<head>
-    <meta charset="utf-8">
-
-    <title>Test render</title>
-</head>
-
-<body>
-
-<div class="content">
-    {% block content %}
-        <p>Content to override</p>
+{% extends "../base.jinja2" %}
+{% block content %}
+    {% block test_header %}
+        <h1>{{ header }}</h1>
     {% endblock %}
-</div>
+    <p><a href="{{ request.route_url('admin_index') }}">&lt;&dash; back</a></p>
 
-</body>
-</html>
+    {% block test_content %}
+
+    {% endblock %}
+
+    {{ content }}
+    {{ non_filtered_content | safe }}
+    {% if code_block %}
+        <pre>{{ code_block }}</pre>
+    {% endif %}
+{% endblock %}

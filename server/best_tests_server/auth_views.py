@@ -25,7 +25,7 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-import best_tests_server.helpers as helpers
+from best_tests_server import helpers
 
 from .widgets import exception_for_form_field
 

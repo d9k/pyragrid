@@ -1,9 +1,12 @@
 {% extends "base.jinja2" %}
 {% block content %}
     <h1>Index</h1>
-    <p>Welcome, {{ username }}!</p>
+    <p>Welcome, {{ view.user.name }}!</p>
     <ul>
-       <li><a href="{{ request.route_url('profile_edit') }}">edit profile</a></li>
-       <li><a href="{{ request.route_url('logout') }}">logout</a></li>
+        {% if view.user.is_admin() %}
+            <li><a href="{{ request.route_url('admin_index') }}">admin</a></li>
+        {% endif %}
+        <li><a href="{{ request.route_url('profile_edit') }}">edit profile</a></li>
+        <li><a href="{{ request.route_url('logout') }}">logout</a></li>
     </ul>
 {% endblock %}

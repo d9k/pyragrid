@@ -8,7 +8,7 @@ from colander import (
     null
 )
 import deform.widget as widgets
-import best_tests_server.models as models
+from best_tests_server import models
 from .widgets import TextInputPlaceHolderWidget, PasswordPlaceholderWidget, RecaptchaWidget
 from .helpers import check_dev_mode
 

@@ -17,7 +17,7 @@ import deform.widget
 import colander
 from dictalchemy import DictableModel
 import dictalchemy.utils
-import best_tests_server.helpers as helpers
+from best_tests_server import helpers
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """

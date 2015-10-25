@@ -14,13 +14,17 @@ from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
 from pkg_resources import resource_filename
 import deform
-import best_tests_server.helpers as helpers
+from best_tests_server import helpers
 
 from pyramid_mailer.mailer import Mailer
 import os.path
-
-
+import pyramid.events
 import pyramid_jinja2
+
+
+# http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
+def add_renderer_globals(event):
+    event['helpers'] = helpers
 
 
 def main(global_config, **settings):
@@ -82,15 +86,21 @@ def main(global_config, **settings):
     config.add_route('register_success', '/register_success')
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
+    config.add_route('test_notify', '/test/notify')
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')
     config.add_route('admin_users', '/admin/users')
     config.add_route('admin_users_grid', '/admin/users/grid')
     config.set_session_factory(session_factory)
+
+    config.add_subscriber(add_renderer_globals, pyramid.events.BeforeRender)
+
     # config.registry['mailer'] = Mailer.from_settings(settings)
     config.scan()
+    # TODO убрать настройку jinja2 env в конфиг
     app = config.make_wsgi_app()
     jinja2_env = pyramid_jinja2.get_jinja2_environment(config)
     jinja2_env.compressor_debug = True
+
     return app

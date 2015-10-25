@@ -13,6 +13,7 @@ from pyramid_mailer.message import Message
 import transaction
 from bs4 import BeautifulSoup
 
+
 def get_setting(key, default_value=None):
     request = get_current_request()
     settings = request.registry.settings

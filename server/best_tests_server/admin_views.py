@@ -28,7 +28,7 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-import best_tests_server.helpers as helpers
+from best_tests_server import helpers
 
 from datatables import ColumnDT, DataTables
 
@@ -63,6 +63,8 @@ class AdminViews(BaseViews):
         result = helpers.datatables_result_add_fake_column(result)
         return result
 
+    # @view_config(route_name='admin_user_disable')
+    # def admin_user_disable_view(self):
 
     @view_config(route_name='delete_user', renderer='templates/default_page.jinja2')
     def delete_user_view(self):
@@ -90,24 +92,3 @@ class AdminViews(BaseViews):
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user ' + user.name + ' deleted'}
 
-    @view_config(route_name='test_mail', renderer='templates/default_page.jinja2')
-    def test_mail_view(self):
-        # try:
-        # with transaction.manager:
-        """ :type : Mailer """
-        # mailer = self.request.registry['mailer']
-        mailer = get_mailer(self.request)
-        message = Message(subject="test pyramid email send",
-                          sender="d9kd9k@gmail.com",
-                          recipients=['d9k@ya.ru'],
-                          body="test body")
-        mailer.send(message)
-        transaction.commit()
-        # except:
-        #     return {'content': 'Error on email sending'}
-        return {'content': 'Email sent (?)'}
-
-    @view_config(route_name='test_render', renderer='templates/default_page.jinja2')
-    def test_render_view(self):
-        rendered_view = helpers.render_to_string('templates/test/test.jinja2', self.request, {})
-        return {'code_block': rendered_view}

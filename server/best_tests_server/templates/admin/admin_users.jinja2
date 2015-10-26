@@ -17,7 +17,7 @@
             <th>Почта</th>{# 3 #}
             <th>Почта подтв.</th>{# 4 #}
             <th>Включен</th>{# 5 #}
-            <th></th>{# 6 #}
+            <th>{# buttons col #}</th>{# 6 #}
         </tr>
         </thead>
         <tbody></tbody>
@@ -26,7 +26,7 @@
     {% compress 'js' %}
         <script type="text/coffeescript">
             $(document).ready ->
-              $('#usersGrid').dataTable
+               $table = $('#usersGrid').dataTable
                 'bProcessing': true
                 'bServerSide': true
                 'sAjaxSource': '{{ request.route_path('admin_users_grid') }}'
@@ -55,14 +55,37 @@
                       icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
                       btn_class = 'btn-' + (if active then 'danger' else 'success')
 
-                      rendered += '<a href="#" data-url="' + button_url + '" class="btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
+                      rendered += '<a href="#" data-url="' + button_url + '" class="buttonSwitchActive btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
 
                       rendered
                     'sClass': 'withButtons'
                     'bSortable': false
                   }
                 ]
-              return
+                'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
+                    $table = $(this)
+                    $row = $(nRow)
+                    $buttonsCol = $row.find('td:eq(6)')
+                    $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
+                    $buttonSwitchActive.on('click', (e) ->
+                        e.preventDefault()
+                        url = $(this).attr('data-url')
+                        $.ajax(
+                            url: url,
+                            success: (data) -> # правильная ли функция?
+                                new PNotify(
+                                    title: data.message || 'Изменение прошло успешно'
+                                    type: 'success'
+                                )
+                                $table._fnAjaxUpdate()
+                            error: (data) ->
+                                new PNotify(
+                                    title: data.message || 'Ошибка при изменении'
+                                    type: 'error'
+                                )
+                        )
+                    )
+               return
         </script>
     {% endcompress %}
 

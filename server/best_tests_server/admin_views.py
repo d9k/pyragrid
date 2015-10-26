@@ -92,3 +92,28 @@ class AdminViews(BaseViews):
             return Response(conn_err_msg, content_type='text/plain', status_int=500)
         return {'content': 'user ' + user.name + ' deleted'}
 
+    @view_config(route_name='admin_user_enable', renderer='json')
+    def admin_user_enable(self):
+        user_id = self.request.matchdict.get('user_id')
+        if not user_id:
+            return HTTPBadRequest('No user id specified')
+        user = User.by_id(user_id)
+        if not user:
+            return HTTPNotFound('User not found')
+        user.active = True
+        with transaction.manager:
+            DBSession.add(user)
+        return {'result': 'success', 'message': 'Пользователь актирован'}
+
+    @view_config(route_name='admin_user_disable', renderer='json')
+    def admin_user_disable(self):
+        user_id = self.request.matchdict.get('user_id')
+        if not user_id:
+            return HTTPBadRequest('No user id specified')
+        user = User.by_id(user_id)
+        if not user:
+            return HTTPNotFound('User not found')
+        user.active = False
+        with transaction.manager:
+            DBSession.add(user)
+        return {'result': 'success', 'message': 'Пользователь отключен'}

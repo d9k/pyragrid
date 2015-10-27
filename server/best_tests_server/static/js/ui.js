@@ -30,6 +30,21 @@
         });
       };
 
+      UI.renderBool = function(value) {
+        switch (value) {
+          case "true":
+            return "да";
+          case "false":
+            return "нет";
+          case "True":
+            return "Да";
+          case "False":
+            return "Нет";
+          default:
+            return "?";
+        }
+      };
+
       return UI;
 
     })();

@@ -38,12 +38,12 @@
                   {
                     'mData': 4
                     'mRender': (value, type, data) ->
-                       DataTablesHelper.renderBool(data[4])
+                       UI.renderBool(data[4])
                   }
                   {
                     'mData': 5
                     'mRender': (value, type, data) ->
-                       DataTablesHelper.renderBool(data[5])
+                       UI.renderBool(data[5])
                   }
                   {
                     'mRender': (value, type, data) ->
@@ -63,7 +63,7 @@
                   }
                 ]
                 'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
-                    $table = $(this)
+                    $table = $(this).dataTable()
                     $row = $(nRow)
                     $buttonsCol = $row.find('td:eq(6)')
                     $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
@@ -74,7 +74,7 @@
                             url: url,
                             success: (data) -> # правильная ли функция?
                                 UI.notifyFromSuccessData(data)
-                                $table._fnAjaxUpdate()
+                                $table.fnDraw(false)
                             error: (data) ->
                                 UI.notifyFromErrorData(data)
                         )

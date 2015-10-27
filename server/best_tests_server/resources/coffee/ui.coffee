@@ -17,6 +17,13 @@ $(document).ready ->
           title: @.messageSuccess(ajaxData)
           type: 'error'
         )
+    @renderBool: (value) ->
+        switch value
+          when "true" then "да"
+          when "false" then "нет"
+          when "True" then "Да"
+          when "False" then "Нет"
+          else "?"
 
   window.UI = UI
   PNotify.prototype.options.styling = "bootstrap3"

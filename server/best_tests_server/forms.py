@@ -8,9 +8,15 @@ from colander import (
     null
 )
 import deform.widget as widgets
-from best_tests_server import models
-from .widgets import TextInputPlaceHolderWidget, PasswordPlaceholderWidget, RecaptchaWidget
+from best_tests_server import models, helpers
+from .widgets import (
+    TextInputPlaceHolderWidget,
+    PasswordPlaceholderWidget,
+    RecaptchaWidget,
+    exception_for_schema_field
+)
 from .helpers import check_dev_mode
+from .models import User
 
 class LoginSchema(Schema):
     login = SchemaNode(
@@ -31,6 +37,37 @@ class LoginSchema(Schema):
 
 def create_edit_user_schema():
     return SQLAlchemySchemaNode(models.User)
+
+
+def user_login_unique_validator(node, value):
+    found = User.by_login(value)
+    if found is not None:
+        raise colander.Invalid(node, 'Пользователь с таким логином уже существует')
+
+
+def email_unique_validator(node, value):
+    found = User.by_email(value)
+    if found is not None:
+        raise colander.Invalid(node, 'Пользователь с таким адресом уже существует')
+
+
+# TODO @deferred
+def validate_user_edit_form(schema, values):
+    # found = User.by_login(value)
+    linked_user = None
+    not_login = None
+    not_email = None
+    if hasattr(schema, 'linked_user'):
+        linked_user = schema.linked_user
+    if linked_user is not None:
+        not_login = linked_user.login
+        not_email = linked_user.email
+    found_by_login = User.by_login(values.get('login'), not_login)
+    if found_by_login is not None:
+        raise exception_for_schema_field(schema, 'login', 'Пользователь с таким логином уже существует')
+    found_by_email = User.by_email(values.get('email'), not_email)
+    if found_by_email is not None:
+        raise exception_for_schema_field(schema, 'email', 'Пользователь с таким адресом уже существует')
 
 
 class RegisterSchema(SQLAlchemySchemaNode):
@@ -61,10 +98,10 @@ class RegisterSchema(SQLAlchemySchemaNode):
                 widget=RecaptchaWidget(lang='ru', theme='clean'),
                 order=1000
             ))
+        self.validator = validate_user_edit_form
 
 
 class ProfileEditSchema(SQLAlchemySchemaNode):
-
     def __init__(self, class_=models.User, includes=None,
                  excludes=None,
                  overrides=None,
@@ -75,6 +112,8 @@ class ProfileEditSchema(SQLAlchemySchemaNode):
                          includes=includes,
                          overrides=overrides,
                          **kw)
+        self.linked_user = None
+        self.validator = validate_user_edit_form
 
 
 class UserEditSchema(SQLAlchemySchemaNode):
@@ -88,3 +127,5 @@ class UserEditSchema(SQLAlchemySchemaNode):
                          includes=includes,
                          overrides=overrides,
                          **kw)
+        self.linked_user = None
+        self.validator = validate_user_edit_form

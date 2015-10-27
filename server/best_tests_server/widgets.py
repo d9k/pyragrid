@@ -114,9 +114,17 @@ class RecaptchaWidget(CheckedInputWidget):
         return pstruct['recaptcha_response_field']
 
 
-def exception_for_form_field(form, field_name, text):
+def exception_for_schema_field(form, field_name, text):
     exc = colander.Invalid(form)
     """:type : SchemaNode"""
-    field = form.get(field_name)
-    exc.add(colander.Invalid(field, text), field._order)
+    # field = form.get(field_name)
+    field = None
+    field_pos = 0
+    for pos, f in enumerate(form.children):
+        if f.name == field_name:
+            field = f
+            field_pos = pos
+            break
+
+    exc.add(colander.Invalid(field, text), field_pos)
     return exc

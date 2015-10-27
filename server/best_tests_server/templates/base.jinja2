@@ -46,9 +46,24 @@
             </div>
             <div class="col-md-10">
                 <div class="content">
+                    {% block header %}
+                        {% if header %}
+                            <h1>{{ header }}</h1>
+                        {% endif %}
+                    {% endblock %}
+                    {% set enable_greeting = True %}
+                    {% block greeting %}
+                        {% if not enable_greeting and view.user %}
+                            <p>Welcome, {{ view.user.name }}!</p>
+                        {% endif %}
+                    {% endblock %}
+                    {% block backlink %}
+                        {% if backlink %}
+                            <p><a href="{{ backlink }}">&lt;&dash; back</a></p>
+                        {% endif %}
+                    {% endblock %}
                     {% block content %}
-                        <h1><span class="font-semi-bold">Pyramid</span> <span class="smaller">Alchemy scaffold</span></h1>
-                        <p class="lead">Welcome to <span class="font-normal">{{project}}</span>, an&nbsp;application generated&nbsp;by<br>the <span class="font-normal">Pyramid Web Framework 1.5.7</span>.</p>
+
                     {% endblock %}
                 </div>
             </div>

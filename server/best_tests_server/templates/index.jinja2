@@ -1,7 +1,6 @@
+{% set header = 'Index' %}
 {% extends "base.jinja2" %}
 {% block content %}
-    <h1>Index</h1>
-    <p>Welcome, {{ view.user.name }}!</p>
     <ul>
         {% if view.user.is_admin() %}
             <li><a href="{{ request.route_url('admin_index') }}">admin</a></li>

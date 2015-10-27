@@ -27,7 +27,7 @@ from sqlalchemy.exc import DBAPIError
 
 from best_tests_server import helpers
 
-from .widgets import exception_for_form_field
+from .widgets import exception_for_schema_field
 
 from .forms import (
     LoginSchema, RegisterSchema
@@ -67,13 +67,13 @@ class AuthViews(BaseViews):
             # and then raise deform.ValidationFailure(form, form.cstruct, None) or something
 
             if not user:
-                raise exception_for_form_field(form, 'login', 'Пользователь не найден')
+                raise exception_for_schema_field(form, 'login', 'Пользователь не найден')
             if not user.check_password(password):
-                raise exception_for_form_field(form, 'password', 'Неверный пароль')
+                raise exception_for_schema_field(form, 'password', 'Неверный пароль')
             if not user.email_checked:
-                raise exception_for_form_field(form, 'login', 'Email пользователя не подтверждён. Проверьте почтовый ящик') #TODO показывать email "в звёздочках"
+                raise exception_for_schema_field(form, 'login', 'Email пользователя не подтверждён. Проверьте почтовый ящик') #TODO показывать email "в звёздочках"
             if not user.active:
-                raise exception_for_form_field(form, 'login', 'Аккаунт пользователя заблокирован')
+                raise exception_for_schema_field(form, 'login', 'Аккаунт пользователя заблокирован')
             authed_user = user
 
         login_form = Form(

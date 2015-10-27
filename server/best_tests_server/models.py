@@ -63,57 +63,24 @@ def create_salt():
     return uuid.uuid4().hex
 
 
-def user_login_unique_validator(node, value):
-    found = User.by_login(value)
-    if found is not None:
-        raise colander.Invalid(node, 'Пользователь с таким логином уже существует')
+# @colander.deferred
+# def email_validator(node, kwargs):
+#     return colander.All(
+#         colander.Email(),
+#         email_unique_validator
+#     )
 
 
-@colander.deferred
-def user_login_validator(node, kwargs):
-    return colander.All(
-        colander.Regex('^[a-z0-9_]+$', 'Логин должен содержать только цифры и английские буквы'),
-        user_login_unique_validator,
-    )
-
-
-def email_unique_validator(node, value):
-    found = User.by_email(value)
-    if found is not None:
-        raise colander.Invalid(node, 'Пользователь с таким адресом уже существует')
-
-
-@colander.deferred
-def email_validator(node, kwargs):
-    return colander.All(
-        colander.Email(),
-        email_unique_validator
-    )
-
-
-# def nullable_int(self, value):
-#     if value is None:
-#         return colander.null
-#     else:
-#         return int(value)
+def nullable_int(self, value):
+    if value == colander.null or value is None:
+        return ''
+    else:
+        return int(value)
 
 
 class NullableInt(colander.Number):
-    num = None
+    num = nullable_int
 
-    def serialize(self, node, appstruct):
-        if appstruct is None:
-            return None
-        if appstruct is null:
-            return None
-
-        try:
-            return str(int(appstruct))
-        except Exception:
-            raise Invalid(node,
-                          _('"${val}" is not a number',
-                            mapping={'val':appstruct}),
-                          )
 
 class User(Base):
     __tablename__ = 'users'
@@ -137,7 +104,10 @@ class User(Base):
     login = Column(Text,
                    info={'colanderalchemy': {
                        'title': 'Логин пользователя',
-                       'validator': user_login_validator,
+                       'validator': colander.Regex(
+                           '^[a-z0-9_]+$',
+                           'Логин должен содержать только цифры и английские буквы'
+                       ),
                        'missing': colander.required
                    }})
     name = Column(Text,
@@ -148,7 +118,7 @@ class User(Base):
     email = Column(Text,
                    info={'colanderalchemy': {
                        'title': 'E-mail',
-                       'validator': email_validator,
+                       'validator': colander.Email(),
                        'missing': colander.required
                        # 'widget': deform.widget.CheckedInputWidget(
                        #     subject='E-mail',
@@ -195,11 +165,22 @@ class User(Base):
         return DBSession.query(User).filter(User.id == user_id).first()
 
     @staticmethod
-    def by_login(user_login: str):
+    # def by_login(user_login: str, filters=None):
+    def by_login(user_login: str, not_login: str = None):
         """
         :return User
         """
-        return DBSession.query(User).filter(User.login == user_login).first()
+        # # if filters is None:
+        # #     filters = []
+        # filters = [User.login == user_login]
+        # # if not_login is not None:
+        # #     filters.append(User.login != not_login)
+        # return DBSession.query(User).filter(filters).first()
+        q = DBSession.query(User)\
+            .filter(User.login == user_login)
+        if not_login is not None:
+            q = q.filter(User.login != not_login)
+        return q.first()
 
     @staticmethod
     def by_vk_id(vk_id: int):
@@ -209,11 +190,14 @@ class User(Base):
         return DBSession.query(User).filter(User.vk_id == vk_id).first()
 
     @staticmethod
-    def by_email(email: str):
+    def by_email(email: str, not_email: str = None):
         """
         :return User
         """
-        return DBSession.query(User).filter(User.email == email).first()
+        q = DBSession.query(User).filter(User.email == email)
+        if not_email is not None:
+            q = q.filter(User.email != not_email)
+        return q.first()
 
 
     @staticmethod

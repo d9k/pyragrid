@@ -123,7 +123,7 @@ class AdminViews(BaseViews):
         return {'result': 'success', 'message': 'Пользователь отключен'}
 
     @view_config(route_name='admin_user_edit', renderer='templates/admin/admin_user_edit.jinja2')
-    def admin_user_disable(self):
+    def admin_user_edit(self):
         user_id = self.request.matchdict.get('user_id')
         if not user_id:
             return HTTPBadRequest('No user id specified')
@@ -131,8 +131,11 @@ class AdminViews(BaseViews):
         if not user:
             return HTTPNotFound('User not found')
 
+        user_edit_schema = forms.UserEditSchema()
+        user_edit_schema.linked_user = user
+
         user_edit_form = deform.Form(
-            forms.UserEditSchema().bind(),
+            user_edit_schema.bind(),
             buttons=[deform.Button(name='user_edit_form_submit', title='Изменить')],
         )
         if 'user_edit_form_submit' in self.request.params:
@@ -142,9 +145,9 @@ class AdminViews(BaseViews):
             except deform.ValidationFailure as e:
                 return dict(rendered_form=e.render())
 
-            name = data.get('name')
-            if name:
-                self.user.name = name
+            # TODO proper binding
+            user.name = data.get('name')
+            user.vk_id = data.get('vk_id')
 
             try:
                 with transaction.manager:

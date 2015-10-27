@@ -1,8 +1,8 @@
+{% set header = 'Admin' %}
+{% set backlink = request.route_url('index') %}
 {% extends "../base.jinja2" %}
 {% block content %}
-    <h1>Admin</h1>
-    <p>Welcome, {{ username }}!</p>
-    <p><a href="{{ request.route_url('index') }}">&lt;&dash; back</a></p>
+{#    <p><a href="{{ request.route_url('index') }}">&lt;&dash; back</a></p>#}
     <ul>
        <li><a href="{{ request.route_url('admin_users') }}">users</a></li>
 {#       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>#}

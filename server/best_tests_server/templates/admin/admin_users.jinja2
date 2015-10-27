@@ -1,8 +1,7 @@
+{% set header = 'Пользователи' %}
+{% set backlink = request.route_url('admin_index') %}
 {% extends "../base.jinja2" %}
 {% block content %}
-    <h1>Пользователи</h1>
-    <p>Welcome, {{ username }}!</p>
-
     {% include '../_datatables_js.jinja2' %}
 
 {#    <p><a href="{{ request.route_url('add_user') }}">Добавить пользователя [+]</a></p>#}

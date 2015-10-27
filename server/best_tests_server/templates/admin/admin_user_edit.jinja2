@@ -1,6 +1,7 @@
+{% set header = 'Редактирование пользователя' %}
+{% set backlink = request.route_url('admin_users') %}
+{% set enable_greeting = False %}
 {% extends "../base.jinja2" %}
 {% block content %}
-    <h1>Редактирование пользователя</h1>
-
     {{ rendered_form|safe }}
 {% endblock %}

@@ -28,9 +28,13 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-from best_tests_server import helpers
+from best_tests_server import helpers, forms
 
 from datatables import ColumnDT, DataTables
+
+import deform
+
+import dictalchemy.utils
 
 
 @view_defaults(permission='admin')
@@ -117,3 +121,39 @@ class AdminViews(BaseViews):
         with transaction.manager:
             DBSession.add(user)
         return {'result': 'success', 'message': 'Пользователь отключен'}
+
+    @view_config(route_name='admin_user_edit', renderer='templates/admin/admin_user_edit.jinja2')
+    def admin_user_disable(self):
+        user_id = self.request.matchdict.get('user_id')
+        if not user_id:
+            return HTTPBadRequest('No user id specified')
+        user = User.by_id(user_id)
+        if not user:
+            return HTTPNotFound('User not found')
+
+        user_edit_form = deform.Form(
+            forms.UserEditSchema().bind(),
+            buttons=[deform.Button(name='user_edit_form_submit', title='Изменить')],
+        )
+        if 'user_edit_form_submit' in self.request.params:
+            controls = self.request.POST.items()
+            try:
+                data = user_edit_form.validate(controls)
+            except deform.ValidationFailure as e:
+                return dict(rendered_form=e.render())
+
+            name = data.get('name')
+            if name:
+                self.user.name = name
+
+            try:
+                with transaction.manager:
+                    DBSession.add(user)
+            except DBAPIError:
+                return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+        # TODO name validator
+        appstruct = dictalchemy.utils.asdict(user)
+        # TODO fix vk_id
+        # appstruct['vk_id'] = 0
+        return dict(rendered_form=user_edit_form.render(appstruct))

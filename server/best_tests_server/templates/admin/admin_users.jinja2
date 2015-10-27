@@ -49,7 +49,7 @@
                     'mRender': (value, type, data) ->
                       id = data[0]
                       active = data[5] == 'True'
-                      rendered = '<a href="#" data-url="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+                      rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
 
                       button_url = '/admin/users/' + (if active then 'disable' else 'enable') + '/' + id
                       icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')

@@ -23,17 +23,11 @@ from pyramid.httpexceptions import (
 )
 
 import deform
-import colander
-from colander import SchemaNode
 from deform import Form, Button
-
-import pyramid.security as security
 
 import transaction
 import dictalchemy.utils
 from best_tests_server import helpers
-
-import dictalchemy.utils
 
 from .forms import (
     ProfileEditSchema

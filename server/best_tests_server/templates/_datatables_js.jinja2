@@ -14,25 +14,6 @@
                 filterDiv.find('input').attr 'placeholder', 'Поиск...'
             return
 
-{#        $.fn.dataTableExt.oApi.fnReloadAjax = (oSettings) ->#}
-{#    #oSettings.sAjaxSource = sNewSource;#}
-{#            @fnClearTable this#}
-{#            @oApi._fnProcessingDisplay oSettings, true#}
-{#            that = this#}
-{#            $.getJSON oSettings.sAjaxSource, null, (json) ->#}
-{##}
-{#                ### Got the data - add it to the table ####}
-{##}
-{#                i = 0#}
-{#                while i < json.aaData.length#}
-{#                    that.oApi._fnAddData oSettings, json.aaData[i]#}
-{#                    i++#}
-{#                oSettings.aiDisplay = oSettings.aiDisplayMaster.slice()#}
-{#                that.fnDraw that#}
-{#                that.oApi._fnProcessingDisplay oSettings, false#}
-{#                return#}
-{#            return#}
-
         return
 
 </script>

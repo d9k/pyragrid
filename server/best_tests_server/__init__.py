@@ -94,6 +94,7 @@ def main(global_config, **settings):
     config.add_route('admin_users_grid', '/admin/users/grid')
     config.add_route('admin_user_enable', '/admin/users/enable/{user_id}')
     config.add_route('admin_user_disable', '/admin/users/disable/{user_id}')
+    config.add_route('admin_user_edit', '/admin/users/edit/{user_id}')
     config.set_session_factory(session_factory)
 
     config.add_subscriber(add_renderer_globals, pyramid.events.BeforeRender)

@@ -15,6 +15,7 @@ from sqlalchemy.orm import (
 from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
 import colander
+from colander import null, Invalid
 from dictalchemy import DictableModel
 import dictalchemy.utils
 from best_tests_server import helpers
@@ -90,6 +91,30 @@ def email_validator(node, kwargs):
     )
 
 
+# def nullable_int(self, value):
+#     if value is None:
+#         return colander.null
+#     else:
+#         return int(value)
+
+
+class NullableInt(colander.Number):
+    num = None
+
+    def serialize(self, node, appstruct):
+        if appstruct is None:
+            return None
+        if appstruct is null:
+            return None
+
+        try:
+            return str(int(appstruct))
+        except Exception:
+            raise Invalid(node,
+                          _('"${val}" is not a number',
+                            mapping={'val':appstruct}),
+                          )
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -97,9 +122,17 @@ class User(Base):
                 info={'colanderalchemy': {
                     'title': 'id пользователя'
                 }})
-    vk_id = Column(BigInteger, unique=True,
+    vk_id = Column(BigInteger,
+                   unique=True,
+                   nullable=True,
                    info={'colanderalchemy': {
-                       'title': 'id вконтакте'
+                       'title': 'id вконтакте',
+                       # 'widget': deform.widget.TextInputWidget(),
+                       # 'missing': colander.drop,
+                       # 'missing': colander.null,
+                       # 'default': colander.null,
+                       'default': None,
+                       'typ': NullableInt
                    }})
     login = Column(Text,
                    info={'colanderalchemy': {

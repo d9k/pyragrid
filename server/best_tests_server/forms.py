@@ -72,6 +72,19 @@ class ProfileEditSchema(SQLAlchemySchemaNode):
         if includes is None:
             includes = ['name', ]
         super().__init__(class_,
-                     includes=includes,
-                     overrides=overrides,
-                     **kw)
+                         includes=includes,
+                         overrides=overrides,
+                         **kw)
+
+
+class UserEditSchema(SQLAlchemySchemaNode):
+    def __init__(self, class_=models.User, includes=None,
+                 excludes=None,
+                 overrides=None,
+                 unknown='ignore', **kw):
+        if includes is None:
+            includes = ['login', 'vk_id',  'name', 'email', 'password']
+        super().__init__(class_,
+                         includes=includes,
+                         overrides=overrides,
+                         **kw)

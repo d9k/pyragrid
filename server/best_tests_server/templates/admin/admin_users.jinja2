@@ -73,16 +73,10 @@
                         $.ajax(
                             url: url,
                             success: (data) -> # правильная ли функция?
-                                new PNotify(
-                                    title: data.message || 'Изменение прошло успешно'
-                                    type: 'success'
-                                )
+                                UI.notifyFromSuccessData(data)
                                 $table._fnAjaxUpdate()
                             error: (data) ->
-                                new PNotify(
-                                    title: data.message || 'Ошибка при изменении'
-                                    type: 'error'
-                                )
+                                UI.notifyFromErrorData(data)
                         )
                     )
                return

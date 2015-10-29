@@ -122,10 +122,19 @@ class UserEditSchema(SQLAlchemySchemaNode):
                  overrides=None,
                  unknown='ignore', **kw):
         if includes is None:
-            includes = ['login', 'vk_id',  'name', 'email', 'password']
+            includes = ['login', 'vk_id',  'name', 'email', 'active', 'email_checked']
         super().__init__(class_,
                          includes=includes,
                          overrides=overrides,
                          **kw)
+        self.add(SchemaNode(
+            String(),
+            name='password',
+            title='Пароль',
+            widget=widgets.CheckedPasswordWidget(
+                placeholder='email, id вконтакте или ник'
+            ),
+            missing=None
+        ))
         self.linked_user = None
         self.validator = validate_user_edit_form

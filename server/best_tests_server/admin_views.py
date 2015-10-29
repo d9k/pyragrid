@@ -146,8 +146,13 @@ class AdminViews(BaseViews):
                 return dict(rendered_form=e.render())
 
             # TODO proper binding
-            user.name = data.get('name')
-            user.vk_id = data.get('vk_id')
+            # user.name = data.get('name')
+            # user.vk_id = data.get('vk_id')
+
+            helpers.obj_fields_from_dict(user, data)
+            password = data.get('password')
+            if password:
+                user.set_password(password)
 
             try:
                 with transaction.manager:

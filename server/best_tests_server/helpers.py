@@ -105,3 +105,8 @@ def datatables_result_add_fake_column(datatables_result):
         record_dict[str(new_key)] = ''
         data[i] = record_dict
     return datatables_result
+
+
+def obj_fields_from_dict(obj, data_dict):
+    for key in data_dict:
+        setattr(obj, key, data_dict[key])

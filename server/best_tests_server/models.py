@@ -130,8 +130,14 @@ class User(Base):
                        'title': 'Группа пользователя'
                    }})
     email_check_code = Column(Text)
-    email_checked = Column(Boolean, default=False, server_default='false', nullable=False)
-    active = Column(Boolean, default=False, server_default='false', nullable=False)
+    email_checked = Column(Boolean, default=False, server_default='false', nullable=False,
+                           info={'colanderalchemy': {
+                                'title': 'Почта проверена'
+                           }})
+    active = Column(Boolean, default=False, server_default='false', nullable=False,
+                    info={'colanderalchemy': {
+                        'title': 'Аккаунт включен'
+                    }})
     # stores password hash and salt separated by colon
     password_hash = Column(Text, info={'colanderalchemy': {
                         'title': 'Пароль',

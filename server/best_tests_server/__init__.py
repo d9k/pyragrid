@@ -77,6 +77,7 @@ def main(global_config, **settings):
 
     config.add_route('index', '/')
     config.add_route('profile_edit', '/profile/edit')
+    config.add_route('vk_auth', '/vkAuth')
     config.add_route('test', '/t')
     config.add_route('add_user', '/users/add')
     config.add_route('delete_user', '/users/delete/{any_data}')
@@ -87,6 +88,7 @@ def main(global_config, **settings):
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
     config.add_route('test_notify', '/test/notify')
+    config.add_route('test_url', '/test/url')
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')

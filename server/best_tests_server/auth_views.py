@@ -207,3 +207,40 @@ class AuthViews(BaseViews):
             user.active = True
             DBSession.add(user)
         return {'user_name': user.name}
+
+    @view_config(route_name='vk_auth', renderer='templates/vk_auth.jinja2')
+    def vk_auth_view(self):
+        if self.user:
+            headers = security.forget(self.request)
+            vk_page = self.request.route_url('vk_auth')
+            return HTTPFound(location=vk_page, headers=headers)
+        index_page = self.request.route_url('index')
+        vk_page = self.request.route_url('vk_auth')
+        vk_auth_code = self.request.params.get('code')
+        state = self.request.params.get('code')
+        if state == 'vk_auth_code' and vk_auth_code == 'vk_auth_code':
+            # TODO match User model or create new user
+            return HTTPFound(location=index_page)
+        # headers = {}
+        # return HTTPFound(location=index_page, headers=headers)
+
+        vk_app_id = int(helpers.get_setting('vk_app_id'))
+
+        # return HTTPFound(location=index_page, headers=headers)
+        return Response(
+            status=302,
+            location=helpers.build_url(
+                'https://oauth.vk.com/authorize',
+                get_params=dict(
+                    redirect_url=vk_page,
+                    client_id=helpers.get_setting('vk_app_id'),
+                    display='popup',
+                    # https://vk.com/dev/permissions
+                    # friends (2) + status(1024)
+                    scope='friends,status,photos,notes,wall',
+                    response_type='code',
+                    v='5.37',
+                    state='vk_auth_code'
+                )
+            )
+        )

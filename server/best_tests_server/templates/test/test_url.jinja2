@@ -1,0 +1,9 @@
+{% extends "test_base.jinja2" %}
+
+{% block test_header %}
+    <h1>Test url</h1>
+{% endblock %}
+
+{% block content %}
+    {{ request.route_url('index') }}
+{% endblock %}

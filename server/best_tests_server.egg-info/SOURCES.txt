@@ -15,6 +15,7 @@ best_tests_server/forms.py
 best_tests_server/helpers.py
 best_tests_server/models.py
 best_tests_server/site_views.py
+best_tests_server/test_views.py
 best_tests_server/tests.py
 best_tests_server/widgets.py
 best_tests_server.egg-info/PKG-INFO
@@ -32,10 +33,15 @@ best_tests_server/static/jquery.dataTables.js
 best_tests_server/static/jquery.dataTables.mod.css
 best_tests_server/static/jquery.js
 best_tests_server/static/jquery.min.js
+best_tests_server/static/pnotify.custom.css
+best_tests_server/static/pnotify.custom.js
+best_tests_server/static/pnotify.custom.min.css
+best_tests_server/static/pnotify.custom.min.js
 best_tests_server/static/pyramid-16x16.png
 best_tests_server/static/pyramid.png
 best_tests_server/static/css/style.css
 best_tests_server/static/js/test.js
+best_tests_server/static/js/ui.js
 best_tests_server/templates/deform_mod/passwordplaceholder.pt
 best_tests_server/templates/deform_mod/recaptcha_widget.pt
 best_tests_server/templates/deform_mod/textinputplaceholder.pt

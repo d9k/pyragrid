@@ -61,4 +61,8 @@ class Testiews(AdminViews):
 
     @view_config(route_name='test_notify', renderer='templates/test/test_notify.jinja2')
     def test_notify(self):
-        return {}
+        return {'header': 'Test notify'}
+
+    @view_config(route_name='test_url', renderer='templates/test/test_url.jinja2')
+    def test_url(self):
+        return {'header': 'Test url'}

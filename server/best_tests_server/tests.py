@@ -4,6 +4,28 @@ import transaction
 from pyramid import testing
 
 
+class MyUnitTest(unittest.TestCase):
+    def setUp(self):
+        self.request = testing.DummyRequest()
+        self.config = testing.setUp()
+
+    def test_build_url(self):
+        from best_tests_server import helpers
+
+        self.assertEqual(
+            'http://example.com/test.html',
+            helpers.build_url('http://example.com/test.html', {})
+        )
+        self.assertIn(
+            helpers.build_url('http://example.com/test.html', {'param1': 'some words', 'param2': '', 'param3': '3'}),
+            # WTF with order?
+            ['http://example.com/test.html?param3=3&param1=some+words&param2=',
+             'http://example.com/test.html?param3=3&param2=&param1=some+words']
+        )
+
+    def tearDown(self):
+        testing.tearDown()
+
 # class TestMyViewSuccessCondition(unittest.TestCase):
 #     def setUp(self):
 #         self.config = testing.setUp()

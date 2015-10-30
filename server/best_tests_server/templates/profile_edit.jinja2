@@ -1,6 +1,6 @@
+{% set header = 'Редактирование профиля' %}
+{% set backlink = request.route_url('index') %}
 {% extends "base.jinja2" %}
 {% block content %}
-    <h1>Редактирование профиля</h1>
-
     {{ rendered_profile_edit_form|safe }}
 {% endblock %}

@@ -8,10 +8,6 @@
 {#       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>#}
 
     </ul>
-    Tests:
-    <ul>
-        <li><a href="{{ request.route_url('test_render') }}">rendering</a></li>
-        <li><a href="{{ request.route_url('test_mail') }}">email</a></li>
-        <li><a href="{{ request.route_url('test_notify') }}">notify</a></li>
-    </ul>
+    <p>Tests:</p>
+    {% include '../_test_urls.jinja2' %}
 {% endblock %}

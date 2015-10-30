@@ -12,6 +12,7 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 import transaction
 from bs4 import BeautifulSoup
+import urllib.parse
 
 
 def get_setting(key, default_value=None):
@@ -110,3 +111,12 @@ def datatables_result_add_fake_column(datatables_result):
 def obj_fields_from_dict(obj, data_dict):
     for key in data_dict:
         setattr(obj, key, data_dict[key])
+
+
+def build_url(host_page_url: str, get_params: dict):
+    #TODO tests
+    # if host_page_url[-1:] != '/':
+    #     host_page_url += '/'
+    if not get_params:
+        return host_page_url
+    return host_page_url + '?' + urllib.parse.urlencode(get_params)

@@ -38,7 +38,7 @@ from deform import Form, Button
 import pyramid.security as security
 
 import dictalchemy.utils
-
+import hashlib
 
 class AuthViews(BaseViews):
     # def __init__(self, request):
@@ -215,32 +215,49 @@ class AuthViews(BaseViews):
             vk_page = self.request.route_url('vk_auth')
             return HTTPFound(location=vk_page, headers=headers)
         index_page = self.request.route_url('index')
-        vk_page = self.request.route_url('vk_auth')
-        vk_auth_code = self.request.params.get('code')
-        state = self.request.params.get('code')
-        if state == 'vk_auth_code' and vk_auth_code == 'vk_auth_code':
-            # TODO match User model or create new user
-            return HTTPFound(location=index_page)
+        # vk_page = self.request.route_url('vk_auth')
+        # vk_auth_code = self.request.params.get('code')
+        # state = self.request.params.get('code')
+
+        # if state == 'vk_auth_code' and vk_auth_code == 'vk_auth_code':
+        #     # TODO match User model or create new user
+        #     return HTTPFound(location=index_page)
+
         # headers = {}
         # return HTTPFound(location=index_page, headers=headers)
 
-        vk_app_id = int(helpers.get_setting('vk_app_id'))
+        vk_auth_key = self.request.params.get('auth_key')
+        vk_auth_token = self.request.params.get('access_token')
+        vk_viewer_id = self.request.params.get('viewer_id')
+
+        if not vk_auth_key or not vk_auth_token or not vk_viewer_id:
+            return HTTPBadRequest('нет входных параметров vk')
+
+        vk_app_id_str = helpers.get_setting('vk_app_id')
+        vk_app_secret_key = helpers.get_setting('vk_app_secret_key')
+
+        str_to_hash = vk_app_id_str + '_' + vk_viewer_id + '_' + vk_app_secret_key
+
+        if hashlib.md5(str_to_hash.encode('utf-8')).hexdigest() != vk_auth_key:
+            return HTTPBadRequest('Ошибка безопасности: vk_auth_key неверен')
+
 
         # return HTTPFound(location=index_page, headers=headers)
-        return Response(
-            status=302,
-            location=helpers.build_url(
-                'https://oauth.vk.com/authorize',
-                get_params=dict(
-                    redirect_url=vk_page,
-                    client_id=helpers.get_setting('vk_app_id'),
-                    display='popup',
-                    # https://vk.com/dev/permissions
-                    # friends (2) + status(1024)
-                    scope='friends,status,photos,notes,wall',
-                    response_type='code',
-                    v='5.37',
-                    state='vk_auth_code'
-                )
-            )
-        )
+        # return Response(
+        #     status=302,
+        #     location=helpers.build_url(
+        #         'https://oauth.vk.com/authorize',
+        #         get_params=dict(
+        #             redirect_url=vk_page,
+        #             client_id=helpers.get_setting('vk_app_id'),
+        #             display='popup',
+        #             # https://vk.com/dev/permissions
+        #             # friends (2) + status(1024)
+        #             scope='friends,status,photos,notes,wall',
+        #             response_type='code',
+        #             v='5.37',
+        #             state='vk_auth_code'
+        #         )
+        #     )
+        # )
+        return {}

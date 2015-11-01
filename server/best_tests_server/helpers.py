@@ -13,6 +13,8 @@ from pyramid_mailer.message import Message
 import transaction
 from bs4 import BeautifulSoup
 import urllib.parse
+import urllib.request
+import json
 
 
 def get_setting(key, default_value=None):
@@ -113,10 +115,35 @@ def obj_fields_from_dict(obj, data_dict):
         setattr(obj, key, data_dict[key])
 
 
-def build_url(host_page_url: str, get_params: dict):
-    #TODO tests
-    # if host_page_url[-1:] != '/':
-    #     host_page_url += '/'
+def build_url(host_page_url: str, get_params: dict = None):
     if not get_params:
         return host_page_url
     return host_page_url + '?' + urllib.parse.urlencode(get_params)
+
+
+def get_from_url(url: str, get_params: dict = None):
+    full_url = build_url(url, get_params)
+    responce = urllib.request.urlopen(full_url)
+    data = responce.read()
+    """ :type : bytes """
+    result = None
+    try:
+        result = data.decode('utf-8')
+    except:
+        pass
+    if result:
+        return result
+    # TODO import chardet.. http://stackoverflow.com/a/1495631/1760643
+    result = data.decode('latin-1')
+    return result
+
+
+def get_json_from_url(url: str, get_params: dict = None):
+    result = get_from_url(url, get_params)
+    if not result:
+        return {}
+    try:
+        return json.loads(result)
+    except:
+        return {}
+

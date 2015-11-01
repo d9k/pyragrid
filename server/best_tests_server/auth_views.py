@@ -20,7 +20,8 @@ import transaction
 from pyramid.httpexceptions import (
     HTTPBadRequest,
     HTTPNotFound,
-    HTTPFound
+    HTTPFound,
+    HTTPServerError
 )
 
 from sqlalchemy.exc import DBAPIError
@@ -241,6 +242,33 @@ class AuthViews(BaseViews):
         if hashlib.md5(str_to_hash.encode('utf-8')).hexdigest() != vk_auth_key:
             return HTTPBadRequest('Ошибка безопасности: vk_auth_key неверен')
 
+        token_get_result = helpers.get_json_from_url('https://api.vk.com/oauth/access_token', dict(
+            v='5.21',
+            client_id=vk_app_id_str,
+            client_secret=vk_app_secret_key,
+            grant_type='client_credentials',
+            scope='offline'
+        ))
+
+        access_token = token_get_result.get('access_token')
+        if not access_token:
+            return HTTPServerError('Ошибка при получении серверного access_token')
+
+        check_tocken_result = helpers.get_json_from_url('https://api.vk.com/method/secure.checkToken', dict(
+            token=vk_auth_token,
+            access_token=access_token,
+            client_secret=vk_app_secret_key
+        ))
+
+        check_tocken_response = check_tocken_result.get('response')
+        if not isinstance(check_tocken_response, dict):
+            return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
+
+        success = check_tocken_response.get('success')
+        user_id = check_tocken_response.get('user_id')
+
+        if not success == 1 or not user_id == int(vk_viewer_id):
+            return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
 
         # return HTTPFound(location=index_page, headers=headers)
         # return Response(

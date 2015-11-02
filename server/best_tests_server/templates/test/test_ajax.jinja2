@@ -38,6 +38,16 @@
             if !!history
                 history.pushState(state, null, url, false)
 
+        domain_from_url = (url) ->
+            a = document.createElement('a')
+            a.href = url
+            return a.hostname
+
+        url_on_this_domain = (url) ->
+            this_domain = domain_from_url(window.location.href)
+            url_domain = domain_from_url(url)
+            return this_domain == url_domain
+
         ajaxUpdateContent = (url, type="GET", data='', _addToHistory=true)->
             $.ajax(
                 url: url,
@@ -75,9 +85,9 @@
             console.log 'popstate binded'
         window.popstateBinded = true
 
+        {# TODO check before event attach #}
         $('a').on 'click', (e) ->
             console.log "ajax link clicked"
-            e.preventDefault()
             url = $(this).attr('href')
 {#            $.ajax(#}
 {#                url: url,#}
@@ -89,14 +99,15 @@
 {#                    console.log "ajax link error request"#}
 {#                    UI.notifyFromErrorData(data)#}
 {#            )#}
-            ajaxUpdateContent(url)
+            if url_on_this_domain(url)
+                e.preventDefault()
+                ajaxUpdateContent(url)
 
         $('form').each( () ->
             $form = $(this)
             $submitButton = $form.find('button[type=submit]')
             $submitButton.on('click', (e) ->
                 console.log "ajax button pressed"
-                e.preventDefault()
                 url = $form.attr('action')
                 if !url
                     url = window.location.href
@@ -112,7 +123,10 @@
 {#                        console.log "ajax link error request"#}
 {#                        UI.notifyFromErrorData(data)#}
 {#                )#}
-                ajaxUpdateContent(url, "POST", $form.serialize())
+                if url_on_this_domain(url)
+                    e.preventDefault()
+                    ajaxUpdateContent(url, "POST", $form.serialize())
+{#              TODO  stop event propagating? #}
             )
         )
 

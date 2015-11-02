@@ -25,7 +25,7 @@
 
       UI.notifyFromErrorData = function(ajaxData) {
         return new PNotify({
-          title: this.messageSuccess(ajaxData),
+          title: this.messageError(ajaxData),
           type: 'error'
         });
       };

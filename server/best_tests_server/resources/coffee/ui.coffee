@@ -14,7 +14,7 @@ $(document).ready ->
         )
     @notifyFromErrorData: (ajaxData) ->
         new PNotify(
-          title: @.messageSuccess(ajaxData)
+          title: @.messageError(ajaxData)
           type: 'error'
         )
     @renderBool: (value) ->

@@ -1,0 +1,122 @@
+{% extends "test_base.jinja2" %}
+
+{% block test_header %}
+    <h1>Test url</h1>
+{% endblock %}
+
+{% block content %}
+    {# TODO browser history! #}
+    <p>counter: {{ counter }}</p>
+    <p></p><a id="testAjax" href="{{ request.route_url('test_ajax', _query=dict(counter=counter)) }}">Увеличить счётчик через GET</a></p>
+
+
+<form id="testAjaxForm" method="POST" enctype="multipart/form-data" accept-charset="utf-8">
+  <fieldset class="testAjaxFormFieldset">
+    <div class="form-group">
+        <label for="testAjaxFormCounter" class="control-label required" id="req-deformField1">
+            Счётчик
+        </label>
+        <input name="counter" value="{{ counter }}" id="testAjaxFormCounter" class=" form-control " type="text" />
+    </div>
+    <div class="form-group">
+        <button id="testAjaxFormSubmit" name="testAjaxFormSubmit" type="submit" class="btn btn-primary " value="testAjaxFormSubmit">
+          Увеличить счётчик через POST
+        </button>
+    </div>
+
+  </fieldset>
+
+</form>
+
+{% compress 'js' %}
+<script type="text/coffeescript">
+    $(document).ready ->
+        console.log "bind ajax click events"
+
+        addToHistory = (url, state) ->
+            console.log "add to history"
+            if !!history
+                history.pushState(state, null, url, false)
+
+        ajaxUpdateContent = (url, type="GET", data='', _addToHistory=true)->
+            $.ajax(
+                url: url,
+                type: type,
+                data: data,
+                success: (success_data) ->
+                    console.log "ajax link success request"
+                    $('.content').html(success_data)
+                    if _addToHistory
+                        addToHistory(url, {
+                            url: url,
+                            requestType: type,
+                            data: data
+                        })
+                error: (error_data) ->
+                    console.log "ajax link error request"
+                    UI.notifyFromErrorData(error_data)
+            )
+
+        if !window.hasOwnProperty('popstateBinded')
+            $(window).bind('popstate', (e) ->
+                console.log "back in history"
+                state = e.originalEvent.state
+                url = state['url']
+                requestType = state['requestType'];
+                post = (state['requestType'] != 'GET')
+                data = state['data']
+                if !url
+                    return
+                if post && !confirm('Провести повторную отправку формы?')
+                    return
+
+                ajaxUpdateContent(url, requestType, data, false)
+            )
+            console.log 'popstate binded'
+        window.popstateBinded = true
+
+        $('a').on 'click', (e) ->
+            console.log "ajax link clicked"
+            e.preventDefault()
+            url = $(this).attr('href')
+{#            $.ajax(#}
+{#                url: url,#}
+{#                success: (data) ->#}
+{#                    console.log "ajax link success request"#}
+{#                    $('.content').html(data)#}
+{#                    addToHistory(url)#}
+{#                error: (data) ->#}
+{#                    console.log "ajax link error request"#}
+{#                    UI.notifyFromErrorData(data)#}
+{#            )#}
+            ajaxUpdateContent(url)
+
+        $('form').each( () ->
+            $form = $(this)
+            $submitButton = $form.find('button[type=submit]')
+            $submitButton.on('click', (e) ->
+                console.log "ajax button pressed"
+                e.preventDefault()
+                url = $form.attr('action')
+                if !url
+                    url = window.location.href
+{#                $.ajax(#}
+{#                    url: url,#}
+{#                    data: $form.serialize()#}
+{#                    type: "POST",#}
+{#                    success: (data) ->#}
+{#                        console.log "ajax link success request"#}
+{#                        $('.content').html(data)#}
+{#                        addToHistory(url)#}
+{#                    error: (data) ->#}
+{#                        console.log "ajax link error request"#}
+{#                        UI.notifyFromErrorData(data)#}
+{#                )#}
+                ajaxUpdateContent(url, "POST", $form.serialize())
+            )
+        )
+
+</script>
+{% endcompress %}
+
+{% endblock %}

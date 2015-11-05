@@ -17,6 +17,7 @@ best_tests_server/models.py
 best_tests_server/site_views.py
 best_tests_server/test_views.py
 best_tests_server/tests.py
+best_tests_server/vk.py
 best_tests_server/widgets.py
 best_tests_server.egg-info/PKG-INFO
 best_tests_server.egg-info/SOURCES.txt

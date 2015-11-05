@@ -3,7 +3,7 @@ from .models import (
     User
 )
 import pyramid.security as security
-
+from pyramid.request import Request
 
 class BaseViews:
     """
@@ -11,9 +11,12 @@ class BaseViews:
     """
     def __init__(self, request):
         self.request = request
+        """ :type : Request"""
+
         self.user_id = None
         self.user = None
         self.logined = self.check_logined(self.request)
+        self.ajax = self.request.is_xhr
 
     def check_logined(self, request):
         self.user_id = security.authenticated_userid(request)

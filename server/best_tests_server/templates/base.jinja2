@@ -1,3 +1,7 @@
+{% if ajax_links_enabled is not defined %}
+    {% set ajax_links_enabled=true %}
+{% endif %}
+{% if not view.ajax %}
 <!DOCTYPE html>
 <html lang="{{ request.locale_name }}">
 <head>
@@ -28,6 +32,10 @@
     <script src="{{ request.static_url('best_tests_server:static/pnotify.custom.min.js') }}"></script>
     <link href="{{ request.static_url('best_tests_server:static/pnotify.custom.min.css') }}" rel="stylesheet">
 
+{% if ajax_links_enabled %}
+    <script src="{{ request.static_url('best_tests_server:static/js/ajaxLinks.js') }}"></script>
+{% endif %}
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -46,6 +54,7 @@
             </div>
             <div class="col-md-10">
                 <div class="content">
+{% endif %}{# /not view.ajax: #}
                     {% block header %}
                         {% if header %}
                             <h1>{{ header }}</h1>
@@ -65,6 +74,7 @@
                     {% block content %}
 
                     {% endblock %}
+{% if not view.ajax %}
                 </div>
             </div>
         </div>
@@ -91,3 +101,4 @@
 
 </body>
 </html>
+{% endif %}{# /not view.ajax: #}

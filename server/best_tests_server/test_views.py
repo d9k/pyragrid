@@ -66,3 +66,12 @@ class Testiews(AdminViews):
     @view_config(route_name='test_url', renderer='templates/test/test_url.jinja2')
     def test_url(self):
         return {'header': 'Test url'}
+
+    @view_config(route_name='test_ajax', renderer='templates/test/test_ajax.jinja2')
+    def test_url(self):
+        if self.request.method == 'GET':
+            counter = int(self.request.GET.get('counter', 0))
+        else:
+            counter = int(self.request.POST.get('counter', 0))
+        counter += 1
+        return dict(header='Test ajax', counter=counter)

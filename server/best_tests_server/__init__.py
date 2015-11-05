@@ -89,6 +89,7 @@ def main(global_config, **settings):
     config.add_route('test_render', '/test/render')
     config.add_route('test_notify', '/test/notify')
     config.add_route('test_url', '/test/url')
+    config.add_route('test_ajax', '/test/ajax')
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')

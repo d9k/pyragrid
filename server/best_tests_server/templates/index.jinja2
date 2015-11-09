@@ -6,6 +6,8 @@
             <li><a href="{{ request.route_url('admin_index') }}">admin</a></li>
         {% endif %}
         <li><a href="{{ request.route_url('profile_edit') }}">edit profile</a></li>
-        <li><a href="{{ request.route_url('logout') }}">logout</a></li>
+        {% if view.login_from_vk_iframe==None %}
+            <li><a href="{{ request.route_url('logout') }}">logout</a></li>
+        {% endif %}
     </ul>
 {% endblock %}

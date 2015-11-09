@@ -1,6 +1,12 @@
 {% if ajax_links_enabled is not defined %}
     {% set ajax_links_enabled=true %}
 {% endif %}
+{% if load_vk_scripts is not defined %}
+{#    {% set load_vk_scripts=false %}#}
+{#    {% if view.vk_id is not None %}#}
+        {% set load_vk_scripts=view.vk_id!=None %}
+{#    {% endif %}#}
+{% endif %}
 {% if not view.ajax %}
 <!DOCTYPE html>
 <html lang="{{ request.locale_name }}">
@@ -31,11 +37,15 @@
     <script src="{{ request.static_url('best_tests_server:static/js/ui.js') }}"></script>
     <script src="{{ request.static_url('best_tests_server:static/pnotify.custom.min.js') }}"></script>
     <link href="{{ request.static_url('best_tests_server:static/pnotify.custom.min.css') }}" rel="stylesheet">
+{# TODO conditional vk script loading #}
+    <link href="{{ request.static_url('best_tests_server:static/pnotify.custom.min.css') }}" rel="stylesheet">
 
 {% if ajax_links_enabled %}
     <script src="{{ request.static_url('best_tests_server:static/js/ajaxLinks.js') }}"></script>
 {% endif %}
-
+{% if load_vk_scripts %}
+    <script src="{{ request.static_url('best_tests_server:static/js/vkAuth.js') }}"></script>
+{% endif %}
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

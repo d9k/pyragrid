@@ -1,6 +1,6 @@
 (function() {
   $(document).ready(function() {
-    var addToHistory, ajaxUpdateContent, debugMode, domainFromUrl, trace, urlOnThisDomain;
+    var addToHistory, ajaxUpdateContent, cloneObject, debugMode, domainFromUrl, hasDisableAjaxAttr, noOptimise, trace, urlOnThisDomain;
     debugMode = function() {
       return window.hasOwnProperty('ajaxLinksDebugMode') && window.ajaxLinksDebugMode;
     };
@@ -10,10 +10,32 @@
       }
     };
     trace("bind ajax click events");
-    addToHistory = function(url, state) {
+    cloneObject = function(obj) {
+      var attr, copy;
+      if (null === obj || "object" !== typeof obj) {
+        return obj;
+      }
+      copy = obj.constructor();
+      for (attr in obj) {
+        if (obj.hasOwnProperty(attr)) {
+          copy[attr] = obj[attr];
+        }
+      }
+      return copy;
+    };
+    addToHistory = function(state) {
+      var stateRedirected;
       trace("add to history");
       if (!!history) {
-        return history.pushState(state, null, url);
+        history.pushState(state, null, state['url']);
+        if (state['returnedUrl'] !== ['url']) {
+          stateRedirected = cloneObject(state);
+          stateRedirected['url'] = stateRedirected['returnedUrl'];
+          stateRedirected['data'] = '';
+          return setTimeout((function() {
+            return history.pushState(state, null, stateRedirected['url']);
+          }), 300);
+        }
       }
     };
     domainFromUrl = function(url) {
@@ -28,7 +50,19 @@
       url_domain = domainFromUrl(url);
       return this_domain === url_domain;
     };
+    hasDisableAjaxAttr = function($el) {
+      return typeof $el.attr('data-no-ajax-on-click') !== 'undefined';
+    };
+    noOptimise = function(variable) {
+      return variable;
+    };
+    addToHistory({
+      url: window.location.href,
+      requestType: 'GET',
+      data: ''
+    });
     ajaxUpdateContent = function(url, type, data, _addToHistory) {
+      var rawXHR;
       if (type == null) {
         type = "GET";
       }
@@ -38,22 +72,30 @@
       if (_addToHistory == null) {
         _addToHistory = true;
       }
+      rawXHR = null;
       return $.ajax({
         url: url,
         type: type,
         data: data,
-        success: function(success_data) {
+        xhr: function() {
+          var xhr;
+          xhr = jQuery.ajaxSettings.xhr();
+          rawXHR = xhr;
+          return xhr;
+        },
+        success: function(success_data, textStatus, request) {
           trace("ajax link success request");
           $('.content').html(success_data);
           if (_addToHistory) {
-            return addToHistory(url, {
+            return addToHistory({
               url: url,
               requestType: type,
-              data: data
+              data: data,
+              returnedUrl: rawXHR.responseURL
             });
           }
         },
-        error: function(error_data) {
+        error: function(error_data, textStatus, errorThrown) {
           trace("ajax link error request");
           return UI.notifyFromErrorData(error_data);
         }
@@ -63,7 +105,11 @@
       window.addEventListener('popstate', function(e) {
         var data, post, requestType, state, url;
         trace("back in history");
-        state = e.state;
+        state = $.extend({
+          'requestType': 'GET',
+          'returnedUrl': '',
+          'data': ''
+        }, e.state);
         url = state['url'];
         requestType = state['requestType'];
         post = state['requestType'] !== 'GET';
@@ -80,25 +126,35 @@
     }
     window.popstateBinded = true;
     $('body').on('click', 'a', function(e) {
-      var url;
+      var $this, url;
       trace("ajax link clicked");
-      url = $(this).attr('href');
+      $this = $(this);
+      url = $this.attr('href');
+      if (hasDisableAjaxAttr($this)) {
+        return;
+      }
       if (urlOnThisDomain(url)) {
         e.preventDefault();
         return ajaxUpdateContent(url);
       }
     });
     return $('body').on('click', 'form button[type=submit]', function(e) {
-      var $form, url;
+      var $form, $this, formData, url;
+      $this = $(this);
       $form = $(this).closest('form');
       trace("ajax button pressed");
       url = $form.attr('action');
       if (!url) {
         url = window.location.href;
       }
+      if (hasDisableAjaxAttr($this) || hasDisableAjaxAttr($form)) {
+        return;
+      }
+      formData = $form.serialize();
+      formData += '&' + this.name + '=' + this.value;
       if (urlOnThisDomain(url)) {
         e.preventDefault();
-        return ajaxUpdateContent(url, "POST", $form.serialize());
+        return ajaxUpdateContent(url, "POST", formData);
       }
     });
   });

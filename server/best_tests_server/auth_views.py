@@ -48,7 +48,7 @@ class AuthViews(BaseViews):
 
     @view_config(route_name='login', renderer='templates/login.jinja2')
     @forbidden_view_config(renderer='templates/login.jinja2')
-    def login_view(self):
+    def view_login(self):
 
         authed_user = None
 
@@ -70,12 +70,16 @@ class AuthViews(BaseViews):
 
             if not user:
                 raise exception_for_schema_field(form, 'login', 'Пользователь не найден')
+            if not user.active:
+                raise exception_for_schema_field(form, 'login', 'Аккаунт пользователя заблокирован')
+            if user.password_hash is None:
+                if user.email is None:
+                    raise exception_for_schema_field(form, 'password', 'Вход по паролю отключен. Почта не была привязана к аккаунту')
+                raise exception_for_schema_field(form, 'password', 'Вход по паролю отключен')
             if not user.check_password(password):
                 raise exception_for_schema_field(form, 'password', 'Неверный пароль')
             if not user.email_checked:
                 raise exception_for_schema_field(form, 'login', 'Email пользователя не подтверждён. Проверьте почтовый ящик') #TODO показывать email "в звёздочках"
-            if not user.active:
-                raise exception_for_schema_field(form, 'login', 'Аккаунт пользователя заблокирован')
             authed_user = user
 
         login_form = Form(
@@ -102,7 +106,7 @@ class AuthViews(BaseViews):
         return dict(rendered_login_form=login_form.render())
 
     @view_config(route_name='register', renderer='templates/register.jinja2')
-    def register_view(self):
+    def view_register(self):
 
         # def validate_register(form, values):
         #     pass
@@ -159,7 +163,7 @@ class AuthViews(BaseViews):
         return dict(rendered_register_form=register_form.render())
 
     @view_config(route_name='register_success', renderer='templates/register_success.jinja2')
-    def register_success_view(self):
+    def view_register_success(self):
         # TODO show user name and email
         new_user_id = self.request.session.get('new_user_id')
         if new_user_id is None:
@@ -171,7 +175,7 @@ class AuthViews(BaseViews):
         return dict(user_name=user.name, new_password=new_password)
 
     @view_config(route_name='logout', renderer='templates/logout.jinja2')
-    def logout_view(self):
+    def view_logout(self):
         if self.vk_id:
             return
         headers = security.forget(self.request)
@@ -180,7 +184,7 @@ class AuthViews(BaseViews):
         return HTTPFound(location=login_page, headers=headers)
 
     @view_config(route_name='add_user', renderer='templates/default_page.jinja2')
-    def add_user_view(self):
+    def view_add_user(self):
         try:
             with transaction.manager:
                 # new_user = User(vk_id=1, name='Павел Дуров')
@@ -264,10 +268,13 @@ class AuthViews(BaseViews):
 
         check_tocken_response = check_tocken_result.get('response')
         if not isinstance(check_tocken_response, dict):
-            return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
+            # return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
+            return {'content_raw': 'Нажмите ссылку "Добавить приложение" в правом верхнем углу'}
 
         success = check_tocken_response.get('success')
         user_id = check_tocken_response.get('user_id')
+
+        # TODO check expiration time
 
         if not success == 1 or not user_id == int(vk_id):
             return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
@@ -282,5 +289,15 @@ class AuthViews(BaseViews):
             self.request.session['login_from_vk_iframe'] = True
             return HTTPFound(location=index_page, headers=headers)
 
-        # TODO or create new one
-        return {}
+        new_user = User(vk_id=vk_id, login='id'+str(vk_id), active=True)
+        try:
+            with transaction.manager:
+                DBSession.add(new_user)
+        except DBAPIError:
+            return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+        if new_user.id:
+            return HTTPFound(location=self.request.url)
+
+        # TODO create new user
+        return {'content': 'Ошибка при создании пользователя'}

@@ -4,9 +4,9 @@
     UI = (function() {
       function UI() {}
 
-      UI.DEF_MESSAGE_SUCCESS = 'Изменение прошло успешно';
+      UI.DEF_MESSAGE_SUCCESS = 'Запрос выполнен успешно';
 
-      UI.DEF_MESSAGE_ERROR = 'Ошибка при изменении';
+      UI.DEF_MESSAGE_ERROR = 'Ошибка при выполнении запроса';
 
       UI.messageSuccess = function(ajaxData) {
         return ajaxData.message || this.DEF_MESSAGE_SUCCESS;

@@ -82,7 +82,12 @@
                         {% endif %}
                     {% endblock %}
                     {% block content %}
-
+                        {% if content %}
+                            <p>{{ content }}</p>
+                        {% endif %}
+                        {% if content_raw %}
+                            {{ content_raw | safe }}
+                        {% endif %}
                     {% endblock %}
 {% if not view.ajax %}
                 </div>

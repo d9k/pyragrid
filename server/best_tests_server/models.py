@@ -150,6 +150,8 @@ class User(Base):
         self.password_hash = create_hashed_password(password, salt) + ':' + salt
 
     def check_password(self, user_password):
+        if self.password_hash is None:
+            return False
         hashed_password_only, salt = self.password_hash.split(':')
         return hashed_password_only == create_hashed_password(user_password, salt)
 

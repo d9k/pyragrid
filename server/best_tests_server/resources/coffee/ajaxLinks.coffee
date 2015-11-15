@@ -32,6 +32,8 @@ $(document).ready () ->
                 setTimeout (-> history.pushState(state, null, stateRedirected['url'])), 300
 
     domainFromUrl = (url) ->
+        if !url?
+            return null
         a = document.createElement('a')
         a.href = url
         return a.hostname;

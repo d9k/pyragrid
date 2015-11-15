@@ -40,6 +40,9 @@
     };
     domainFromUrl = function(url) {
       var a;
+      if (url == null) {
+        return null;
+      }
       a = document.createElement('a');
       a.href = url;
       return a.hostname;

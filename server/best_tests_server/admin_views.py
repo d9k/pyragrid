@@ -131,13 +131,23 @@ class AdminViews(BaseViews):
         if not user:
             return HTTPNotFound('User not found')
 
+        if 'user_delete' in self.request.params:
+            try:
+                with transaction.manager:
+                    DBSession.delete(user)
+            except DBAPIError:
+                return Response(conn_err_msg, content_type='text/plain', status_int=500)
+            return HTTPFound(self.request.route_url('admin_users'))
+
         user_edit_schema = forms.UserEditSchema()
         user_edit_schema.linked_user = user
 
         user_edit_form = deform.Form(
             user_edit_schema.bind(),
-            buttons=[deform.Button(name='user_edit_form_submit', title='Изменить')],
+            buttons=[deform.Button(name='user_edit_form_submit', title='Изменить'),
+                     deform.Button(name='user_delete', title='X', css_class='btn-danger')],  # TODO description="Удалить пользователя",
         )
+
         if 'user_edit_form_submit' in self.request.params:
             controls = self.request.POST.items()
             try:

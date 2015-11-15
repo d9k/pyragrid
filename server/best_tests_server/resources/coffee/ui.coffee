@@ -1,8 +1,8 @@
 $(document).ready ->
   class UI
     constructor: () ->
-    @DEF_MESSAGE_SUCCESS: 'Изменение прошло успешно'
-    @DEF_MESSAGE_ERROR: 'Ошибка при изменении'
+    @DEF_MESSAGE_SUCCESS: 'Запрос выполнен успешно'
+    @DEF_MESSAGE_ERROR: 'Ошибка при выполнении запроса'
     @messageSuccess: (ajaxData) ->
       ajaxData.message || @.DEF_MESSAGE_SUCCESS
     @messageError: (ajaxData) ->

@@ -10,4 +10,6 @@
     </ul>
     <p>Tests:</p>
     {% include '../_test_urls.jinja2' %}
+
+    <p><a href="{{ request.route_url('logout') }}">logout</a></p>
 {% endblock %}

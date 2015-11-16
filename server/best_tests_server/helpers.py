@@ -15,11 +15,18 @@ from bs4 import BeautifulSoup
 import urllib.parse
 import urllib.request
 import json
+import pyramid.threadlocal
+import colander
 
 
 def get_setting(key, default_value=None):
     request = get_current_request()
-    settings = request.registry.settings
+    if request is None:
+        settings = pyramid.threadlocal.get_current_registry().settings
+    else:
+        settings = request.registry.settings
+    if settings is None:
+        return None
     return settings.get(key, default_value)
 
 
@@ -49,6 +56,28 @@ def dicts_merge(dictionary1, dictionary2):
         output[item] = value
     return output
 
+
+def dict_has_keys(_dict: dict, keys: list):
+    """ see http://stackoverflow.com/a/1285920/1760643 """
+    if not isinstance(_dict, dict):
+        return False
+    return all(k in _dict for k in keys)
+
+
+def dict_has_data(_dict: dict, data_to_have: dict):
+    if not isinstance(_dict, dict):
+        return False
+    has_data = True
+    for key, value in data_to_have.items():
+        if _dict.get(key) != value:
+            has_data = False
+            break
+    return has_data
+
+
+def dict_to_vars(_dict: dict, keys: list):
+    for key in keys:
+        yield _dict[key]
 
 # see https://gist.github.com/mmerickel/7901444
 def load_config(file_name):
@@ -112,7 +141,10 @@ def datatables_result_add_fake_column(datatables_result):
 
 def obj_fields_from_dict(obj, data_dict):
     for key in data_dict:
-        setattr(obj, key, data_dict[key])
+        if data_dict[key] == colander.null:
+            setattr(obj, key, None)
+        else:
+            setattr(obj, key, data_dict[key])
 
 
 def build_url(host_page_url: str, get_params: dict = None):

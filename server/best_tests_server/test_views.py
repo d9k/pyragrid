@@ -63,6 +63,13 @@ class Testiews(AdminViews):
     def test_notify(self):
         return {'header': 'Test notify'}
 
+    @view_config(route_name='test_view_notify', renderer='templates/test/test_base.jinja2')
+    def test_view_notify(self):
+        self.add_success_flash('Тестирование успеха')
+        self.add_error_flash('Тестирование ошибки')
+        self.add_success_flash('И снова успех!')
+        return {'header': 'Test view notify'}
+
     @view_config(route_name='test_url', renderer='templates/test/test_url.jinja2')
     def test_url(self):
         return {'header': 'Test url'}

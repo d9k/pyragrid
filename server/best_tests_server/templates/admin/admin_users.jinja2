@@ -11,12 +11,13 @@
         <tr>
             {# TODO строковые индексы колонок #}
             <th>id</th>{# 0 #}
-            <th>Логин</th>{# 1 #}
-            <th>Имя</th>{# 2 #}
-            <th>Почта</th>{# 3 #}
-            <th>Почта подтв.</th>{# 4 #}
-            <th>Включен</th>{# 5 #}
-            <th>{# buttons col #}</th>{# 6 #}
+            <th>vk id</th>{# 1 #}
+            <th>Логин</th>{# 2 #}
+            <th>Имя</th>{# 3 #}
+            <th>Почта</th>{# 4 #}
+            <th>Почта подтв.</th>{# 5 #}
+            <th>Включен</th>{# 6 #}
+            <th>{# buttons col #}</th>{# 7 #}
         </tr>
         </thead>
         <tbody></tbody>
@@ -34,20 +35,21 @@
                   { 'mData': 1 }
                   { 'mData': 2 }
                   { 'mData': 3 }
-                  {
-                    'mData': 4
-                    'mRender': (value, type, data) ->
-                       UI.renderBool(data[4])
-                  }
+                  { 'mData': 4 }
                   {
                     'mData': 5
                     'mRender': (value, type, data) ->
                        UI.renderBool(data[5])
                   }
                   {
+                    'mData': 6
+                    'mRender': (value, type, data) ->
+                       UI.renderBool(data[6])
+                  }
+                  {
                     'mRender': (value, type, data) ->
                       id = data[0]
-                      active = data[5] == 'True'
+                      active = data[6] == 'True'
                       rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
 
                       button_url = '/admin/users/' + (if active then 'disable' else 'enable') + '/' + id

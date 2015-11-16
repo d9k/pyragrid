@@ -55,17 +55,15 @@ def email_unique_validator(node, value):
 def validate_user_edit_form(schema, values):
     # found = User.by_login(value)
     linked_user = None
-    not_login = None
-    not_email = None
+    not_id = None
     if hasattr(schema, 'linked_user'):
         linked_user = schema.linked_user
     if linked_user is not None:
-        not_login = linked_user.login
-        not_email = linked_user.email
-    found_by_login = User.by_login(values.get('login'), not_login)
+        not_id = linked_user.id
+    found_by_login = User.by_login(values.get('login'), not_id)
     if found_by_login is not None:
         raise exception_for_schema_field(schema, 'login', 'Пользователь с таким логином уже существует')
-    found_by_email = User.by_email(values.get('email'), not_email)
+    found_by_email = User.by_email(values.get('email'), not_id)
     if found_by_email is not None:
         raise exception_for_schema_field(schema, 'email', 'Пользователь с таким адресом уже существует')
 

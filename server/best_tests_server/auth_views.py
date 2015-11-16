@@ -41,6 +41,11 @@ import pyramid.security as security
 import dictalchemy.utils
 import hashlib
 
+from . import vk
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class AuthViews(BaseViews):
     # def __init__(self, request):
@@ -223,60 +228,42 @@ class AuthViews(BaseViews):
             headers = security.forget(self.request)
             return HTTPFound(location=self.request.url, headers=headers)
         index_page = self.request.route_url('index')
-        vk_auth_key = self.request.params.get('auth_key')
-        vk_auth_token = self.request.params.get('access_token')
-        vk_id = self.request.params.get('viewer_id')
 
-        if not vk_auth_key or not vk_auth_token or not vk_id:
-            # return HTTPBadRequest('нет входных параметров vk')
-            return None  # not inside iframe
+        try:
+            vk_auth_key, vk_auth_token, vk_id = helpers.dict_to_vars(self.request.params, [
+                'auth_key', 'access_token', 'viewer_id'
+            ])
+        except KeyError:
+            return HTTPBadRequest('страница вызвана не из фрейма vk')
 
         if self.user:
-            if self.user.vk_id == vk_auth_token:
+            if self.user.vk_id == vk_id and self.request.session.get('login_from_vk_iframe') is not None:
+                # TODO put below, after token check maybe?
                 return HTTPFound(location=index_page)
             else:
                 headers = security.forget(self.request)
                 self.request.session.invalidate()
                 return HTTPFound(location=self.request.url, headers=headers)
 
-        vk_app_id_str = helpers.get_setting('vk_app_id')
-        vk_app_secret_key = helpers.get_setting('vk_app_secret_key')
-        vk_api_version = helpers.get_setting('vk_api_version')
-
-        str_to_hash = vk_app_id_str + '_' + vk_id + '_' + vk_app_secret_key
-
-        if hashlib.md5(str_to_hash.encode('utf-8')).hexdigest() != vk_auth_key:
+        if not vk.check_md5_vk_auth_key(vk_id, vk_auth_key):
             return HTTPBadRequest('Ошибка безопасности: vk_auth_key неверен')
 
-        token_get_result = helpers.get_json_from_url('https://api.vk.com/oauth/access_token', dict(
-            v=vk_api_version,
-            client_id=vk_app_id_str,
-            client_secret=vk_app_secret_key,
-            grant_type='client_credentials',
-            scope='offline'
-        ))
-
-        access_token = token_get_result.get('access_token')
+        access_token = vk.get_token()  # token_get_result.get('access_token')
         if not access_token:
             return HTTPServerError('Ошибка при получении серверного access_token')
 
-        check_tocken_result = helpers.get_json_from_url('https://api.vk.com/method/secure.checkToken', dict(
+        check_token_response = vk.api_response('secure.checkToken', dict(
             token=vk_auth_token,
             access_token=access_token,
-            client_secret=vk_app_secret_key
+            client_secret=vk.vk_app_secret_key
         ))
 
-        check_tocken_response = check_tocken_result.get('response')
-        if not isinstance(check_tocken_response, dict):
+        if check_token_response is None:
             # return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
             return {'content_raw': 'Нажмите ссылку "Добавить приложение" в правом верхнем углу'}
-
-        success = check_tocken_response.get('success')
-        user_id = check_tocken_response.get('user_id')
-
         # TODO check expiration time
 
-        if not success == 1 or not user_id == int(vk_id):
+        if not helpers.dict_has_data(check_token_response, {'success': 1, 'user_id': int(vk_id)}):
             return HTTPServerError('Ошибка при проверке access_token: неверный формат ответа')
 
         authed_user = User.by_vk_id(vk_id)
@@ -289,7 +276,9 @@ class AuthViews(BaseViews):
             self.request.session['login_from_vk_iframe'] = True
             return HTTPFound(location=index_page, headers=headers)
 
-        new_user = User(vk_id=vk_id, login='id'+str(vk_id), active=True)
+        new_user = User(vk_id=vk_id, login='id'+str(vk_id), name='id'+str(vk_id), active=True)
+        vk.update_user_model_by_vk_id(new_user, vk_id)
+
         try:
             with transaction.manager:
                 DBSession.add(new_user)

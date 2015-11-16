@@ -20,11 +20,14 @@ from pyramid_mailer.mailer import Mailer
 import os.path
 import pyramid.events
 import pyramid_jinja2
+import pyramid.threadlocal
+import json
 
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
     event['helpers'] = helpers
+    event['json'] = json
 
 
 def main(global_config, **settings):
@@ -88,6 +91,7 @@ def main(global_config, **settings):
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
     config.add_route('test_notify', '/test/notify')
+    config.add_route('test_view_notify', '/test/view_notify')
     config.add_route('test_url', '/test/url')
     config.add_route('test_ajax', '/test/ajax')
     config.add_route('test_redirect', '/test/redirect')
@@ -104,6 +108,11 @@ def main(global_config, **settings):
     config.add_subscriber(add_renderer_globals, pyramid.events.BeforeRender)
 
     # config.registry['mailer'] = Mailer.from_settings(settings)
+
+    # fix vk init:
+    if pyramid.threadlocal.get_current_registry().settings is None:
+        pyramid.threadlocal.get_current_registry().settings = settings
+
     config.scan()
     # TODO убрать настройку jinja2 env в конфиг
     app = config.make_wsgi_app()

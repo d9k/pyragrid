@@ -11,6 +11,7 @@ best_tests_server/__init__.py
 best_tests_server/admin_views.py
 best_tests_server/auth_views.py
 best_tests_server/base_views.py
+best_tests_server/datatables_mod.py
 best_tests_server/forms.py
 best_tests_server/helpers.py
 best_tests_server/models.py
@@ -41,8 +42,11 @@ best_tests_server/static/pnotify.custom.min.js
 best_tests_server/static/pyramid-16x16.png
 best_tests_server/static/pyramid.png
 best_tests_server/static/css/style.css
+best_tests_server/static/js/ajaxLinks.js
 best_tests_server/static/js/test.js
 best_tests_server/static/js/ui.js
+best_tests_server/static/js/vkAuth.js
+best_tests_server/templates/deform_mod/form_mod.pt
 best_tests_server/templates/deform_mod/passwordplaceholder.pt
 best_tests_server/templates/deform_mod/recaptcha_widget.pt
 best_tests_server/templates/deform_mod/textinputplaceholder.pt

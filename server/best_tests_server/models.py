@@ -9,8 +9,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
-    scoped_session,
-    sessionmaker,
+    scoped_session, sessionmaker, Query
 )
 from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
@@ -174,20 +173,13 @@ class User(Base):
 
     @staticmethod
     # def by_login(user_login: str, filters=None):
-    def by_login(user_login: str, not_login: str = None):
+    def by_login(user_login: str, not_id: int = None):
         """
         :return User
         """
-        # # if filters is None:
-        # #     filters = []
-        # filters = [User.login == user_login]
-        # # if not_login is not None:
-        # #     filters.append(User.login != not_login)
-        # return DBSession.query(User).filter(filters).first()
         q = DBSession.query(User)\
             .filter(User.login == user_login)
-        if not_login is not None:
-            q = q.filter(User.login != not_login)
+        q = User.filter_not_id(q, not_id)
         return q.first()
 
     @staticmethod
@@ -198,15 +190,20 @@ class User(Base):
         return DBSession.query(User).filter(User.vk_id == vk_id).first()
 
     @staticmethod
-    def by_email(email: str, not_email: str = None):
+    def by_email(email: str, not_id:int = None):
         """
         :return User
         """
         q = DBSession.query(User).filter(User.email == email)
-        if not_email is not None:
-            q = q.filter(User.email != not_email)
+        q = User.filter_not_id(q, not_id)
         return q.first()
 
+
+    @staticmethod
+    def filter_not_id(query:Query, not_id):
+        if not_id is not None:
+            return query.filter(User.id != not_id)
+        return query
 
     @staticmethod
     def by_any(any):

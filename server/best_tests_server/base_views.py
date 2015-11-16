@@ -12,6 +12,7 @@ from pyramid.httpexceptions import (
 )
 from . import helpers
 import hashlib
+from pyramid.response import Response
 
 
 class BaseViews:
@@ -28,6 +29,7 @@ class BaseViews:
         self.logined = self.check_logined(self.request)
         self.vk_id = self.check_vk_auth()
         self.login_from_vk_iframe = self.request.session.get('login_from_vk_iframe')
+        self.pnotify=[]
         a = 1
 
     def check_logined(self, request):
@@ -108,6 +110,25 @@ class BaseViews:
         #
         # # TODO or create new one
         # return vk_id
+
+    def responce_db_error(self):
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+    def add_flash_message(self, title=None, text=None, type='success'):
+        new_message = {}
+        if title is not None:
+            new_message['title'] = title
+        if text is not None:
+            new_message['text'] = text
+        if type is not None:
+            new_message['type'] = type
+        self.pnotify.append(new_message)
+
+    def add_success_flash(self, title=None, text=None):
+        self.add_flash_message(title, text, 'success')
+
+    def add_error_flash(self, title=None, text=None):
+        self.add_flash_message(title, text, 'error')
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

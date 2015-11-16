@@ -36,6 +36,9 @@ import deform
 
 import dictalchemy.utils
 
+from . import widgets
+from .datatables_mod import DataTablesMod
+
 
 @view_defaults(permission='admin')
 class AdminViews(BaseViews):
@@ -52,6 +55,7 @@ class AdminViews(BaseViews):
     def admin_users_grid_view(self):
         columns = [
             ColumnDT('id'),
+            ColumnDT('vk_id'),
             ColumnDT('login'),
             ColumnDT('name'),
             ColumnDT('email'),
@@ -60,7 +64,7 @@ class AdminViews(BaseViews):
         ]
         query = DBSession.query(User)
         # instantiating a DataTable for the query and table needed
-        row_table = DataTables(self.request.GET, User, query, columns)
+        row_table = DataTablesMod(self.request.GET, User, query, columns)
 
         # returns what is needed by DataTable
         result = row_table.output_result()
@@ -142,10 +146,11 @@ class AdminViews(BaseViews):
         user_edit_schema = forms.UserEditSchema()
         user_edit_schema.linked_user = user
 
-        user_edit_form = deform.Form(
+        user_edit_form = widgets.FormEx(
             user_edit_schema.bind(),
-            buttons=[deform.Button(name='user_edit_form_submit', title='Изменить'),
-                     deform.Button(name='user_delete', title='X', css_class='btn-danger')],  # TODO description="Удалить пользователя",
+            buttons=[widgets.ButtonEx(name='user_edit_form_submit', title='Изменить'),
+                     widgets.ButtonEx(name='user_delete', title='X', css_class='btn-danger',
+                                      description="Удалить пользователя")],
         )
 
         if 'user_edit_form_submit' in self.request.params:
@@ -169,6 +174,8 @@ class AdminViews(BaseViews):
                     DBSession.add(user)
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+            self.add_success_flash('Пользователь успешно изменён')
 
         # TODO name validator
         appstruct = dictalchemy.utils.asdict(user)

@@ -89,6 +89,14 @@
                             {{ content_raw | safe }}
                         {% endif %}
                     {% endblock %}
+                    {% if view.pnotify %}
+                        <script>
+                        $(function() {
+                            UI.notifyFromArray({{ json.dumps(view.pnotify) | safe }});
+                        });
+
+                        </script>
+                    {% endif %}
 {% if not view.ajax %}
                 </div>
             </div>

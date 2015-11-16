@@ -3,6 +3,8 @@ import transaction
 
 from pyramid import testing
 
+from best_tests_server import helpers
+
 
 class MyUnitTest(unittest.TestCase):
     def setUp(self):
@@ -10,7 +12,6 @@ class MyUnitTest(unittest.TestCase):
         self.config = testing.setUp()
 
     def test_build_url(self):
-        from best_tests_server import helpers
 
         self.assertEqual(
             'http://example.com/test.html',
@@ -19,9 +20,48 @@ class MyUnitTest(unittest.TestCase):
         self.assertIn(
             helpers.build_url('http://example.com/test.html', {'param1': 'some words', 'param2': '', 'param3': '3'}),
             # WTF with order?
-            ['http://example.com/test.html?param3=3&param1=some+words&param2=',
+            ['http://example.com/test.html?param1=some+words&param2=&param3=3',
+             'http://example.com/test.html?param1=some+words&param3=3&param2=',
+             'http://example.com/test.html?param2=&param1=some+words&param3=3',
+             'http://example.com/test.html?param2=&param3=3&param1=some+words',
+             'http://example.com/test.html?param3=3&param1=some+words&param2=',
              'http://example.com/test.html?param3=3&param2=&param1=some+words']
         )
+
+    def test_dict_has_keys(self):
+        has_keys = helpers.dict_has_keys
+        T = self.assertTrue
+        F = self.assertFalse
+        T(has_keys({'a': 1, 'b': 2, 'd': 3}, []))
+        T(has_keys({'a': 1, 'b': 2, 'd': 3}, ['a']))
+        T(has_keys({'a': 1, 'b': 2, 'd': 3}, ['a', 'b']))
+        T(has_keys({'a': 1, 'b': 2, 'd': 3}, ['a', 'b', 'd']))
+        F(has_keys({'a': 1, 'b': 2, 'd': 3}, ['c']))
+        F(has_keys({'a': 1, 'b': 2, 'd': 3}, ['a', 'b', 'c', 'd']))
+
+    def test_dict_has_data(self):
+        has_data = helpers.dict_has_data
+        T = self.assertTrue
+        F = self.assertFalse
+        T(has_data({'a': 1, 'b': 2, 'd': 3}, {}))
+        T(has_data({'a': 1, 'b': 2, 'd': 3}, {'a': 1}))
+        T(has_data({'a': 1, 'b': 2, 'd': 3}, {'a': 1, 'b': 2}))
+        F(has_data({'a': 1, 'b': 2, 'd': 3}, {'a': 1, 'b': -1}))
+        F(has_data({'a': 1, 'b': 2, 'd': 3}, {'a': 1, 'b': 2, 'c': 0}))
+        F(has_data({'a': 1, 'b': 2, 'd': 3}, {'c': 0}))
+        F(has_data({'a': 1, 'b': 2, 'd': 3}, {'a': 1, 'b': 2, 'c': 0, 'd': 3}))
+
+    def test_dict_to_vars(self):
+        to_vars = helpers.dict_to_vars
+        eq = self.assertEqual
+        a, b, d = to_vars({'a': 1, 'b': 2, 'c': 3, 'd': 4}, ['a', 'b', 'd'])
+        eq(a, 1); eq(b, 2); eq(d, 4)
+        del a, b, d
+
+        def test_key_error():
+            a, b, e = to_vars({'a': 1, 'b': 2, 'c': 3, 'd': 4}, ['a', 'b', 'e'])
+
+        self.assertRaises(KeyError, test_key_error)
 
     def tearDown(self):
         testing.tearDown()

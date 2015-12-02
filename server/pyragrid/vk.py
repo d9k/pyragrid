@@ -1,6 +1,6 @@
 # vk helpers
 
-from best_tests_server import helpers
+from pyragrid import helpers
 from . import helpers
 import logging
 import hashlib

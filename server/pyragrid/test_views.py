@@ -30,7 +30,7 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-from best_tests_server import helpers
+from pyragrid import helpers
 
 from datatables import ColumnDT, DataTables
 

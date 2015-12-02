@@ -14,7 +14,7 @@ from pyramid.i18n import get_localizer
 from pyramid.threadlocal import get_current_request
 from pkg_resources import resource_filename
 import deform
-from best_tests_server import helpers
+from pyragrid import helpers
 
 from pyramid_mailer.mailer import Mailer
 import os.path
@@ -48,14 +48,14 @@ def main(global_config, **settings):
     # DBSession.configure(bind=engine)
     Base.metadata.bind = sql_engine
     session_factory = session_factory_from_settings(settings)
-    config = Configurator(settings=settings, root_factory='best_tests_server.models.RootFactory')
+    config = Configurator(settings=settings, root_factory='pyragrid.models.RootFactory')
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
     config.add_translation_dirs(
         'colander:locale',
         'deform:locale',
-        'best_tests_server:locale'
+        'pyragrid:locale'
     )
 
     def translator(term):

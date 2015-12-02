@@ -18,7 +18,7 @@ fileConfig(config.config_file_name)
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
 
-from best_tests_server.models import Base
+from pyragrid.models import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

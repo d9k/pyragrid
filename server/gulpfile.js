@@ -7,10 +7,10 @@ var gulp    = require('gulp'), 
     sourcemaps = require('gulp-sourcemaps');
 
 var config = {
-    coffeePath: './best_tests_server/resources/coffee',
-     sassPath: './best_tests_server/resources/sass',
+    coffeePath: './pyragrid/resources/coffee',
+     sassPath: './pyragrid/resources/sass',
      bowerDir: './bower_components' ,
-    staticDir: './best_tests_server/static'
+    staticDir: './pyragrid/static'
 };
 
 gulp.task('bower', function() { 

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: best_tests_server 0.0\n"
+"Project-Id-Version: pyragrid 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2015-09-26 21:30+0300\n"
 "PO-Revision-Date: 2015-09-26 21:30+0300\n"

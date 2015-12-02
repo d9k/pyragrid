@@ -3,7 +3,7 @@ import transaction
 
 from pyramid import testing
 
-from best_tests_server import helpers
+from pyragrid import helpers
 
 
 class MyUnitTest(unittest.TestCase):
@@ -90,7 +90,7 @@ class MyUnitTest(unittest.TestCase):
 #         request = testing.DummyRequest()
 #         info = my_view(request)
 #         self.assertEqual(info['one'].name, 'one')
-#         self.assertEqual(info['project'], 'best_tests_server')
+#         self.assertEqual(info['project'], 'pyragrid')
 #
 #
 # class TestMyViewFailureCondition(unittest.TestCase):

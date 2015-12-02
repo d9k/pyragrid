@@ -8,7 +8,7 @@ from colander import (
     null
 )
 import deform.widget as widgets
-from best_tests_server import models, helpers
+from pyragrid import models, helpers
 from .widgets import (
     TextInputPlaceHolderWidget,
     PasswordPlaceholderWidget,

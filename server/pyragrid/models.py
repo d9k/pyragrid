@@ -17,7 +17,7 @@ import colander
 from colander import null, Invalid
 from dictalchemy import DictableModel
 import dictalchemy.utils
-from best_tests_server import helpers
+from pyragrid import helpers
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """

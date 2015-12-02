@@ -1,12 +1,12 @@
-<script src="{{ request.static_url('best_tests_server:static/jquery.dataTables.js') }}"></script>
-<link rel="stylesheet" href="{{ request.static_url('best_tests_server:static/jquery.dataTables.mod.css') }}"/>
+<script src="{{ request.static_url('pyragrid:static/jquery.dataTables.js') }}"></script>
+<link rel="stylesheet" href="{{ request.static_url('pyragrid:static/jquery.dataTables.mod.css') }}"/>
 
 {% compress 'js' %}
 <script type="text/coffeescript">
     $(document).ready ->
         $.extend $.fn.dataTable.defaults,
             'sDom': 'fiptrl'
-            'oLanguage': 'sUrl': '{{ request.static_url('best_tests_server:static/jquery.dataTables.russian.json') }}'
+            'oLanguage': 'sUrl': '{{ request.static_url('pyragrid:static/jquery.dataTables.russian.json') }}'
 
         $('body').on 'DOMNodeInserted', 'div', (e) ->
             filterDiv = $(this).find('.dataTables_filter')

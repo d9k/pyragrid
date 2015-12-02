@@ -2,7 +2,7 @@
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
-SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/best_tests_server)
+SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/pyragrid)
 
 source ${THIS_DIR}/db-params.inc.sh
 

@@ -22,7 +22,7 @@ import re
 
 class TextInputPlaceHolderWidget(deform.widget.TextInputWidget):
     placeholder = ''
-    template = 'best_tests_server:templates/deform_mod/textinputplaceholder.pt'
+    template = 'pyragrid:templates/deform_mod/textinputplaceholder.pt'
 
     def serialize(self, field, cstruct, **kw):
         if cstruct in (null, None):
@@ -37,7 +37,7 @@ class TextInputPlaceHolderWidget(deform.widget.TextInputWidget):
 
 class PasswordPlaceholderWidget(TextInputPlaceHolderWidget):
     placeholder = ''
-    template = 'best_tests_server:templates/deform_mod/passwordplaceholder.pt'
+    template = 'pyragrid:templates/deform_mod/passwordplaceholder.pt'
     # TODO fix readonly
     readonly_template = 'readonly/password'
     redisplay = False
@@ -48,7 +48,7 @@ class RecaptchaWidget(CheckedInputWidget):
     requirements: ini settings must have recaptcha_private_key, recaptcha_public_key records
     """
     # template = 'recaptcha_widget'
-    template = 'best_tests_server:templates/deform_mod/recaptcha_widget.pt'
+    template = 'pyragrid:templates/deform_mod/recaptcha_widget.pt'
     readonly_template = 'recaptcha_widget'
     requirements = ()
     url = "http://www.google.com/recaptcha/api/verify"
@@ -162,7 +162,7 @@ class FormEx(deform.Form):
 
 
 class FormWidgetEx(deform.widget.FormWidget):
-    template = 'best_tests_server:templates/deform_mod/form_mod.pt'
+    template = 'pyragrid:templates/deform_mod/form_mod.pt'
     # readonly_template = 'readonly/form'
 
 

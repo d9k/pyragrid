@@ -1,4 +1,4 @@
-best_tests_server README
+pyragrid README
 ==================
 
 Getting Started
@@ -8,7 +8,7 @@ Getting Started
 
 - $VENV/bin/python setup.py develop
 
-- $VENV/bin/initialize_best_tests_server_db development.ini
+- $VENV/bin/initialize_pyragrid_db development.ini
 
 - $VENV/bin/pserve development.ini
 

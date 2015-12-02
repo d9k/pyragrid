@@ -1,10 +1,10 @@
-# Modification of Russian translations for deform (for best_tests_server).
+# Modification of Russian translations for deform (for pyragrid).
 # This file is distributed under the same license as the deform project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: deform mod for best_tests_server 0.0\n"
+"Project-Id-Version: deform mod for pyragrid 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2012-03-30 16:17+0200\n"
 "PO-Revision-Date: 2011-11-08 15:55+0100\n"

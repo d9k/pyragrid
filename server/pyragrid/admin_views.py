@@ -28,7 +28,7 @@ from pyramid.httpexceptions import (
 
 from sqlalchemy.exc import DBAPIError
 
-from best_tests_server import helpers, forms
+from pyragrid import helpers, forms
 
 from datatables import ColumnDT, DataTables
 

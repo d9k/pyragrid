@@ -31,9 +31,9 @@ requires = [
     'jac', # jinja-assets-compressor
 ]
 
-setup(name='best_tests_server',
+setup(name='pyragrid',
       version='0.0',
-      description='best_tests_server',
+      description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -48,12 +48,12 @@ setup(name='best_tests_server',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='best_tests_server',
+      test_suite='pyragrid',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = best_tests_server:main
+      main = pyragrid:main
       [console_scripts]
-      initialize_best_tests_server_db = best_tests_server.scripts.initializedb:main
+      initialize_pyragrid_db = pyragrid.scripts.initializedb:main
       """,
       )

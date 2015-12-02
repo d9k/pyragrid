@@ -9,6 +9,14 @@ installation:
 	virtualenv -p $(which python3.4) venv
 	source venv/bin/activate
 
+запускать после каждой установки пакета (чтобы можно было перемещать)
+
+	virtualenv-3.4 --relocatable venv
+
+TODO проверить:
+
+	pip freeze > requirements.txt
+
 проверка после `source venv/bin/activate`:
 
 	which python

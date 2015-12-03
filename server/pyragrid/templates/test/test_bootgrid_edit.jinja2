@@ -1,0 +1,11 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+    {% compress 'js' %}
+    <script type="text/coffeescript">
+        $ ->
+
+    </script>
+    {% endcompress %}
+    {{ content }}
+{% endblock %}

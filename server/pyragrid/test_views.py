@@ -87,3 +87,7 @@ class Testiews(AdminViews):
     def test_redirect(self):
         admin_url = self.request.route_url('admin_index')
         return HTTPFound(location=admin_url)
+
+    @view_config(route_name='test_bootgrid_edit', renderer='templates/test/test_bootgrid_edit.jinja2')
+    def test_bootgrid_edit_view(self):
+        return dict(header='Test bootstrap grid edit')

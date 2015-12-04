@@ -1,10 +1,26 @@
+{% set ajax_links_enabled=false %}
 {% extends "test_base.jinja2" %}
 
 {% block content %}
+    {# TODO delete when and if jquery-ui would be in base.jinja2 head #}
+    <script src="{{ request.static_url('pyragrid:static/jquery-ui.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/tinymce/tinymce.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/tinymce/jquery.tinymce.min.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/jquery.grideditor.js') }}"></script>
+    <div id="myGrid"></div>
     {% compress 'js' %}
     <script type="text/coffeescript">
-        $ ->
+        loadCSS = (filename)->
+           return if !filename
+           $('head').append("<link rel='stylesheet' type='text/css' href='#{filename}'>");
 
+        loadCSS('{{ request.static_url('pyragrid:static/grideditor.css') }}')
+{#        loadCSS('{{ request.static_url('pyragrid:static/grideditor-font-awesome.css') }}')#}
+
+        $ ->
+            $('#myGrid').gridEditor {
+                new_row_layouts: [[12], [6,6], [9,3]],
+            }
     </script>
     {% endcompress %}
     {{ content }}

@@ -90,4 +90,4 @@ class Testiews(AdminViews):
 
     @view_config(route_name='test_bootgrid_edit', renderer='templates/test/test_bootgrid_edit.jinja2')
     def test_bootgrid_edit_view(self):
-        return dict(header='Test bootstrap grid edit')
+        return dict(header='Test bootstrap grid editor')

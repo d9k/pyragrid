@@ -56,9 +56,12 @@ gulp.task('coffee', function(){
 gulp.task('js-copy', function(){
     gulp.src([
             config.bowerDir + '/jquery/dist/jquery.*',
+            config.bowerDir + '/jquery-ui/jquery-ui.*',
             config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap.*',
-            config.bowerDir + '/datatables/media/js/jquery.dataTables.js'
+            config.bowerDir + '/datatables/media/js/jquery.dataTables.js',
         ]).pipe(gulp.dest(config.staticDir));
+
+    gulp.src([config.bowerDir + '/tinymce/**/*']).pipe(gulp.dest(config.staticDir + '/tinymce'))
 });
 
 

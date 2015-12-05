@@ -4,6 +4,10 @@ THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
 SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/pyragrid)
 
+DB_BACKUP_FILE_NAME=
 source ${THIS_DIR}/db-params.inc.sh
 
-pg_dump --oids --no-owner BestTests > ${SERVER_DIR}/data/${DB_BACKUP_FILE_NAME}
+backup_file_name="${SERVER_DIR}/data/${DB_BACKUP_FILE_NAME}"
+
+pg_dump --oids --no-owner BestTests > "${backup_file_name}"
+ls -l "${backup_file_name}"

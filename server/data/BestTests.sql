@@ -107,7 +107,13 @@ CREATE TABLE users (
     id integer NOT NULL,
     vk_id bigint,
     name text,
-    password_hash text
+    password_hash text,
+    "group" text,
+    email text,
+    login text,
+    active boolean DEFAULT false NOT NULL,
+    email_check_code text,
+    email_checked boolean DEFAULT false NOT NULL
 );
 
 
@@ -156,7 +162,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 COPY alembic_version (version_num) FROM stdin;
-32846275520
+59ba331f80
 \.
 
 
@@ -194,7 +200,9 @@ SELECT pg_catalog.setval('tests_id_seq', 1, false);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY users (id, vk_id, name, password_hash) FROM stdin;
+COPY users (id, vk_id, name, password_hash, "group", email, login, active, email_check_code, email_checked) FROM stdin;
+18	1146494	Комаров Дмитрий 67	da4c5a0396163836ecfe6238b9cbec06453b393aa5c996a096b652742b6ad690:62d99a94baf449729986e57203722e85	admin	d9k@ya.ru	d9kd9k	t	\N	t
+64	26961427	Protoss Observer	\N	\N	\N	pro_obs	t	\N	f
 \.
 
 
@@ -202,7 +210,7 @@ COPY users (id, vk_id, name, password_hash) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_id_seq', 6, true);
+SELECT pg_catalog.setval('users_id_seq', 64, true);
 
 
 --

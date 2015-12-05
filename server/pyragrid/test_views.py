@@ -37,7 +37,7 @@ from datatables import ColumnDT, DataTables
 
 class Testiews(AdminViews):
     @view_config(route_name='test_mail', renderer='templates/test/test_base.jinja2')
-    def test_mail_view(self):
+    def view_test_mail_view(self):
         # try:
         # with transaction.manager:
         """ :type : Mailer """
@@ -55,27 +55,27 @@ class Testiews(AdminViews):
         return {'header': 'Test Email', 'content': 'Email sent (?)'}
 
     @view_config(route_name='test_render', renderer='templates/test/test_base.jinja2')
-    def test_render_view(self):
+    def view_test_render_view(self):
         rendered_view = helpers.render_to_string('templates/test_render/test_render.jinja2', self.request, {})
         return {'header': 'Test Render', 'code_block': rendered_view}
 
     @view_config(route_name='test_notify', renderer='templates/test/test_notify.jinja2')
-    def test_notify(self):
+    def view_test_notify(self):
         return {'header': 'Test notify'}
 
     @view_config(route_name='test_view_notify', renderer='templates/test/test_base.jinja2')
-    def test_view_notify(self):
+    def view_test_view_notify(self):
         self.add_success_flash('Тестирование успеха')
         self.add_error_flash('Тестирование ошибки')
         self.add_success_flash('И снова успех!')
         return {'header': 'Test view notify'}
 
     @view_config(route_name='test_url', renderer='templates/test/test_url.jinja2')
-    def test_url(self):
+    def view_test_url(self):
         return {'header': 'Test url'}
 
     @view_config(route_name='test_ajax', renderer='templates/test/test_ajax.jinja2')
-    def test_ajax(self):
+    def view_test_ajax(self):
         if self.request.method == 'GET':
             counter = int(self.request.GET.get('counter', 0))
         else:
@@ -84,10 +84,19 @@ class Testiews(AdminViews):
         return dict(header='Test ajax', counter=counter)
 
     @view_config(route_name='test_redirect', renderer='templates/test/test_base.jinja2')
-    def test_redirect(self):
+    def view_test_redirect(self):
         admin_url = self.request.route_url('admin_index')
         return HTTPFound(location=admin_url)
 
     @view_config(route_name='test_bootgrid_edit', renderer='templates/test/test_bootgrid_edit.jinja2')
-    def test_bootgrid_edit_view(self):
+    def view_test_bootgrid_edit(self):
         return dict(header='Test bootstrap grid editor')
+
+    @view_config(route_name='test_script_inclusion', renderer='templates/test/test_base.jinja2')
+    def view_test_script_inclusion(self):
+        import pyragrid.scripts.parse_config as parse_config
+        ini_path = parse_config.get_ini_path('development')
+        db_connection_url = parse_config.get_connection_url_from_ini(ini_path)
+        db_connection_params = parse_config.db_connection_params_from_url(db_connection_url)
+        return dict(header='Test script inclusion', content='db name is '+parse_config.quote(db_connection_params['name']))
+

@@ -8,7 +8,7 @@ import configparser
 from urllib.parse import urlparse, urlsplit
 
 current_dir_path = dirname(realpath(__file__))
-server_dir_path=dirname(dirname(current_dir_path))
+server_dir_path = dirname(dirname(current_dir_path))
 
 quote = lambda string: '"' + string + '"'
 
@@ -20,7 +20,7 @@ def ini_get(ini: configparser.RawConfigParser, section: str, option: str):
 
 
 def get_ini_path(ini_name):
-    return realpath(path_join(server_dir_path, ini_name+'.ini'))
+    return realpath(path_join(server_dir_path, ini_name + '.ini'))
 
 
 def get_connection_url_from_ini(ini_path: str) -> str:
@@ -60,13 +60,13 @@ def db_connection_params_from_url(db_url: str) -> dict:
 def main():
     arg_parser = argparse.ArgumentParser(description='read info from config')
     arg_parser.add_argument(
-        '--config', '-c',
-        help='config name',
-        default='development'
+            '--config', '-c',
+            help='config name',
+            default='development'
     )
     arg_parser.add_argument(
-        'action',
-        choices=['db'],
+            'action',
+            choices=['db'],
     )
     # print(server_dir_path)
     ini_path = get_ini_path('development')
@@ -94,9 +94,11 @@ def main():
             if value:
                 print(value)
             else:
-                raise Exception('Wrong db connection params key name. Available keys are: ' + ', '.join(connection_params.keys()))
+                raise Exception(
+                    'Wrong db connection params key name. Available keys are: ' + ', '.join(connection_params.keys()))
     else:
-        print('Unknown action '+args.action)
+        print('Unknown action ' + args.action)
+
 
 if __name__ == "__main__":
     main()

@@ -96,6 +96,7 @@ def main(global_config, **settings):
     config.add_route('test_ajax', '/test/ajax')
     config.add_route('test_redirect', '/test/redirect')
     config.add_route('test_bootgrid_edit', '/test/bootgrid')
+    config.add_route('test_script_inclusion', '/test/script_inclusion')
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')

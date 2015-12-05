@@ -1,9 +1,1 @@
-BestTests Db
-
-тесты: индексы, сумма индексов
-indeces, answer_index_inc, test_answers, pass_answers, pass_indeces, test_index_result, test_result_template
-
-
-tests: id, name
-answers: id, user_id, test_id, value, test_time
-text_index_result: id, user_id, test_id, index_id, index_value
+Pyragrid Db

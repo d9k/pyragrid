@@ -20,7 +20,9 @@ def ini_get(ini: configparser.RawConfigParser, section: str, option: str):
 
 
 def get_ini_path(ini_name):
-    return realpath(path_join(server_dir_path, ini_name + '.ini'))
+    if not ini_name.endswith('.ini'):
+        ini_name += '.ini'
+    return realpath(path_join(server_dir_path, ini_name))
 
 
 def get_connection_url_from_ini(ini_path: str) -> str:

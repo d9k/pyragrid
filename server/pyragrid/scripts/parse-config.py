@@ -98,32 +98,5 @@ def main():
     else:
         print('Unknown action '+args.action)
 
-    # if not os.path.isfile(profiles_ini_path):
-    #     print("File", q(profiles_ini_path), "not found")
-    #     return
-    # profile_name = get_profile_from_firefox_ini(profiles_ini_path)
-    # if not profile_name:
-    #     print("No profile-name found in", q(profiles_ini_path))
-    #     return
-    # profile_path = profiles_mozilla_path + '/' + profile_name
-    # if not os.path.isdir(profile_path):
-    #     print("No profile folder at " + q(profile_path))
-    #     return
-    # user_css_folder_path = profile_path + "/chrome"
-    # user_css_path = user_css_folder_path + "/userContent.css"
-    # bash("mkdir", "-p", user_css_folder_path)
-    # bash("touch", user_css_path)
-    # print("""
-    #       Example:
-    #
-    #       @-moz-document domain(example.com) {
-    #           img{opacity: 0.05 !important;}
-    #       }
-    #       """)
-    # if args.merge:
-    #     bash(merge_tool, user_css_path, backup_cfg_path, bg(merge_in_bg))
-    # else:
-    #     bash(edit_tool, user_css_path, bg(edit_in_bg))
-
 if __name__ == "__main__":
     main()

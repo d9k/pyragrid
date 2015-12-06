@@ -22,7 +22,7 @@ fi
 parse_config="${SERVER_PACKAGE_DIR}/scripts/parse_config.py -c ${PYRAGRID_CONFIG_NAME}"
 
 DB_USER=$(${parse_config} db username)
-DB_PASSWORD=$(${parse_config} db password)
+#DB_PASSWORD=$(${parse_config} db password)
 DB_NAME=$(${parse_config} db name)
 DB_BACKUP_FILE_NAME="${DB_NAME}.sql"
 MODEL_OUTPUT_FILE_NAME=models_.py

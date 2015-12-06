@@ -1,2 +1,0 @@
-	id = Column(Integer, primary_key=True, server_default=text("nextval('users_id_seq'::regclass)"))
-	в id = Column(Integer, Sequence('users_id_seq'), primary_key=True)

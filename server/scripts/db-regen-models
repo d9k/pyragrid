@@ -11,4 +11,4 @@ SERVER_PACKAGE_DIR=$(readlink -f ${SERVER_DIR}/pyragrid)
 source ${THIS_DIR}/db-params.inc.sh
 
 . ${SERVER_DIR}/../venv/bin/activate
-sqlacodegen postgresql://${DB_USER}:${DB_PASSWORD}@localhost/BestTests > ${SERVER_PACKAGE_DIR}/${MODEL_OUTPUT_FILE_NAME}
+sqlacodegen postgresql://${DB_USER}:${DB_PASSWORD}@localhost/${DB_NAME} > ${SERVER_PACKAGE_DIR}/${MODEL_OUTPUT_FILE_NAME}

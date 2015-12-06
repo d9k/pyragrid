@@ -9,3 +9,8 @@ regexp:^server/build/.+
 regexp:^server/passwords\.ini
 regexp:^server/mail/.+
 regexp:^server/static/dist/.+
+regexp:^\.idea/dataSources\.local\.xml
+regexp:^\.idea/dataSources\.xml
+regexp:^\.idea/workspace\.xml
+
+/home/d9k/cr/zdorovie-legkie/.idea/dataSources.local.xml

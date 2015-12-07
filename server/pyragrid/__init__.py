@@ -33,12 +33,16 @@ def add_renderer_globals(event):
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    package_path = os.path.dirname(os.path.realpath(__file__))
-    project_path = os.path.abspath(os.path.join(package_path, os.pardir))
-    passwords_config_path = os.path.abspath(os.path.join(project_path, 'passwords.ini'))
-    passwords_settings = helpers.load_config(passwords_config_path)
+    config_path = global_config['__file__']
+    config_dir_path = os.path.dirname(config_path)
+    config_file_name_with_ext = os.path.basename(config_path)
+    config_file_name, config_file_ext = os.path.splitext(config_file_name_with_ext)
+    passwords_config_name = config_file_name + '_passwords' + config_file_ext
+    passwords_config_path = os.path.abspath(os.path.join(config_dir_path, passwords_config_name))
 
-    settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
+    if os.path.isfile(passwords_config_path):
+        passwords_settings = helpers.load_config(passwords_config_path)
+        settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
 
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/

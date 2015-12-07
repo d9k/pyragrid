@@ -15,8 +15,8 @@ for additional_option in config.cmd_opts.x:
     by_equal_split = additional_option.split('=')
     if len(by_equal_split) == 2 and by_equal_split[0] == 'pyramid_config':
         pyragrid_ini_name = by_equal_split[1]
-        pyragrid_ini_path = parse_pyragrid_config.get_ini_path(pyragrid_ini_name)
-        pyragrid_connection_url = parse_pyragrid_config.get_connection_url_from_ini(pyragrid_ini_path)
+        pyragrid_ini = parse_pyragrid_config.load_merged_ini(pyragrid_ini_name)
+        pyragrid_connection_url = parse_pyragrid_config.get_connection_url_from_settings(pyragrid_ini)
         if pyragrid_connection_url:
             config.set_main_option('sqlalchemy.url', pyragrid_connection_url)
 # END pyragrid additional

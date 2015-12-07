@@ -95,8 +95,9 @@ class Testiews(AdminViews):
     @view_config(route_name='test_script_inclusion', renderer='templates/test/test_base.jinja2')
     def view_test_script_inclusion(self):
         import pyragrid.scripts.parse_config as parse_config
-        ini_path = parse_config.get_ini_path('development')
-        db_connection_url = parse_config.get_connection_url_from_ini(ini_path)
+        # ini_path = parse_config.get_ini_path('development')
+        settings = parse_config.load_merged_ini('development')
+        db_connection_url = parse_config.get_connection_url_from_settings(settings)
         db_connection_params = parse_config.db_connection_params_from_url(db_connection_url)
         return dict(header='Test script inclusion', content='db name is '+parse_config.quote(db_connection_params['name']))
 

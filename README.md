@@ -4,14 +4,11 @@ pyragrid README
 Getting Started
 ---------------
 
-- cd <directory containing this file>
-
-- $VENV/bin/python setup.py develop
-
-- $VENV/bin/initialize_pyragrid_db development.ini
-
-- $VENV/bin/pserve development.ini
-
+	cd <directory containing this file>
+	$VENV/bin/python setup.py develop
+	createdb <your_db_name>
+	$VENV/bin/initialize_pyragrid_db development.ini
+	$VENV/bin/pserve development.ini
 
 TODO: how to install ColanderAlchemy simplier?
 
@@ -98,7 +95,3 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffold
 
 TODO
 ====
-
-<!---
-
--->

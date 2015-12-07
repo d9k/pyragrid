@@ -1,6 +1,7 @@
 import os
 import sys
 import transaction
+import pyragrid.helpers as helpers
 
 from sqlalchemy import engine_from_config
 
@@ -11,10 +12,12 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
-from ..models import (
-    # DBSession,
+from pyragrid.models import (
+    DBSession,
     # MyModel,
     Base,
+    User,
+    ADMIN_GROUP
     )
 
 
@@ -31,10 +34,28 @@ def main(argv=sys.argv):
     config_uri = argv[1]
     options = parse_vars(argv[2:])
     setup_logging(config_uri)
+
     settings = get_appsettings(config_uri, options=options)
-    engine = engine_from_config(settings, 'sqlalchemy.')
+    # passwords_config_path = helpers.get_passwords_config_path(global_config['__file__'])
+    passwords_config_path = helpers.get_passwords_config_path(config_uri)
+    if os.path.isfile(passwords_config_path):
+        passwords_settings = helpers.load_config(passwords_config_path)
+        settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
+
+    sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # DBSession.configure(bind=engine)
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(sql_engine)
+    Base.metadata.bind = sql_engine
+    # transaction.commit()
+
     # with transaction.manager:
+    admin = User()
+    admin.login = 'admin'
+    admin.set_password('changeme')
+    admin.group = ADMIN_GROUP
+    admin.email = 'noemail@changeme.org'
+    admin.active = True
+    admin.email_checked = True
     #     model = MyModel(name='one', value=1)
-    #     DBSession.add(model)
+    DBSession.add(admin)
+    transaction.commit()

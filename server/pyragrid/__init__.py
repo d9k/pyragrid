@@ -33,13 +33,7 @@ def add_renderer_globals(event):
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    config_path = global_config['__file__']
-    config_dir_path = os.path.dirname(config_path)
-    config_file_name_with_ext = os.path.basename(config_path)
-    config_file_name, config_file_ext = os.path.splitext(config_file_name_with_ext)
-    passwords_config_name = config_file_name + '_passwords' + config_file_ext
-    passwords_config_path = os.path.abspath(os.path.join(config_dir_path, passwords_config_name))
-
+    passwords_config_path = helpers.get_passwords_config_path(global_config['__file__'])
     if os.path.isfile(passwords_config_path):
         passwords_settings = helpers.load_config(passwords_config_path)
         settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)

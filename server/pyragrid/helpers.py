@@ -17,6 +17,7 @@ import urllib.request
 import json
 import pyramid.threadlocal
 import colander
+import os.path
 
 
 def get_setting(key, default_value=None):
@@ -79,6 +80,7 @@ def dict_to_vars(_dict: dict, keys: list):
     for key in keys:
         yield _dict[key]
 
+
 # see https://gist.github.com/mmerickel/7901444
 def load_config(file_name):
     config = configparser.ConfigParser()
@@ -89,6 +91,15 @@ def load_config(file_name):
         d[k] = dict(config._defaults, **d[k])
         d[k].pop('__name__', None)
     return d
+
+
+#TODO get_relative_config_path
+def get_passwords_config_path(config_path):
+    config_dir_path = os.path.dirname(config_path)
+    config_file_name_with_ext = os.path.basename(config_path)
+    config_file_name, config_file_ext = os.path.splitext(config_file_name_with_ext)
+    passwords_config_name = config_file_name + '_passwords' + config_file_ext
+    return os.path.abspath(os.path.join(config_dir_path, passwords_config_name))
 
 
 def render_to_string(template_name, request, template_params):

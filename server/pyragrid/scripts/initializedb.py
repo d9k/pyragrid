@@ -2,6 +2,7 @@ import os
 import sys
 import transaction
 import pyragrid.helpers as helpers
+import subprocess
 
 from sqlalchemy import engine_from_config
 
@@ -20,12 +21,29 @@ from pyragrid.models import (
     ADMIN_GROUP
     )
 
+from os.path import dirname, realpath
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri> [var=value]\n'
           '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
+
+
+server_path = dirname(dirname(dirname(realpath(__file__))))
+bash_cwd = server_path
+
+
+def bash(*command_parts):
+    # return subprocess.call(["bash", "-c", " ".join(command_parts)], cwd=bash_cwd, stdout=subprocess.PIPE)
+    result = subprocess.check_output(["bash", "-c", " ".join(command_parts)], cwd=bash_cwd)
+    return result.decode()
+
+
+def proc(*command_parts):
+    # return subprocess.call(["bash", "-c", " ".join(command_parts)], cwd=bash_cwd, stdout=subprocess.PIPE)
+    result = subprocess.check_output(command_parts, cwd=bash_cwd)
+    return result.decode()
 
 
 def main(argv=sys.argv):
@@ -59,3 +77,8 @@ def main(argv=sys.argv):
     #     model = MyModel(name='one', value=1)
     DBSession.add(admin)
     transaction.commit()
+
+    # alembic_head_revision = bash('./venv/bin/activate; alembic heads')
+    alembic_heads_result = bash('alembic heads')
+    alembic_head_revision = alembic_heads_result.split(' ')[0]
+    bash('alembic -x pyramid_config=' + config_uri + ' stamp '+alembic_head_revision)

@@ -5,7 +5,7 @@ from pyramid.security import (
     Allow
 )
 from sqlalchemy import (
-    BigInteger, Column, Integer, Text, Boolean
+    BigInteger, Column, Integer, Text, Boolean, DateTime
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
@@ -31,27 +31,10 @@ GROUPS = {ADMIN_GROUP: ['group:admins'],
 
 class RootFactory(object):
     __acl__ = [(Allow, 'group:users', 'view'),
-               (Allow, 'group:admins', ['view','admin'])]
+               (Allow, 'group:admins', ['view', 'admin'])]
 
     def __init__(self, request):
         pass
-
-
-class TestIndexResult(Base):
-    __tablename__ = 'test_index_result'
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer)
-    test_id = Column(Integer)
-    index_id = Column(Integer)
-
-
-class Test(Base):
-    __tablename__ = 'tests'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(Text)
-    description = Column(Text)
 
 
 def create_hashed_password(password, salt):
@@ -104,8 +87,8 @@ class User(Base):
                    info={'colanderalchemy': {
                        'title': 'Логин пользователя',
                        'validator': colander.Regex(
-                           '^[a-z0-9_]+$',
-                           'Логин должен содержать только цифры и английские буквы'
+                               '^[a-z0-9_]+$',
+                               'Логин должен содержать только цифры и английские буквы'
                        ),
                        'missing': colander.required
                    }})
@@ -131,7 +114,7 @@ class User(Base):
     email_check_code = Column(Text)
     email_checked = Column(Boolean, default=False, server_default='false', nullable=False,
                            info={'colanderalchemy': {
-                                'title': 'Почта проверена'
+                               'title': 'Почта проверена'
                            }})
     active = Column(Boolean, default=False, server_default='false', nullable=False,
                     info={'colanderalchemy': {
@@ -139,9 +122,9 @@ class User(Base):
                     }})
     # stores password hash and salt separated by colon
     password_hash = Column(Text, info={'colanderalchemy': {
-                        'title': 'Пароль',
-                        'widget': deform.widget.CheckedPasswordWidget(),
-                   }})
+        'title': 'Пароль',
+        'widget': deform.widget.CheckedPasswordWidget(),
+    }})
 
     def set_password(self, password):
         """thx 2 http://pythoncentral.io/hashing-strings-with-python"""
@@ -177,7 +160,7 @@ class User(Base):
         """
         :return User
         """
-        q = DBSession.query(User)\
+        q = DBSession.query(User) \
             .filter(User.login == user_login)
         q = User.filter_not_id(q, not_id)
         return q.first()
@@ -190,7 +173,7 @@ class User(Base):
         return DBSession.query(User).filter(User.vk_id == vk_id).first()
 
     @staticmethod
-    def by_email(email: str, not_id:int = None):
+    def by_email(email: str, not_id: int = None):
         """
         :return User
         """
@@ -198,9 +181,8 @@ class User(Base):
         q = User.filter_not_id(q, not_id)
         return q.first()
 
-
     @staticmethod
-    def filter_not_id(query:Query, not_id):
+    def filter_not_id(query: Query, not_id):
         if not_id is not None:
             return query.filter(User.id != not_id)
         return query
@@ -245,6 +227,92 @@ class User(Base):
     def is_admin(self):
         return self.group == ADMIN_GROUP
 
+
 # TODO коррекция полей перед сохраненинем
 # http://docs.sqlalchemy.org/en/latest/orm/events.html ?
 # http://docs.sqlalchemy.org/en/latest/orm/session_events.html
+
+
+class Article(Base):
+    __tablename__ = 'articles'
+
+    id = Column(Integer, primary_key=True,
+                info={'colanderalchemy': {
+                    'title': 'id статьи',
+                    'widget': deform.widget.TextInputWidget(readonly=True)
+                }})
+    name = Column(Text,
+                  info={'colanderalchemy': {
+                      'title': 'Название статьи',
+                      'missing': None,
+                  }})
+    systemName = Column(Text,
+                        nullable=False,
+                        info={'colanderalchemy': {
+                            'title': 'Логин пользователя',
+                            'validator': colander.Regex(
+                                    '^[a-z0-9_\-/]+$',
+                                    'Логин должен содержать только цифры и английские буквы'
+                            ),
+                            'missing': colander.required
+                        }})
+    path = Column(Text,
+                  info={'colanderalchemy': {
+                      'title': 'Путь к статье',
+                      'validator': colander.Regex(
+                              '^[a-z0-9_\-/]+$',
+                              'Путь должен содержать только цифры и английские буквы'
+                      ),
+                      'missing': colander.required
+                  }})
+    activeRevisionId = Column(Integer,
+                              nullable=True,
+                              info={'colanderalchemy': {
+                                  'title': 'id активной ревизии',
+                                  'widget': deform.widget.TextInputWidget(readonly=True),
+                                  'typ': NullableInt
+                              }})
+    isTemplate = Column(Boolean, default=False, server_default='false',
+                        nullable=False,
+                        info={'colanderalchemy': {
+                            'title': 'Является шаблоном',
+                        }})
+
+
+class ArticlesRevisions(Base):
+    __tablename__ = 'articles_revisions'
+    id = Column(Integer, primary_key=True,
+                info={'colanderalchemy': {
+                    'title': 'глобальный id ревизии',
+                    'widget': deform.widget.TextInputWidget(readonly=True)
+                }})
+    articleId = Column(Integer,
+                       nullable=False,
+                       info={'colanderalchemy': {
+                           'title': 'id статьи',
+                           'widget': deform.widget.TextInputWidget(readonly=True)
+                       }})
+    parentRevisionId = Column(Integer,
+                              nullable=True,
+                              info={'colanderalchemy': {
+                                    'title': 'id предыдущей ревизии',
+                                    'widget': deform.widget.TextInputWidget(readonly=True),
+                                    'typ': NullableInt
+                              }})
+    code = Column(Text,
+                  nullable=False,
+                  info={'colanderalchemy': {
+                      'title': 'Код статьи',
+                      'widget': deform.widget.TextAreaWidget()
+                  }})
+    authorId = Column(DateTime,
+                      info={'colanderalchemy': {
+                          'title': 'id автора',
+                          'widget': deform.widget.DateTimeInputWidget(readonly=True)
+                      }})
+    dateTime = Column(DateTime,
+                      nullable=False,
+                      info={'colanderalchemy': {
+                          'title': 'Время создания',
+                          'widget': deform.widget.DateTimeInputWidget(readonly=True)
+                      }})

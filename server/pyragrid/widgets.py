@@ -118,7 +118,10 @@ class RecaptchaWidget(CheckedInputWidget):
         return pstruct['recaptcha_response_field']
 
 
-def exception_for_schema_field(form, field_name, text):
+def exception_for_schema_field(form, field_name: str, text: str):
+    """
+    draw exception near specific form field
+    """""
     exc = colander.Invalid(form)
     """:type : SchemaNode"""
     # field = form.get(field_name)
@@ -167,6 +170,7 @@ class FormWidgetEx(deform.widget.FormWidget):
 
 
 class ButtonEx(deform.Button):
+    """ + description (tooltip) """
     def __init__(self, name='submit', title=None, type='submit', value=None,
                  disabled=False, css_class=None, description=None):
         if title is None:

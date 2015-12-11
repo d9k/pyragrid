@@ -287,6 +287,11 @@ class Article(Base):
                                   'widget': deform.widget.TextInputWidget(readonly=True),
                                   'typ': NullableInt
                               }})
+    active = Column(Boolean, default=True, server_default='true',
+                        nullable=False,
+                        info={'colanderalchemy': {
+                            'title': 'Статья активна',
+                        }})
     isTemplate = Column(Boolean, default=False, server_default='false',
                         nullable=False,
                         info={'colanderalchemy': {

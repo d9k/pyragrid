@@ -2,6 +2,8 @@
   <dictionary name="d9k">
     <words>
       <w>colanderalchemy</w>
+      <w>pyragrid</w>
+      <w>sqlalchemy</w>
     </words>
   </dictionary>
 </component>

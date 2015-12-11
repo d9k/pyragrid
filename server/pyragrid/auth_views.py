@@ -138,8 +138,9 @@ class AuthViews(BaseViews):
             new_user = User()
             dictalchemy.utils.fromdict(new_user, data)
             self.request.session.invalidate()
-            if not new_user.name:
-                new_user.name = new_user.login
+            # TODO check user.beforeSave() is called before save
+            # if not new_user.name:
+            #     new_user.name = new_user.login
             password = data.get('password')
             if not password:
                 password = User.generate_password()

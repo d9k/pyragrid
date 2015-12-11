@@ -11,6 +11,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     scoped_session, sessionmaker, Query
 )
+import sqlalchemy.event
 from zope.sqlalchemy import ZopeTransactionExtension
 import deform.widget
 import colander
@@ -84,6 +85,7 @@ class User(Base):
                        'typ': NullableInt
                    }})
     login = Column(Text,
+                   unique=True,
                    info={'colanderalchemy': {
                        'title': 'Логин пользователя',
                        'validator': colander.Regex(
@@ -227,10 +229,23 @@ class User(Base):
     def is_admin(self):
         return self.group == ADMIN_GROUP
 
+    def before_save(self):
+        if not self.name:
+            self.name = self.login
 
 # TODO коррекция полей перед сохраненинем
 # http://docs.sqlalchemy.org/en/latest/orm/events.html ?
 # http://docs.sqlalchemy.org/en/latest/orm/session_events.html
+
+
+@sqlalchemy.event.listens_for(User, 'before_insert')
+def user_before_insert(mapper, connection, user: User):
+    user.before_save()
+
+
+@sqlalchemy.event.listens_for(User, 'before_update')
+def user_before_update(mapper, connection, user: User):
+    user.before_save()
 
 
 class Article(Base):

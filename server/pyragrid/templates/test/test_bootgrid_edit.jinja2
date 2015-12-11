@@ -2,7 +2,7 @@
 {% extends "test_base.jinja2" %}
 
 {% block content %}
-    {# TODO delete when and if jquery-ui would be in base.jinja2 head #}
+    {# TODO delete whesn and if jquery-ui would be in base.jinja2 head #}
     <script src="{{ request.static_url('pyragrid:static/jquery-ui.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/tinymce/tinymce.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/tinymce/jquery.tinymce.min.js') }}"></script>
@@ -19,7 +19,7 @@
 
         $ ->
             $('#myGrid').gridEditor {
-                new_row_layouts: [[12], [6,6], [9,3]],
+                new_row_layouts: [[12], [6,6], [4,4,4], [4]],
             }
     </script>
     {% endcompress %}

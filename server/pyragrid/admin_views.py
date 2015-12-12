@@ -7,7 +7,8 @@ from pyramid.view import (
 
 from .models import (
     DBSession,
-    User
+    User,
+    Article
 )
 
 from .base_views import (
@@ -45,11 +46,11 @@ class AdminViews(BaseViews):
 
     @view_config(route_name='admin_index', renderer='templates/admin/admin_index.jinja2')
     def admin_index_view(self):
-        return {'username': self.user.name}
+        return {}
 
     @view_config(route_name='admin_users', renderer='templates/admin/admin_users.jinja2')
     def admin_users_view(self):
-        return {'username': self.user.name}
+        return {}
 
     @view_config(route_name='admin_users_grid', request_method='GET', renderer='json')
     def admin_users_grid_view(self):
@@ -65,6 +66,29 @@ class AdminViews(BaseViews):
         query = DBSession.query(User)
         # instantiating a DataTable for the query and table needed
         row_table = DataTablesMod(self.request.GET, User, query, columns)
+
+        # returns what is needed by DataTable
+        result = row_table.output_result()
+        result = helpers.datatables_result_add_fake_column(result)
+        return result
+
+    @view_config(route_name='admin_articles', renderer='templates/admin/admin_articles.jinja2')
+    def admin_articles_view(self):
+        return {}
+
+    @view_config(route_name='admin_articles_grid', request_method='GET', renderer='json')
+    def admin_articles_grid_view(self):
+        columns = [
+            ColumnDT('id'),
+            ColumnDT('name'),
+            ColumnDT('system_name'),
+            ColumnDT('path'),
+            ColumnDT('active_revision'),
+            ColumnDT('active')
+        ]
+        query = DBSession.query(Article)
+        # instantiating a DataTable for the query and table needed
+        row_table = DataTablesMod(self.request.GET, Article, query, columns)
 
         # returns what is needed by DataTable
         result = row_table.output_result()

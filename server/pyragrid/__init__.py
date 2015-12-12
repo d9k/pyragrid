@@ -98,11 +98,20 @@ def main(global_config, **settings):
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')
+
     config.add_route('admin_users', '/admin/users')
     config.add_route('admin_users_grid', '/admin/users/grid')
     config.add_route('admin_user_enable', '/admin/users/enable/{user_id}')
     config.add_route('admin_user_disable', '/admin/users/disable/{user_id}')
     config.add_route('admin_user_edit', '/admin/users/edit/{user_id}')
+
+    config.add_route('admin_article_edit', '/admin/articles/edit/{article_id}')
+    config.add_route('admin_article_enable', '/admin/article/enable/{article_id}')
+    config.add_route('admin_article_disable', '/admin/article/disable/{article_id}')
+    config.add_route('admin_article_add', '/admin/articles/add')
+    config.add_route('admin_articles', '/admin/articles/')
+    config.add_route('admin_articles_grid', '/admin/articles/grid')
+
     config.set_session_factory(session_factory)
 
     config.add_subscriber(add_renderer_globals, pyramid.events.BeforeRender)

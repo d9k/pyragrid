@@ -1,23 +1,22 @@
-{% set header = 'Пользователи' %}
+{% set header = 'Статьи' %}
 {% set backlink = request.route_url('admin_index') %}
 {% extends "../base.jinja2" %}
 {% block content %}
     {% include '../_datatables_js.jinja2' %}
 
-{#    <p><a href="{{ request.route_url('add_user') }}">Добавить пользователя [+]</a></p>#}
+{#    <p><a href="{{ request.route_url('add_article') }}">Добавить статью [+]</a></p>#}
 
-    <table class="table" id="usersGrid">
+    <table class="table" id="articlesGrid">
         <thead>
         <tr>
             {# TODO строковые индексы колонок #}
             <th>id</th>{# 0 #}
-            <th>vk id</th>{# 1 #}
-            <th>Логин</th>{# 2 #}
-            <th>Имя</th>{# 3 #}
-            <th>Почта</th>{# 4 #}
-            <th>Почта подтв.</th>{# 5 #}
-            <th>Включен</th>{# 6 #}
-            <th>{# buttons col #}</th>{# 7 #}
+            <th>Название</th>{# 1 #}
+            <th>Системное имя</th>{# 2 #}
+            <th>Путь</th>{# 3 #}
+            <th>Текущая ревизия</th>{# 4 #}
+            <th>Включена</th>{# 5 #}
+            <th>{# buttons col #}</th>{# 6 #}
         </tr>
         </thead>
         <tbody></tbody>
@@ -26,10 +25,10 @@
     {% compress 'js' %}
         <script type="text/coffeescript">
             $(document).ready ->
-               $table = $('#usersGrid').dataTable
+               $table = $('#articlesGrid').dataTable
                 'bProcessing': true
                 'bServerSide': true
-                'sAjaxSource': '{{ request.route_path('admin_users_grid') }}'
+                'sAjaxSource': '{{ request.route_path('admin_articles_grid') }}'
                 'aoColumns': [
                   { 'mData': 0 }
                   { 'mData': 1 }
@@ -42,23 +41,18 @@
                        UI.renderBool(data[5])
                   }
                   {
-                    'mData': 6
                     'mRender': (value, type, data) ->
-                       UI.renderBool(data[6])
-                  }
-                  {
-                    'mRender': (value, type, data) ->
-                      id = data[0]
-                      active = data[6] == 'True'
-                      rendered = '<a href="/admin/users/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+                          id = data[0]
+                          active = data[5] == 'True'
+                          rendered = '<a href="/admin/articles/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
 
-                      button_url = '/admin/users/' + (if active then 'disable' else 'enable') + '/' + id
-                      icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
-                      btn_class = 'btn-' + (if active then 'danger' else 'success')
+                          button_url = '/admin/articles/' + (if active then 'disable' else 'enable') + '/' + id
+                          icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
+                          btn_class = 'btn-' + (if active then 'danger' else 'success')
 
-                      rendered += '<a href="#" data-url="' + button_url + '" class="buttonSwitchActive btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
+                          rendered += '<a href="#" data-url="' + button_url + '" class="buttonSwitchActive btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
 
-                      rendered
+                          rendered
                     'sClass': 'withButtons'
                     'bSortable': false
                   }
@@ -66,7 +60,7 @@
                 'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
                     $table = $(this).dataTable()
                     $row = $(nRow)
-                    $buttonsCol = $row.find('td:eq(7)')
+                    $buttonsCol = $row.find('td:eq(6)')
                     $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
                     $buttonSwitchActive.on('click', (e) ->
                         e.preventDefault()

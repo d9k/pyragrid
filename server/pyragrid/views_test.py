@@ -11,10 +11,10 @@ from .models import (
 )
 
 from .views_base import (
-    BaseViews, conn_err_msg
+    ViewsBase, conn_err_msg
 )
 
-from .views_admin import AdminViews
+from .views_admin import ViewsAdmin
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer import get_mailer
@@ -35,7 +35,7 @@ from pyragrid import helpers
 from datatables import ColumnDT, DataTables
 
 
-class Testiews(AdminViews):
+class Testiews(ViewsAdmin):
     @view_config(route_name='test_mail', renderer='templates/test/test_base.jinja2')
     def view_test_mail_view(self):
         # try:

@@ -34,12 +34,12 @@ from .forms import (
 )
 
 from .views_base import (
-    BaseViews, conn_err_msg
+    ViewsBase, conn_err_msg
 )
 
 
 @view_defaults(route_name='index', permission='view')
-class SiteViews(BaseViews):
+class SiteViews(ViewsBase):
 
     # def __init__(self, request):
     #     super.__init__(request)

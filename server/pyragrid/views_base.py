@@ -15,7 +15,7 @@ import hashlib
 from pyramid.response import Response
 
 
-class BaseViews:
+class ViewsBase:
     """
     :type user: User
     """

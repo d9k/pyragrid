@@ -11,7 +11,7 @@ from .models import (
 )
 
 from .views_base import (
-    BaseViews,
+    ViewsBase,
     conn_err_msg
 )
 
@@ -47,7 +47,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class AuthViews(BaseViews):
+class AuthViews(ViewsBase):
     # def __init__(self, request):
     #     super.__init__(request)
 

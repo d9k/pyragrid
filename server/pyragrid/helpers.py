@@ -150,7 +150,7 @@ def datatables_result_add_fake_column(datatables_result):
     return datatables_result
 
 
-def obj_fields_from_dict(obj, data_dict):
+def obj_set_fields_from_dict(obj, data_dict):
     for key in data_dict:
         if data_dict[key] == colander.null:
             setattr(obj, key, None)

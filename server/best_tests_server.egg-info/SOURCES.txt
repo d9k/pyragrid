@@ -8,9 +8,9 @@ production.ini
 readme-gulp.txt
 setup.py
 pyragrid/__init__.py
-pyragrid/admin_views.py
+pyragrid/views_admin.py
 pyragrid/auth_views.py
-pyragrid/base_views.py
+pyragrid/views_base.py
 pyragrid/datatables_mod.py
 pyragrid/forms.py
 pyragrid/helpers.py

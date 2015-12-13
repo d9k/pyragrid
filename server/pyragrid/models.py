@@ -336,3 +336,4 @@ class ArticlesRevisions(Base):
                           'title': 'Время создания',
                           'widget': deform.widget.DateTimeInputWidget(readonly=True)
                       }})
+

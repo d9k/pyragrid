@@ -11,7 +11,7 @@ from .models import (
     Article
 )
 
-from .base_views import (
+from .views_base import (
     BaseViews, conn_err_msg
 )
 

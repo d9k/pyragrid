@@ -18,6 +18,7 @@ from .widgets import (
 from .helpers import check_dev_mode
 from .models import User
 
+
 class LoginSchema(Schema):
     login = SchemaNode(
         String(),
@@ -76,10 +77,7 @@ class RegisterSchema(SQLAlchemySchemaNode):
                  unknown='ignore', **kw):
         if includes is None:
             includes = ['login', 'name', 'email']
-        super().__init__(class_,
-                         includes=includes,
-                         overrides=overrides,
-                         **kw)
+        super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         self.add(SchemaNode(
             String(),
             name='password',
@@ -106,10 +104,7 @@ class ProfileEditSchema(SQLAlchemySchemaNode):
                  unknown='ignore', **kw):
         if includes is None:
             includes = ['name', ]
-        super().__init__(class_,
-                         includes=includes,
-                         overrides=overrides,
-                         **kw)
+        super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         self.linked_user = None
         self.validator = validate_user_edit_form
 
@@ -121,10 +116,7 @@ class UserEditSchema(SQLAlchemySchemaNode):
                  unknown='ignore', **kw):
         if includes is None:
             includes = ['login', 'vk_id',  'name', 'email', 'active', 'email_checked']
-        super().__init__(class_,
-                         includes=includes,
-                         overrides=overrides,
-                         **kw)
+        super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         self.add(SchemaNode(
             String(),
             name='password',
@@ -136,3 +128,20 @@ class UserEditSchema(SQLAlchemySchemaNode):
         ))
         self.linked_user = None
         self.validator = validate_user_edit_form
+
+
+class ArticleEditSchema(SQLAlchemySchemaNode):
+    def __init__(self, class_=models.Article, includes=None,
+                 excludes=None,
+                 overrides=None,
+                 unknown='ignore', **kw):
+        if includes is None:
+            includes = ['name', 'systemName',  'path', 'email', 'active', 'isTemplate']
+        super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
+        # code is loaded from article_revision
+        self.add(SchemaNode(
+            String(),
+            name='code',
+            title='Html-код статьи',
+            widget=widgets.TextAreaWidget(rows=20, cols=60),
+        ))

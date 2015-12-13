@@ -10,11 +10,11 @@ from .models import (
     User
 )
 
-from .base_views import (
+from .views_base import (
     BaseViews, conn_err_msg
 )
 
-from .admin_views import AdminViews
+from .views_admin import AdminViews
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer import get_mailer

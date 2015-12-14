@@ -190,3 +190,9 @@ def get_json_from_url(url: str, get_params: dict = None):
     except:
         return {}
 
+
+def dict_set_empty_string_on_null(obj):
+    for key in obj:
+        if obj[key] is None:
+            obj[key] = ''
+    return obj

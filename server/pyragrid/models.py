@@ -264,7 +264,7 @@ class Article(Base):
     systemName = Column(Text,
                         nullable=False,
                         info={'colanderalchemy': {
-                            'title': 'Логин пользователя',
+                            'title': 'Системное имя',
                             'validator': colander.Regex(
                                     '^[a-z0-9_\-/]+$',
                                     'Логин должен содержать только цифры и английские буквы'

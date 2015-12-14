@@ -136,7 +136,7 @@ class ArticleEditSchema(SQLAlchemySchemaNode):
                  overrides=None,
                  unknown='ignore', **kw):
         if includes is None:
-            includes = ['name', 'systemName',  'path', 'email', 'active', 'isTemplate']
+            includes = ['name', 'systemName',  'path', 'active']
         super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         # code is loaded from article_revision
         self.add(SchemaNode(

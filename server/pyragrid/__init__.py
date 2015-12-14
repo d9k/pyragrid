@@ -105,10 +105,10 @@ def main(global_config, **settings):
     config.add_route('admin_user_disable', '/admin/users/disable/{user_id}')
     config.add_route('admin_user_edit', '/admin/users/edit/{user_id}')
 
-    config.add_route('admin_article_edit', '/admin/articles/edit/{article_id}')
-    config.add_route('admin_article_enable', '/admin/article/enable/{article_id}')
-    config.add_route('admin_article_disable', '/admin/article/disable/{article_id}')
-    config.add_route('admin_article_add', '/admin/articles/add')
+    config.add_route('admin_article_edit', '/admin/article/{article_id}/edit')
+    config.add_route('admin_article_enable', '/admin/article/{article_id}/enable/')
+    config.add_route('admin_article_disable', '/admin/article/{article_id}/disable/')
+    config.add_route('admin_article_new', '/admin/article/new')
     config.add_route('admin_articles', '/admin/articles/')
     config.add_route('admin_articles_grid', '/admin/articles/grid')
 

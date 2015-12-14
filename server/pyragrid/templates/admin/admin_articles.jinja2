@@ -4,7 +4,7 @@
 {% block content %}
     {% include '../_datatables_js.jinja2' %}
 
-{#    <p><a href="{{ request.route_url('add_article') }}">Добавить статью [+]</a></p>#}
+    <p><a href="{{ request.route_url('admin_article_new') }}">Добавить статью [+]</a></p>
 
     <table class="table" id="articlesGrid">
         <thead>

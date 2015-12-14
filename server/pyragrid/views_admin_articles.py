@@ -68,11 +68,17 @@ class ViewsAdminArticles(ViewsAdmin):
         return result
 
     @view_config(route_name='admin_article_edit', renderer='templates/admin/admin_article_edit.jinja2')
+    @view_config(route_name='admin_article_new', renderer='templates/admin/admin_article_edit.jinja2')
     def view_admin_article_edit(self):
-        article_id = self.request.matchdict.get('article_id')
-        if not article_id:
-            return HTTPBadRequest('No user id specified')
-        article = Article.by_id(article_id)
+        article_id = self.request.GET.get('article_id')
+        if article_id is not None:
+            article = Article.by_id(article_id)
+        else:
+            if self.request.matched_route.name == 'admin_article_new':
+                article = Article()
+            else:
+                return HTTPBadRequest('No article id specified')
+
         if not article:
             return HTTPNotFound('Article not found')
 
@@ -87,7 +93,7 @@ class ViewsAdminArticles(ViewsAdmin):
         article_edit_schema = forms.ArticleEditSchema()
         article_edit_schema.linked_article = article
 
-        user_edit_form = widgets.FormEx(
+        article_edit_form = widgets.FormEx(
             article_edit_schema.bind(),
             buttons=[widgets.ButtonEx(name='form_article_edit_submit', title='Изменить')],
         )
@@ -95,7 +101,7 @@ class ViewsAdminArticles(ViewsAdmin):
         if 'form_article_edit_submit' in self.request.params:
             controls = self.request.POST.items()
             try:
-                data = user_edit_form.validate(controls)
+                data = article_edit_form.validate(controls)
             except deform.ValidationFailure as e:
                 return dict(rendered_form=e.render())
 
@@ -109,7 +115,7 @@ class ViewsAdminArticles(ViewsAdmin):
                 # TODO load revision, compare code, if changed, then create revision
                 pass
 
-            raise Exception('not implemented yet')
+            # raise Exception('not implemented yet')
 
             try:
                 with transaction.manager:
@@ -120,7 +126,7 @@ class ViewsAdminArticles(ViewsAdmin):
             self.add_success_flash('Статья успешно изменена')
 
         # TODO name validator
-        appstruct = dictalchemy.utils.asdict(article)
+        appstruct = helpers.dict_set_empty_string_on_null(dictalchemy.utils.asdict(article))
         # TODO fix vk_id
         # appstruct['vk_id'] = 0
-        return dict(rendered_form=user_edit_form.render(appstruct))
+        return dict(rendered_form=article_edit_form.render(appstruct))

@@ -185,3 +185,9 @@ class ButtonEx(deform.Button):
         self.disabled = disabled
         self.css_class = css_class
         self.description = description
+
+
+class BootstrapGridEditor(deform.widget.TextAreaWidget):
+    template = 'pyragrid:templates/deform_mod/grid_editor.pt'
+    # readonly_template = 'readonly/textinput'
+

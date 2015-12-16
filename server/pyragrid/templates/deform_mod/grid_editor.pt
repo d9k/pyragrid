@@ -1,0 +1,32 @@
+<?python
+try:
+    oid = oid
+except NameError:
+    oid = field.oid
+
+gridId = oid
+gridId += 'Grid'
+?>
+<div id="${gridId}"></div>
+<textarea tal:define="rows rows|field.widget.rows;
+                      cols cols|field.widget.cols;
+                      css_class css_class|field.widget.css_class;
+                      oid oid|field.oid;
+                      name name|field.name;
+                      style style|field.widget.style"
+          tal:attributes="rows rows;
+                          cols cols;
+                          class string: form-control ${css_class};
+                          style style"
+          id="${oid}"
+          name="${name}">${cstruct}</textarea>
+
+<!-- requires _bootstrap_grid_editor_js.jinja2 ! -->
+
+<script type="text/javascript">
+    $(function() {
+      return $('#'+'${gridId}').gridEditor({
+        new_row_layouts: [[12], [6, 6], [4, 4, 4], [4]]
+      });
+    });
+</script>

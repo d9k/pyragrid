@@ -13,6 +13,7 @@ from .widgets import (
     TextInputPlaceHolderWidget,
     PasswordPlaceholderWidget,
     RecaptchaWidget,
+    BootstrapGridEditor,
     exception_for_schema_field
 )
 from .helpers import check_dev_mode
@@ -143,5 +144,6 @@ class ArticleEditSchema(SQLAlchemySchemaNode):
             String(),
             name='code',
             title='Html-код статьи',
-            widget=widgets.TextAreaWidget(rows=20, cols=60),
+            # widget=widgets.TextAreaWidget(rows=20, cols=60),
+            widget=BootstrapGridEditor(rows=20, cols=60),
         ))

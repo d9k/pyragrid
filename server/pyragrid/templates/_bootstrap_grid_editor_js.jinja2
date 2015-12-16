@@ -1,0 +1,22 @@
+{% compress 'js' %}
+ <script type="text/coffeescript">
+ if (! window.bootstrap_grid_editor_loaded?)
+    loadCSS = (filename)->
+       return if !filename
+       $('head').append("<link rel='stylesheet' type='text/css' href='#{filename}'>");
+
+    loadCSS('{{ request.static_url('pyragrid:static/grideditor.css') }}')
+
+    loadJS =(filename) ->
+        return if !filename
+        $('head').append("<script type='text/javascript' src='" + filename + "'><" + "/script>")
+
+    loadCSS("{{ request.static_url('pyragrid:static/grideditor.css') }}")
+{# TODO delete when and if jquery-ui would be in base.jinja2 head#}
+    loadJS("{{ request.static_url('pyragrid:static/jquery-ui.js') }}")
+    loadJS("{{ request.static_url('pyragrid:static/tinymce/tinymce.js') }}")
+    loadJS("{{ request.static_url('pyragrid:static/tinymce/jquery.tinymce.min.js') }}")
+    loadJS("{{ request.static_url('pyragrid:static/jquery.grideditor.js') }}")
+    window.bootstrap_grid_editor_loaded = true
+ </script>
+{% endcompress %}

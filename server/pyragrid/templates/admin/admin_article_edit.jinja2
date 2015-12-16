@@ -3,28 +3,7 @@
 {% set enable_greeting = False %}
 {% extends "../base.jinja2" %}
 {% block content %}
+    {% include '../_bootstrap_grid_editor_js.jinja2' %}
     {{ rendered_form|safe }}
-
-    {# TODO delete whesn and if jquery-ui would be in base.jinja2 head #}
-    <script src="{{ request.static_url('pyragrid:static/jquery-ui.js') }}"></script>
-    <script src="{{ request.static_url('pyragrid:static/tinymce/tinymce.js') }}"></script>
-    <script src="{{ request.static_url('pyragrid:static/tinymce/jquery.tinymce.min.js') }}"></script>
-    <script src="{{ request.static_url('pyragrid:static/jquery.grideditor.js') }}"></script>
-    <div id="myGrid"></div>
-    {% compress 'js' %}
-    <script type="text/coffeescript">
-        loadCSS = (filename)->
-           return if !filename
-           $('head').append("<link rel='stylesheet' type='text/css' href='#{filename}'>");
-
-        loadCSS('{{ request.static_url('pyragrid:static/grideditor.css') }}')
-{#        loadCSS('{{ request.static_url('pyragrid:static/grideditor-font-awesome.css') }}')#}
-
-        $ ->
-            $('#articleEdit textarea[name=code]').gridEditor {
-                new_row_layouts: [[12], [6,6], [4,4,4], [4]],
-            }
-    </script>
-    {% endcompress %}
     {{ content }}
 {% endblock %}

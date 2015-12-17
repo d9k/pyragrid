@@ -142,7 +142,7 @@
       }
     });
     return $('body').on('click', 'form button[type=submit]', function(e) {
-      var $form, $this, formData, url;
+      var $form, $this, formData, formEvents, url;
       $this = $(this);
       $form = $(this).closest('form');
       trace("ajax button pressed");
@@ -153,9 +153,15 @@
       if (hasDisableAjaxAttr($this) || hasDisableAjaxAttr($form)) {
         return;
       }
-      formData = $form.serialize();
-      formData += '&' + this.name + '=' + this.value;
       if (urlOnThisDomain(url)) {
+        formEvents = $._data($form.get(0), "events");
+        if (formEvents.submit != null) {
+          $.each(formEvents.submit, function(j, h) {
+            return h.handler();
+          });
+        }
+        formData = $form.serialize();
+        formData += '&' + this.name + '=' + this.value;
         e.preventDefault();
         return ajaxUpdateContent(url, "POST", formData);
       }

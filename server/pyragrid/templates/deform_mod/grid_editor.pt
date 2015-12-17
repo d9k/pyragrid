@@ -1,12 +1,3 @@
-<?python
-try:
-    oid = oid
-except NameError:
-    oid = field.oid
-
-gridId = oid
-gridId += 'Grid'
-?>
 <div id="${gridId}"></div>
 <textarea tal:define="rows rows|field.widget.rows;
                       cols cols|field.widget.cols;
@@ -21,12 +12,21 @@ gridId += 'Grid'
           id="${oid}"
           name="${name}">${cstruct}</textarea>
 
-<!-- requires _bootstrap_grid_editor_js.jinja2 ! -->
+<!-- requires _bootstrap_grid_editor_js.jinja2 before ! -->
 
 <script type="text/javascript">
     $(function() {
-      return $('#'+'${gridId}').gridEditor({
+      var $gridDiv = $('#'+'${gridId}');
+      var $field = $('#'+'${oid}');
+      $gridDiv.html($field.val());
+      $gridDiv.gridEditor({
         new_row_layouts: [[12], [6, 6], [4, 4, 4], [4]]
       });
+      var $form = $gridDiv.closest('form');
+      var formId = $form.attr('id');
+      $form.on('submit', function(e){
+        $field.val($gridDiv.gridEditor('getHtml'));
+      });
     });
+
 </script>

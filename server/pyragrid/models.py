@@ -278,7 +278,7 @@ class Article(Base):
                               '^[a-z0-9_\-/]+$',
                               'Путь должен содержать только цифры и английские буквы'
                       ),
-                      'missing': colander.required
+                      # 'missing': colander.required
                   }})
     activeRevisionId = Column(Integer,
                               nullable=True,

@@ -123,9 +123,16 @@ $(document).ready () ->
         if hasDisableAjaxAttr($this)\
         or hasDisableAjaxAttr($form)
             return
-        formData = $form.serialize()
-        formData += '&' + this.name + '=' + this.value;
         if urlOnThisDomain(url)
+            formEvents = $._data($form.get(0), "events")
+            if formEvents.submit?
+                $.each(formEvents.submit, (j, h) ->
+                    #TODO fill event object and pass to handler?
+#                    console.log(h.handler)
+                    h.handler();
+                )
+            formData = $form.serialize()
+            formData += '&' + this.name + '=' + this.value;
             e.preventDefault()
             ajaxUpdateContent(url, "POST", formData)
 

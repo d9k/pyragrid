@@ -53,10 +53,10 @@ class ViewsAdminArticles(ViewsAdmin):
         columns = [
             ColumnDT('id'),
             ColumnDT('name'),
-            ColumnDT('system_name'),
+            ColumnDT('systemName'),
             ColumnDT('path'),
-            ColumnDT('active_revision'),
-            ColumnDT('active')
+            ColumnDT('activeRevisionId'),
+            ColumnDT('active'),
         ]
         query = DBSession.query(Article)
         # instantiating a DataTable for the query and table needed

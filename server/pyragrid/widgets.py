@@ -166,7 +166,7 @@ class FormEx(deform.Form):
 
 class FormWidgetEx(deform.widget.FormWidget):
     template = 'pyragrid:templates/deform_mod/form_mod.pt'
-    # readonly_template = 'readonly/'form'
+    # readonly_template = 'readonly/form'
 
 
 class ButtonEx(deform.Button):

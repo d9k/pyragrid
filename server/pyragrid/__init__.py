@@ -109,7 +109,7 @@ def main(global_config, **settings):
     config.add_route('admin_article_enable', '/admin/article/{article_id}/enable')
     config.add_route('admin_article_disable', '/admin/article/{article_id}/disable')
     config.add_route('admin_article_new', '/admin/article/new')
-    config.add_route('admin_articles', '/admin/articles/')
+    config.add_route('admin_articles', '/admin/articles')
     config.add_route('admin_articles_grid', '/admin/articles/grid')
 
     config.set_session_factory(session_factory)

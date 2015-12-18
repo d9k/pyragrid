@@ -21,6 +21,7 @@ import dictalchemy.utils
 from pyragrid import helpers
 import transaction
 from sqlalchemy.exc import DBAPIError
+import datetime
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """
@@ -350,6 +351,7 @@ class ArticleRevision(Base):
                           'widget': deform.widget.TextInputWidget(readonly=True)
                       }})
     dateTime = Column(DateTime,
+                      default=datetime.datetime.utcnow,
                       nullable=False,
                       info={'colanderalchemy': {
                           'title': 'Время создания',

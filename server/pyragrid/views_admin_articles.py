@@ -84,6 +84,10 @@ class ViewsAdminArticles(ViewsAdmin):
         if not article:
             return HTTPNotFound('Article not found')
 
+        current_revision = None
+        if article.activeRevisionId is not None:
+            current_revision = ArticleRevision.by_id(article.activeRevisionId)
+
         # if 'article_delete' in self.request.params:
         #     try:
         #         with transaction.manager:
@@ -119,8 +123,7 @@ class ViewsAdminArticles(ViewsAdmin):
                 # TODO load revision, compare code, if changed, then create revision
                 save_revision = True
                 parent_revision_id = None
-                if article.activeRevisionId is not None:
-                    current_revision = ArticleRevision.by_id(article.activeRevisionId)
+                if current_revision is not None:
                     if current_revision.code == new_code:
                         save_revision = False
                     parent_revision_id = current_revision.id
@@ -142,6 +145,7 @@ class ViewsAdminArticles(ViewsAdmin):
                         return self.db_error_response(error)
 
                     article.activeRevisionId = new_revision.id
+                    current_revision = new_revision
 
             # raise Exception('not implemented yet')
 
@@ -151,8 +155,12 @@ class ViewsAdminArticles(ViewsAdmin):
 
             self.add_success_flash('Статья успешно изменена')
 
+        appstruct = dictalchemy.utils.asdict(article)
+        if current_revision is not None:
+            appstruct['code'] = current_revision.code
+
         # TODO name validator
-        appstruct = helpers.dict_set_empty_string_on_null(dictalchemy.utils.asdict(article))
+        appstruct = helpers.dict_set_empty_string_on_null(appstruct)
         # TODO fix vk_id
         # appstruct['vk_id'] = 0
         return dict(rendered_form=article_edit_form.render(appstruct))

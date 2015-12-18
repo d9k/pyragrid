@@ -44,9 +44,10 @@
                     'mRender': (value, type, data) ->
                           id = data[0]
                           active = data[5] == 'True'
-                          rendered = '<a href="/admin/articles/edit/' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+                          article_url_prefix = '/admin/article/' + id
+                          rendered = '<a href="' + article_url_prefix + '/edit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
 
-                          button_url = '/admin/articles/' + (if active then 'disable' else 'enable') + '/' + id
+                          button_url = article_url_prefix + '/' + (if active then 'disable' else 'enable')
                           icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
                           btn_class = 'btn-' + (if active then 'danger' else 'success')
 

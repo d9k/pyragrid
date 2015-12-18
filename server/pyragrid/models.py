@@ -19,6 +19,8 @@ from colander import null, Invalid
 from dictalchemy import DictableModel
 import dictalchemy.utils
 from pyragrid import helpers
+import transaction
+from sqlalchemy.exc import DBAPIError
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """
@@ -36,6 +38,16 @@ class RootFactory(object):
 
     def __init__(self, request):
         pass
+
+
+def db_save_model(obj):
+    try:
+        with transaction.manager:
+            DBSession.add(obj)
+    except DBAPIError as db_api_error:
+        return db_api_error
+    return None
+
 
 
 def create_hashed_password(password, salt):
@@ -297,9 +309,15 @@ class Article(Base):
                         info={'colanderalchemy': {
                             'title': 'Является шаблоном',
                         }})
+    @staticmethod
+    def by_id(article_id: int):
+        """
+        :return Article
+        """
+        return DBSession.query(Article).filter(Article.id == article_id).first()
 
 
-class ArticlesRevisions(Base):
+class ArticleRevision(Base):
     __tablename__ = 'articles_revisions'
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {
@@ -325,10 +343,11 @@ class ArticlesRevisions(Base):
                       'title': 'Код статьи',
                       'widget': deform.widget.TextAreaWidget()
                   }})
-    authorId = Column(DateTime,
+    authorId = Column(Integer,
+                      nullable=False,
                       info={'colanderalchemy': {
                           'title': 'id автора',
-                          'widget': deform.widget.DateTimeInputWidget(readonly=True)
+                          'widget': deform.widget.TextInputWidget(readonly=True)
                       }})
     dateTime = Column(DateTime,
                       nullable=False,
@@ -337,3 +356,9 @@ class ArticlesRevisions(Base):
                           'widget': deform.widget.DateTimeInputWidget(readonly=True)
                       }})
 
+    @staticmethod
+    def by_id(article_revision_id: int):
+        """
+        :return ArticleRevision
+        """
+        return DBSession.query(ArticleRevision).filter(ArticleRevision.id == article_revision_id).first()

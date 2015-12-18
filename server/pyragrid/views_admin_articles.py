@@ -8,7 +8,9 @@ from pyramid.view import (
 from .models import (
     DBSession,
     User,
-    Article
+    Article,
+    ArticleRevision,
+    db_save_model
 )
 
 from .views_base import (
@@ -70,7 +72,7 @@ class ViewsAdminArticles(ViewsAdmin):
     @view_config(route_name='admin_article_edit', renderer='templates/admin/admin_article_edit.jinja2')
     @view_config(route_name='admin_article_new', renderer='templates/admin/admin_article_edit.jinja2')
     def view_admin_article_edit(self):
-        article_id = self.request.GET.get('article_id')
+        article_id = self.request.matchdict.get('article_id')
         if article_id is not None:
             article = Article.by_id(article_id)
         else:
@@ -111,18 +113,41 @@ class ViewsAdminArticles(ViewsAdmin):
             # user.vk_id = data.get('vk_id')
 
             helpers.obj_set_fields_from_dict(article, data)
-            revision_code = data.get('code')
-            if revision_code:
+
+            new_code = data.get('code')
+            if new_code:
                 # TODO load revision, compare code, if changed, then create revision
-                pass
+                save_revision = True
+                parent_revision_id = None
+                if article.activeRevisionId is not None:
+                    current_revision = ArticleRevision.by_id(article.activeRevisionId)
+                    if current_revision.code == new_code:
+                        save_revision = False
+                    parent_revision_id = current_revision.id
+                if save_revision:
+                    new_revision = ArticleRevision()
+
+                    if article_id is None:
+                        error = db_save_model(article)
+                        if error is not None:
+                            return self.db_error_response(error)
+
+                    new_revision.articleId = article.id
+                    new_revision.authorId = self.user.id
+                    new_revision.code = new_code
+                    new_revision.parentRevisionId = parent_revision_id
+
+                    error = db_save_model(new_revision)
+                    if error is not None:
+                        return self.db_error_response(error)
+
+                    article.activeRevisionId = new_revision.id
 
             # raise Exception('not implemented yet')
 
-            try:
-                with transaction.manager:
-                    DBSession.add(article)
-            except DBAPIError:
-                return Response(conn_err_msg, content_type='text/plain', status_int=500)
+            error = db_save_model(article)
+            if error is not None:
+                return self.db_error_response(error)
 
             self.add_success_flash('Статья успешно изменена')
 

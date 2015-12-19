@@ -112,6 +112,8 @@ def main(global_config, **settings):
     config.add_route('admin_articles', '/admin/articles')
     config.add_route('admin_articles_grid', '/admin/articles/grid')
 
+    config.add_route('article', '/article/{article_system_name}')
+
     config.set_session_factory(session_factory)
 
     config.add_subscriber(add_renderer_globals, pyramid.events.BeforeRender)

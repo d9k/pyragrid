@@ -39,7 +39,7 @@ from .views_base import (
 
 
 @view_defaults(route_name='index', permission='view')
-class SiteViews(ViewsBase):
+class ViewsSite(ViewsBase):
 
     # def __init__(self, request):
     #     super.__init__(request)

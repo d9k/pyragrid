@@ -317,6 +317,13 @@ class Article(Base):
         """
         return DBSession.query(Article).filter(Article.id == article_id).first()
 
+    @staticmethod
+    def by_system_name(article_system_name: str):
+        """
+        :return Article
+        """
+        return DBSession.query(Article).filter(Article.systemName == article_system_name).first()
+
 
 class ArticleRevision(Base):
     __tablename__ = 'articles_revisions'

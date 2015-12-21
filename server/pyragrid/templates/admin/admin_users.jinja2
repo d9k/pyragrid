@@ -73,7 +73,7 @@
                         url = $(this).attr('data-url')
                         $.ajax(
                             url: url,
-                            success: (data) -> # правильная ли функция?
+                            success: (data) ->
                                 UI.notifyFromSuccessData(data)
                                 $table.fnDraw(false)
                             error: (data) ->

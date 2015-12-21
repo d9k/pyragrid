@@ -32,6 +32,7 @@ from pyramid.httpexceptions import (
 )
 
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy import desc
 
 from pyragrid import helpers, forms
 
@@ -163,4 +164,74 @@ class ViewsAdminArticles(ViewsAdmin):
         appstruct = helpers.dict_set_empty_string_on_null(appstruct)
         # TODO fix vk_id
         # appstruct['vk_id'] = 0
-        return dict(rendered_form=article_edit_form.render(appstruct))
+        return dict(rendered_form=article_edit_form.render(appstruct), article_id=article_id)
+
+    @view_config(route_name='admin_article_revision', renderer='templates/admin/admin_article_revisions.jinja2')
+    @view_config(route_name='admin_article_revisions', renderer='templates/admin/admin_article_revisions.jinja2')
+    def view_admin_article_revision(self):
+        article_id = self.request.matchdict.get('article_id')
+        if article_id is not None:
+            article = Article.by_id(article_id)
+        else:
+            return HTTPBadRequest('No article id specified')
+
+        if article is None:
+            return HTTPNotFound('Article not found')
+
+        article_revision_id = self.request.matchdict.get('article_revision_id')
+
+        if article_revision_id is None:
+            article_revision_id = article.activeRevisionId
+        selected_revision = ArticleRevision.by_id(article_revision_id, article_id)
+
+        return dict(article=article, selected_revision=selected_revision)
+
+    @view_config(route_name='admin_article_revisions_grid', request_method='GET', renderer='json')
+    def admin_article_revisions_grid_view(self):
+        columns = [
+            ColumnDT('id'),
+            ColumnDT('articleId'),
+            ColumnDT('parentRevisionId'),
+            ColumnDT('dateTime'),
+            ColumnDT('authorId'),
+        ]
+        article_id = self.request.matchdict.get('article_id')
+        query = DBSession.query(ArticleRevision)\
+            .filter(ArticleRevision.articleId == article_id)\
+            .order_by(desc(ArticleRevision.dateTime))
+        # instantiating a DataTable for the query and table needed
+        row_table = DataTablesMod(self.request.GET, ArticleRevision, query, columns)
+
+        # returns what is needed by DataTable
+        result = row_table.output_result()
+        result = helpers.datatables_result_add_fake_column(result)
+        return result
+
+    @view_config(route_name='admin_article_revision_activate', renderer='json')
+    def view_admin_article_revision_activate(self):
+        article_id = self.request.matchdict.get('article_id')
+
+        if article_id is not None:
+            article = Article.by_id(article_id)
+        else:
+            return HTTPBadRequest('Id статьи не указан')
+
+        if article is None:
+            return HTTPNotFound('Статья не найдена')
+
+        article_revision_id = self.request.matchdict.get('article_revision_id')
+        if article_revision_id is None:
+            return HTTPNotFound('Id ревизии не указан')
+
+        selected_revision = ArticleRevision.by_id(article_revision_id, article_id)
+        if selected_revision is None:
+            return HTTPNotFound('Ревизия статьи не найдена')
+
+        article.activeRevisionId = selected_revision.id
+
+        error = db_save_model(article)
+        if error is not None:
+            return self.db_error_response(error)
+
+        return {'result': 'success', 'message': 'Ревизия установлена'}
+

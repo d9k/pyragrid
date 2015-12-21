@@ -45,7 +45,17 @@
                           id = data[0]
                           active = data[5] == 'True'
                           article_url_prefix = '/admin/article/' + id
-                          rendered = '<a href="' + article_url_prefix + '/edit" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>'
+                          rendered =
+                              '<a href="' + article_url_prefix + '/edit" class="btn btn-default btn-sm">' +
+                                  '<span class="glyphicon glyphicon-pencil"></span>' +
+                              '</a>'
+
+                          rendered +=
+                            '<a href="' + article_url_prefix + '/revisions"' +
+                            '   class="btn btn-default btn-sm"' +
+                            '   title="Ревизии">' +
+                                '<span class="glyphicon glyphicon-time"></span>' +
+                            '</a>'
 
                           button_url = article_url_prefix + '/' + (if active then 'disable' else 'enable')
                           icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')

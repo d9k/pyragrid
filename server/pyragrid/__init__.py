@@ -108,11 +108,16 @@ def main(global_config, **settings):
     config.add_route('admin_article_edit', '/admin/article/{article_id}/edit')
     config.add_route('admin_article_enable', '/admin/article/{article_id}/enable')
     config.add_route('admin_article_disable', '/admin/article/{article_id}/disable')
+    config.add_route('admin_article_revisions', '/admin/article/{article_id}/revisions')
+    config.add_route('admin_article_revision', '/admin/article/{article_id}/revision/{article_revision_id}')
+    config.add_route('admin_article_revision_activate', '/admin/article/{article_id}/revision/{article_revision_id}/activate')
     config.add_route('admin_article_new', '/admin/article/new')
     config.add_route('admin_articles', '/admin/articles')
     config.add_route('admin_articles_grid', '/admin/articles/grid')
+    config.add_route('admin_article_revisions_grid', '/admin/article/{article_id}/revisions/grid')
 
     config.add_route('article', '/article/{article_system_name}')
+    config.add_route('article_revision', '/article/{article_system_name}')
 
     config.set_session_factory(session_factory)
 

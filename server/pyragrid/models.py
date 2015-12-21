@@ -310,6 +310,7 @@ class Article(Base):
                         info={'colanderalchemy': {
                             'title': 'Является шаблоном',
                         }})
+
     @staticmethod
     def by_id(article_id: int):
         """
@@ -366,8 +367,11 @@ class ArticleRevision(Base):
                       }})
 
     @staticmethod
-    def by_id(article_revision_id: int):
+    def by_id(article_revision_id: int, article_id: int = None):
         """
         :return ArticleRevision
         """
-        return DBSession.query(ArticleRevision).filter(ArticleRevision.id == article_revision_id).first()
+        q = DBSession.query(ArticleRevision).filter(ArticleRevision.id == article_revision_id)
+        if article_id is not None:
+            q = q.filter(ArticleRevision.articleId == article_id)
+        return q.first()

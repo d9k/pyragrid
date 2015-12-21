@@ -1,0 +1,120 @@
+{% set header = 'Ревизии статьи '+article.systemName %}
+{% set backlink = request.route_url('admin_articles') %}
+{% extends "../base.jinja2" %}
+{% block content %}
+    {% include '../_datatables_js.jinja2' %}
+
+    <p><a href="{{ request.route_path('admin_article_edit', article_id=article.id) }}">Изменить статью</a></p>
+
+    <table class="table" id="articlesGrid">
+        <thead>
+        <tr>
+            <th>id</th>{# 0 #}
+            <th>Статья</th>{# 1 #}
+            <th>Предыдущая</th>{# 2 #}
+            <th>Дата</th>{# 3 #}
+            <th>Автор</th>{# 4 #}
+{#            <th>Включена</th>{# 5 #}
+            <th>{# buttons col #}</th>{# 5 #}
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    {% compress 'js' %}
+        <script type="text/coffeescript">
+            $(document).ready ->
+               selectedRevisionId = '{{ selected_revision.id }}'
+               activeRevisionId = '{{ article.activeRevisionId }}'
+               articleId = '{{ article.id }}'
+
+               $table = $('#articlesGrid').dataTable
+                'bProcessing': true
+                'bServerSide': true
+                'sAjaxSource': '{{ request.route_path('admin_article_revisions_grid', article_id=article.id) }}'
+                'aoColumns': [
+                  { 'mData': 0 }
+                  { 'mData': 1 }
+                  { 'mData': 2 }
+                  { 'mData': 3 }
+                  { 'mData': 4 }
+{#                  {#}
+{#                    'mData': 5#}
+{#                    'mRender': (value, type, data) ->#}
+{#                       UI.renderBool(data[5])#}
+{#                  }#}
+                  {
+                    'mRender': (value, type, data) ->
+                        id = data[0]
+                        rendered = ''
+                        article_url_prefix = '/admin/article/' + articleId
+                        selected = (id == selectedRevisionId)
+                        active = (id == activeRevisionId)
+                        rendered +=
+                            '<a href="' + article_url_prefix + '/revision/' + id + '"' +
+                            '   title="Просмотр' + (if active then ' (текущая ревизия)' else '') + '"'+
+                            '   class="btn ' + (if selected then 'btn-primary' else 'btn-default' )+ ' btn-sm">' +
+                                '<span class="glyphicon glyphicon-eye-open"></span>' +
+                            '</a>'
+
+                        if selected and not active
+                            rendered +=
+                                '<a data-url="' + article_url_prefix + '/revision/' + id + '/activate"' +
+                                '   title="Сделать активной"'+
+                                '   class="buttonSetActive btn btn-sm ' +
+                                            (if active then 'disabled btn-default' else 'btn-success' ) +
+                                '">' +
+                                    '<span class="glyphicon glyphicon-ok"></span>' +
+                                '</a>'
+
+{#                          active = data[5] == 'True'#}
+
+{##}
+{#                          button_url = article_url_prefix + '/' + (if active then 'disable' else 'enable')#}
+{#                          icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')#}
+{#                          btn_class = 'btn-' + (if active then 'danger' else 'success')#}
+{##}
+{#                          rendered += '<a href="#" data-url="' + button_url + '" class="buttonSwitchActive btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'#}
+
+                        rendered
+                    'sClass': 'withButtons'
+                    'bSortable': false
+                  }
+                ]
+                'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
+                    id = aData[0]
+                    selected = (id == selectedRevisionId)
+                    active = (id == activeRevisionId)
+
+                    $table = $(this).dataTable()
+                    $row = $(nRow)
+                    if active
+                        $row.addClass('activated')
+                    else
+                        if selected
+                            $row.addClass('selected')
+
+                    $buttonsCol = $row.find('td:eq(5)')
+                    buttonSetActive = $buttonsCol.find('.buttonSetActive')
+                    buttonSetActive.on('click', (e) ->
+                        e.preventDefault()
+                        url = $(this).attr('data-url')
+                        $.ajax(
+                            url: url,
+                            success: (data) ->
+                                UI.notifyFromSuccessData(data)
+{#                                $table.fnDraw(false)#}
+                                window.location.replace('{{ request.route_path('admin_article_revisions', article_id=article.id) }}');
+                            error: (data) ->
+                                UI.notifyFromErrorData(data)
+                        )
+                    )
+               return
+        </script>
+    {% endcompress %}
+
+    <h2>Предпросмотр ревизии:</h2>
+    <hr>
+    {{ selected_revision.code|safe }}
+    <hr>
+{% endblock %}

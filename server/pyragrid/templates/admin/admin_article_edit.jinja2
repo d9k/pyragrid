@@ -4,6 +4,7 @@
 {% extends "../base.jinja2" %}
 {% block content %}
     {% include '../_bootstrap_grid_editor_js.jinja2' %}
+    <p><a href="{{ request.route_path('admin_article_revisions', article_id=article_id) }}">История правок</a></p>
     {{ rendered_form|safe }}
     {{ content }}
 {% endblock %}

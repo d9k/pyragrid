@@ -46,22 +46,27 @@
                           active = data[5] == 'True'
                           article_url_prefix = '/admin/article/' + id
                           rendered =
-                              '<a href="' + article_url_prefix + '/edit" class="btn btn-default btn-sm">' +
+                              '<a href="' + article_url_prefix + '/edit" ' +
+                              '   class="btn btn-default btn-sm"' +
+                              '   title="Править">' +
                                   '<span class="glyphicon glyphicon-pencil"></span>' +
                               '</a>'
 
                           rendered +=
                             '<a href="' + article_url_prefix + '/revisions"' +
                             '   class="btn btn-default btn-sm"' +
-                            '   title="Ревизии">' +
+                            '   title="Правки">' +
                                 '<span class="glyphicon glyphicon-time"></span>' +
                             '</a>'
 
-                          button_url = article_url_prefix + '/' + (if active then 'disable' else 'enable')
-                          icon_class = 'glyphicon-' + (if active then 'remove' else 'ok')
-                          btn_class = 'btn-' + (if active then 'danger' else 'success')
-
-                          rendered += '<a href="#" data-url="' + button_url + '" class="buttonSwitchActive btn btn-default btn-sm ' + btn_class + '"><span class="glyphicon ' + icon_class + '"></a>'
+                          rendered +=
+                              '<a href="#"' +
+                              '   data-url="' + article_url_prefix + '/' + (if active then 'disable' else 'enable') + '" ' +
+                              '   class="buttonSwitchActive btn btn-default btn-sm ' +
+                                         'btn-' + (if active then 'danger' else 'success') + '"' +
+                              '   title="' + (if active then 'Отключить показ' else 'Включить показ') + ' на сайте">' +
+                                   '<span class="glyphicon glyphicon-' + (if active then 'remove' else 'ok') + '"></span>' +
+                              '</a>'
 
                           rendered
                     'sClass': 'withButtons'

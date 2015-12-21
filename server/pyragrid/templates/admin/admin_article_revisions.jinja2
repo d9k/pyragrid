@@ -1,4 +1,4 @@
-{% set header = 'Ревизии статьи '+article.systemName %}
+{% set header = 'История правок статьи '+article.systemName %}
 {% set backlink = request.route_url('admin_articles') %}
 {% extends "../base.jinja2" %}
 {% block content %}
@@ -21,12 +21,47 @@
         <tbody></tbody>
     </table>
 
+    <h2>Предпросмотр правки
+    {% if article.activeRevisionId == selected_revision.id  %}
+        (текущая правка статьи)
+    {% endif %}
+    </h2>
+
+    {% if article.activeRevisionId != selected_revision.id  %}
+        <p>
+            <a class="setActive"
+               href="#"
+               data-url="{{ request.route_path('admin_article_revision_activate', article_id=article.id, article_revision_id=selected_revision.id) }}"
+            >Сделать текущей правкой</a>
+        </p>
+    {% endif %}
+
+    <hr>
+    {{ selected_revision.code|safe }}
+    <hr>
+
     {% compress 'js' %}
         <script type="text/coffeescript">
             $(document).ready ->
                selectedRevisionId = '{{ selected_revision.id }}'
                activeRevisionId = '{{ article.activeRevisionId }}'
                articleId = '{{ article.id }}'
+
+               setActive = (e) ->
+                    e.preventDefault()
+                    url = $(this).attr('data-url')
+                    $.ajax(
+                        url: url,
+                        success: (data) ->
+                            UI.notifyFromSuccessData(data)
+{#                                $table.fnDraw(false)#}
+                            window.location.replace('{{ request.route_path('admin_article_revisions', article_id=article.id) }}');
+                        error: (data) ->
+                            UI.notifyFromErrorData(data)
+                    )
+                    false
+
+               $('a.setActive').on("click", setActive)
 
                $table = $('#articlesGrid').dataTable
                 'bProcessing': true
@@ -96,25 +131,9 @@
 
                     $buttonsCol = $row.find('td:eq(5)')
                     buttonSetActive = $buttonsCol.find('.buttonSetActive')
-                    buttonSetActive.on('click', (e) ->
-                        e.preventDefault()
-                        url = $(this).attr('data-url')
-                        $.ajax(
-                            url: url,
-                            success: (data) ->
-                                UI.notifyFromSuccessData(data)
-{#                                $table.fnDraw(false)#}
-                                window.location.replace('{{ request.route_path('admin_article_revisions', article_id=article.id) }}');
-                            error: (data) ->
-                                UI.notifyFromErrorData(data)
-                        )
-                    )
+                    buttonSetActive.on('click', setActive)
                return
         </script>
     {% endcompress %}
 
-    <h2>Предпросмотр ревизии:</h2>
-    <hr>
-    {{ selected_revision.code|safe }}
-    <hr>
 {% endblock %}

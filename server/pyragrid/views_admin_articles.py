@@ -166,6 +166,38 @@ class ViewsAdminArticles(ViewsAdmin):
         # appstruct['vk_id'] = 0
         return dict(rendered_form=article_edit_form.render(appstruct), article_id=article_id)
 
+    @view_config(route_name='admin_article_enable', renderer='json')
+    def view_admin_article_enable(self):
+        article_id = self.request.matchdict.get('article_id')
+        if not article_id:
+            return HTTPBadRequest('No article id specified')
+        article = Article.by_id(article_id)
+        if not article:
+            return HTTPNotFound('Article not found')
+        article.active = True
+
+        error = db_save_model(article)
+        if error is not None:
+            return self.db_error_response(error)
+
+        return {'result': 'success', 'message': 'Статья актирована'}
+
+    @view_config(route_name='admin_article_disable', renderer='json')
+    def view_admin_article_disable(self):
+        article_id = self.request.matchdict.get('article_id')
+        if not article_id:
+            return HTTPBadRequest('No article id specified')
+        article = Article.by_id(article_id)
+        if not article:
+            return HTTPNotFound('Article not found')
+        article.active = False
+
+        error = db_save_model(article)
+        if error is not None:
+            return self.db_error_response(error)
+
+        return {'result': 'success', 'message': 'Статья отключена'}
+
     @view_config(route_name='admin_article_revision', renderer='templates/admin/admin_article_revisions.jinja2')
     @view_config(route_name='admin_article_revisions', renderer='templates/admin/admin_article_revisions.jinja2')
     def view_admin_article_revision(self):

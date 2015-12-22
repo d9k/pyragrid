@@ -222,13 +222,15 @@ class ViewsAdminArticles(ViewsAdmin):
     def admin_article_revisions_grid_view(self):
         columns = [
             ColumnDT('id'),
-            ColumnDT('articleId'),
+            ColumnDT('article.systemName'),
             ColumnDT('parentRevisionId'),
             ColumnDT('dateTime'),
-            ColumnDT('authorId'),
+            ColumnDT('author.login'),
         ]
         article_id = self.request.matchdict.get('article_id')
         query = DBSession.query(ArticleRevision)\
+            .join(Article)\
+            .join(User)\
             .filter(ArticleRevision.articleId == article_id)\
             .order_by(desc(ArticleRevision.dateTime))
         # instantiating a DataTable for the query and table needed

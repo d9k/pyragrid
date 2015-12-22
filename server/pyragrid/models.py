@@ -5,11 +5,11 @@ from pyramid.security import (
     Allow
 )
 from sqlalchemy import (
-    BigInteger, Column, Integer, Text, Boolean, DateTime
+    BigInteger, Column, Integer, Text, Boolean, DateTime, ForeignKey
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
-    scoped_session, sessionmaker, Query
+    scoped_session, sessionmaker, Query, relationship
 )
 import sqlalchemy.event
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -313,6 +313,9 @@ class Article(Base):
                             'title': 'Является шаблоном',
                         }})
 
+    # relations
+    revisions = relationship('ArticleRevision', back_populates='article')
+
     @staticmethod
     def by_id(article_id: int):
         """
@@ -345,6 +348,7 @@ class ArticleRevision(Base):
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
     articleId = Column(Integer,
+                       ForeignKey('articles.id'),
                        nullable=False,
                        info={'colanderalchemy': {
                            'title': 'id статьи',
@@ -364,6 +368,7 @@ class ArticleRevision(Base):
                       'widget': deform.widget.TextAreaWidget()
                   }})
     authorId = Column(Integer,
+                      ForeignKey('users.id'),
                       nullable=False,
                       info={'colanderalchemy': {
                           'title': 'id автора',
@@ -376,6 +381,9 @@ class ArticleRevision(Base):
                           'title': 'Время создания',
                           'widget': deform.widget.DateTimeInputWidget(readonly=True)
                       }})
+    # relations
+    article = relationship("Article", back_populates='revisions')
+    author = relationship("User")
 
     @staticmethod
     def by_id(article_revision_id: int, article_id: int = None):

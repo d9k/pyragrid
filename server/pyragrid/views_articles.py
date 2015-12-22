@@ -46,7 +46,6 @@ class ViewsArticles(ViewsBase):
 
     @view_config(route_name='article', renderer='templates/article.jinja2')
     def view_article(self):
-        article = None
 
         if self.notfound:
             path = self.request.path

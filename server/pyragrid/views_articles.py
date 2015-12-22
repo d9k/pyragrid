@@ -2,7 +2,8 @@ from pyramid.response import Response
 from pyramid.view import (
     view_config,
     view_defaults,
-    forbidden_view_config
+    forbidden_view_config,
+    notfound_view_config
 )
 from pyramid.security import has_permission
 # from pyramid.url import route_url
@@ -41,18 +42,28 @@ from .views_base import (
 
 
 @view_defaults(route_name='index')
-class ViewsSite(ViewsBase):
+class ViewsArticles(ViewsBase):
 
     @view_config(route_name='article', renderer='templates/article.jinja2')
     def view_article(self):
-        system_name = self.request.matchdict.get('article_system_name')
-        if system_name is None:
-            return HTTPNotFound('Название статьи не указано')
+        article = None
 
-        article = Article.by_system_name(system_name)
+        if self.notfound:
+            path = self.request.path
+            article = Article.by_path(path)
+            if article is None:
+                return HTTPNotFound('Страница не найдена')
+        else:
+            system_name = self.request.matchdict.get('article_system_name')
+            if system_name is None:
+                return HTTPNotFound('Название статьи не указано')
 
-        if article is None:
-            return HTTPNotFound('Статья не найдена')
+            article = Article.by_system_name(system_name)
+
+            if article is None:
+                return HTTPNotFound('Статья не найдена')
+
+            self.request.override_renderer = 'templates/article.jinja2'
 
         article_revision = None
 
@@ -84,4 +95,9 @@ class ViewsSite(ViewsBase):
         # #TODO name validator
         # appstruct = dictalchemy.utils.asdict(self.user, include=['name'])
         # return dict(rendered_profile_edit_form=profile_edit_form.render(appstruct))
-        return dict(article=None, article_revision=article_revision)
+        return dict(article=article, article_revision=article_revision)
+
+
+def view_custom_not_found(request):
+    views_articles = ViewsArticles(request)
+    return views_articles.view_article()

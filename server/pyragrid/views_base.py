@@ -29,6 +29,13 @@ class ViewsBase:
         self.request = request
         """ :type : Request"""
 
+        if self.request.matchdict is None:
+            self.request.matchdict = dict()
+
+        self.notfound = \
+             request.exception is not None \
+             and type(request.exception).__name__ == 'HTTPNotFound'
+
         self.user_id = None
         self.user = None
         self.ajax = self.request.is_xhr
@@ -36,7 +43,7 @@ class ViewsBase:
         self.vk_id = self.check_vk_auth()
         self.login_from_vk_iframe = self.request.session.get('login_from_vk_iframe')
         self.pnotify = []
-        a = 1
+
 
     def check_logined(self, request):
         self.user_id = security.authenticated_userid(request)

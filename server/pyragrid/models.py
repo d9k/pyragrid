@@ -287,6 +287,8 @@ class Article(Base):
     path = Column(Text,
                   info={'colanderalchemy': {
                       'title': 'Путь к статье',
+                      # TODO description to validator
+                      'description': '(должен начинаться с /)',
                       'validator': colander.Regex(
                               '^[a-z0-9_\-/]+$',
                               'Путь должен содержать только цифры и английские буквы'
@@ -324,6 +326,15 @@ class Article(Base):
         :return Article
         """
         return DBSession.query(Article).filter(Article.systemName == article_system_name).first()
+
+    @staticmethod
+    def by_path(path: str):
+        """
+        :return Article
+        """
+        if path is None or path == '':
+            return None
+        return DBSession.query(Article).filter(Article.path == path).first()
 
 
 class ArticleRevision(Base):
@@ -375,3 +386,19 @@ class ArticleRevision(Base):
         if article_id is not None:
             q = q.filter(ArticleRevision.articleId == article_id)
         return q.first()
+
+
+class ArticleCustomRoutePredicate:
+
+    def __init__(self, val, config):
+        self.val = val
+
+    def text(self):
+        return 'article custom predicate = ' % [self.val, ]
+
+    phash = text
+
+    def __call__(self, context, request):
+        # TODO
+        return False
+

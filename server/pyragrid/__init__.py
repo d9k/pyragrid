@@ -23,6 +23,7 @@ import pyramid_jinja2
 import pyramid.threadlocal
 import json
 
+from . import views_articles
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
@@ -118,6 +119,8 @@ def main(global_config, **settings):
 
     config.add_route('article', '/article/{article_system_name}')
     config.add_route('article_revision', '/article/{article_system_name}')
+
+    config.add_notfound_view(views_articles.view_custom_not_found)
 
     config.set_session_factory(session_factory)
 

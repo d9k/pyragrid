@@ -40,8 +40,14 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
 
 installation:
 
-	virtualenv -p $(which python3.4) venv
-	source venv/bin/activate
+    # ?
+    sudo apt-get install python3.4-venv
+
+    sudo apt-get install python3-pip
+    sudo pip install virtualenv
+    virtualenv-3.4 --no-site-packages venv
+    virtualenv -p $(which python3.4) venv
+    source venv/bin/activate
 
 run after every new package installation (for venv moving ability)
 

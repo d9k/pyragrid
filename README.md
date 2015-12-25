@@ -45,8 +45,10 @@ installation:
 
     sudo apt-get install python3-pip
     sudo pip install virtualenv
-    virtualenv-3.4 --no-site-packages venv
-    virtualenv -p $(which python3.4) venv
+    
+    cd server
+    virtualenv-3.4 venv
+    # or `virtualenv -p $(which python3.4) venv`
     source venv/bin/activate
 
 run after every new package installation (for venv moving ability)
@@ -65,30 +67,34 @@ check after `source venv/bin/activate`:
 
 dependancy install:
 
+	python setup.py develop
+	# run develop command on production too
+	# if you experience some dependency missing error, try run command again
+
 	//easy_install "pyramid==1.5.7"
 	//easy_install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy
 
-	pip install "pyramid==1.5.7"
-    pip install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy pyramid_beaker
+	//pip install "pyramid==1.5.7"
+    //pip install nose webtest deform sqlalchemy pyramid_jinja2 pyramid_debugtoolbar waitress pyramid_tm zope.sqlalchemy pyramid_beaker
 
-pyramid_beaker - sessions
-
-
-https://pypi.python.org/pypi/sqlacodegen:
-
-    pip install psycopg2 sqlacodegen
-
-alembic (https://alembic.readthedocs.org/en/latest/tutorial.html) :
-
-    pip install alembic
-    alembic init --template pylons alembic
+//pyramid_beaker - sessions
 
 
-password hashing (http://www.cyberciti.biz/python-tutorials/securely-hash-passwords-in-python/)
+//https://pypi.python.org/pypi/sqlacodegen:
 
-	pip install passlib
+    //pip install psycopg2 sqlacodegen
 
-http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffolds.html
+//alembic (https://alembic.readthedocs.org/en/latest/tutorial.html) :
+
+    //pip install alembic
+    //alembic init --template pylons alembic
+
+
+//password hashing (http://www.cyberciti.biz/python-tutorials/securely-hash-passwords-in-python/)
+
+	//pip install passlib
+
+//http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/scaffolds.html
 
 	hash -r
 	pcreate --scaffold starter scaffolds

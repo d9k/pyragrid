@@ -40,12 +40,15 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
 
 installation:
 
+    # for psycopg2
+    sudo apt-get install libpq-dev python-dev
+
     # ?
     sudo apt-get install python3.4-venv
 
     sudo apt-get install python3-pip
     sudo pip install virtualenv
-    
+
     cd server
     virtualenv-3.4 venv
     # or `virtualenv -p $(which python3.4) venv`

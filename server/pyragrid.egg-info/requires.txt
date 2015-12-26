@@ -16,3 +16,4 @@ pyramid_mailer
 configparser
 sqlalchemy-datatables
 jac
+psycopg2

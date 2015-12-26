@@ -1,0 +1,1 @@
+[file README.txt must exist for `python setup.py develop` avalilable for running]

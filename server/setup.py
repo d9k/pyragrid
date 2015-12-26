@@ -10,7 +10,7 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'pyramid',
-    # 'pyramid_chameleon',
+    'pyramid_chameleon',
     'pyramid_debugtoolbar',
     'pyramid_tm',
     'SQLAlchemy',
@@ -26,7 +26,7 @@ requires = [
     'repoze.sendmail==4.1',
     'pyramid_mailer',
     'configparser',
-    'sqlalchemy-datatables',
+    'sqlalchemy-datatables==0.1.7',
     # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
     'jac', # jinja-assets-compressor
     'psycopg2',

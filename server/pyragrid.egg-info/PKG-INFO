@@ -6,7 +6,7 @@ Home-page: UNKNOWN
 Author: UNKNOWN
 Author-email: UNKNOWN
 License: UNKNOWN
-Description: 
+Description: [file README.txt must exist for `python setup.py develop` avalilable for running]
         
         0.0
         ---

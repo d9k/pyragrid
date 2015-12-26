@@ -1,4 +1,5 @@
 pyramid
+pyramid_chameleon
 pyramid_debugtoolbar
 pyramid_tm
 SQLAlchemy
@@ -14,6 +15,6 @@ dictalchemy
 repoze.sendmail==4.1
 pyramid_mailer
 configparser
-sqlalchemy-datatables
+sqlalchemy-datatables==0.1.7
 jac
 psycopg2

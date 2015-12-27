@@ -25,6 +25,10 @@ import json
 
 from . import views_articles
 
+from jac import CompressorExtension
+
+import os.path
+
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
     event['helpers'] = helpers
@@ -72,7 +76,7 @@ def main(global_config, **settings):
     # TODO hacky. maybe better copy resources with gulp task?
     config.add_static_view('static/fonts/bootstrap', '../bower_components/bootstrap-sass-official/assets/fonts/bootstrap', cache_max_age=static_cache_max_age)
     config.add_static_view('static/bower_components', '../bower_components', cache_max_age=static_cache_max_age)
-    config.add_static_view('static/dist', '../static/dist', cache_max_age=static_cache_max_age)
+    # config.add_static_view('static/dist', '../static/dist', cache_max_age=static_cache_max_age)
     config.add_static_view('static', 'static', cache_max_age=static_cache_max_age)
     config.add_static_view('resources', 'resources', cache_max_age=static_cache_max_age)
     config.add_static_view('static_deform', 'deform:static')
@@ -134,8 +138,12 @@ def main(global_config, **settings):
 
     config.scan()
     # TODO убрать настройку jinja2 env в конфиг
+
     app = config.make_wsgi_app()
     jinja2_env = pyramid_jinja2.get_jinja2_environment(config)
+    jac_output_dir_path = os.path.join(os.path.dirname(__file__), 'static', 'dist')
+    #jinja2_env.compressor_output_dir = './pyragrid/static/dist'
+    jinja2_env.compressor_output_dir = jac_output_dir_path
     jinja2_env.compressor_debug = True
 
     return app

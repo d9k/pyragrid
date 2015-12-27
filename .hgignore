@@ -9,6 +9,7 @@ regexp:^server/build/.+
 regexp:^server/[A-z0-9\-_]+_passwords\.ini$
 regexp:^server/mail/.+
 regexp:^server/static/dist/.+
+regexp:^server/pyragrid/static/dist/.+
 regexp:^\.idea/dataSources\.local\.xml
 regexp:^\.idea/dataSources\.xml
 regexp:^\.idea/workspace\.xml

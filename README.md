@@ -48,19 +48,30 @@ main part
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 
-//TODO: how to install ColanderAlchemy simplier?
-
-//	pip install ColanderAlchemy
-//	cd venv/lib/python3.4/site-packages
-//	unzip ColanderAlchemy-0.3.3-py3.4.egg
-//	rm -r EGG-INFO
-
 For Jinja asset compiler working
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    sudo npm install -g coffee-script
-    sudo npm install -g js2coffee
+install nodejs (for Ubuntu):
 
+    sudo apt-get install -y build-essential
+
+    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+
+then
+
+    sudo npm install -g coffee-script js2coffee
+
+For assets fix
+~~~~~~~~~~~~~~
+
+    # ensure ruby installed, then
+    sudo su -c "gem install sass"
+
+    sudo npm i -g gulp bower
+    npm i
+    gulp bower
+    gulp
 
 Type hinting
 ------------
@@ -99,3 +110,11 @@ TODO
 TODO check this:
 
 	pip freeze > requirements.txt
+
+        //TODO: how to install ColanderAlchemy simplier?
+
+//	pip install ColanderAlchemy
+//	cd venv/lib/python3.4/site-packages
+//	unzip ColanderAlchemy-0.3.3-py3.4.egg
+//	rm -r EGG-INFO
+

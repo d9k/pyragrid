@@ -108,5 +108,27 @@ dependancy install:
 
 	pserve development.ini --reload
 
+PRODUCTION DEPLOYMENT
+=====================
+
+    % sudo apt-get install supervisor
+    % nano /etc/supervisor/supervisord.conf
+
+To the end:
+
+    [program:mysite]
+    autorestart=true
+    command=/path/to/mysite/server/venv/bin/pserve /path/to/mysite/server/production.ini http_port=50%(process_num)02d
+    process_name=%(program_name)s-%(process_num)01d
+    numprocs=2
+    numprocs_start=0
+    redirect_stderr=true
+    stdout_logfile=/var/log/supervisor/%(program_name)s-%(process_num)01d.log
+
+then
+
+    % sudo service supervisor restart
+
 TODO
 ====
+

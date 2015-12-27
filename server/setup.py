@@ -30,6 +30,7 @@ requires = [
     # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
     'jac', # jinja-assets-compressor
     'psycopg2',
+    'alembic',
 ]
 
 setup(name='pyragrid',

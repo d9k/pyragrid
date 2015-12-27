@@ -18,3 +18,4 @@ configparser
 sqlalchemy-datatables==0.1.7
 jac
 psycopg2
+alembic

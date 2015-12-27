@@ -5,6 +5,7 @@ alembic.ini
 development.ini
 development_passwords.ini
 production.ini
+production_passwords.ini
 readme-gulp.txt
 setup.py
 pyragrid/__init__.py

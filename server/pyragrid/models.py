@@ -276,8 +276,10 @@ class Article(Base):
                   }})
     systemName = Column(Text,
                         nullable=False,
+                        unique=True,
                         info={'colanderalchemy': {
                             'title': 'Системное имя',
+                            'description': '(index для главной страницы)',
                             'validator': colander.Regex(
                                     '^[a-z0-9_\-/]+$',
                                     'Логин должен содержать только цифры и английские буквы'
@@ -285,6 +287,7 @@ class Article(Base):
                             'missing': colander.required
                         }})
     path = Column(Text,
+                  unique=True,
                   info={'colanderalchemy': {
                       'title': 'Путь к статье',
                       # TODO description to validator

@@ -433,3 +433,12 @@
 .ge-canvas.ge-layout-desktop .col-md-12 {
   width: 100%;
 }
+
+/* hipsterkot additions: */
+.ge-canvas.ge-editing .row{
+  background-color: inherit;
+}
+
+.ge-canvas.ge-editing .column{
+  background-color: inherit;
+}

@@ -122,8 +122,8 @@
                         {% if view.user is none %}
                             <li><a href="{{ request.route_url('login') }}">Вход в панель управления</a></li>
                         {% else %}
-                            <li><a href="{{ request.route_url('admin_index') }}">Панель управления</a></li>
-                            <li><a href="{{ request.route_url('logout') }}">Выход из панели управления</a></li>
+                            <li><a href="{{ request.route_url('admin_index')}}">Панель управления</a></li>
+                            <li><a href="{{ request.route_url('logout') }}" data-no-ajax-on-click="1">Выход из панели управления</a></li>
                         {% endif %}
                         {# TODO exit #}
                         <li><a href="http://pylonsproject.org">Построено с помощью Pyramid (c)</a></li>

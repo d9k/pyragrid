@@ -62,7 +62,7 @@ class ViewsArticles(ViewsBase):
             if article is None:
                 return HTTPNotFound('Статья не найдена')
 
-            self.request.override_renderer = 'templates/article.jinja2'
+        self.request.override_renderer = 'templates/article.jinja2'
 
         article_revision = None
 

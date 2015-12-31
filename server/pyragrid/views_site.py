@@ -9,9 +9,8 @@ from pyramid.security import has_permission
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
-    Base,
     DBSession,
-    User
+    Article
 )
 
 from colanderalchemy import SQLAlchemySchemaNode
@@ -21,6 +20,8 @@ from pyramid.httpexceptions import (
     HTTPNotFound,
     HTTPFound
 )
+
+from pyramid.request import Request
 
 import deform
 from deform import Form, Button
@@ -33,10 +34,8 @@ from .forms import (
     ProfileEditSchema
 )
 
-from .views_base import (
-    ViewsBase, conn_err_msg
-)
-
+from .views_base import (ViewsBase, conn_err_msg)
+from .views_articles import ViewsArticles
 
 @view_defaults(route_name='index', permission='view')
 class ViewsSite(ViewsBase):
@@ -44,9 +43,20 @@ class ViewsSite(ViewsBase):
     # def __init__(self, request):
     #     super.__init__(request)
 
-    @view_config(route_name='index', renderer='templates/index.jinja2')
+    @view_config(route_name='index', permission=None, renderer='templates/index.jinja2')
     def index_view(self):
-        return {'username': self.user.name}
+        if self.user is not None:
+            return {}
+        article = Article.by_system_name('index')
+        if article is not None:
+            # views_articles = ViewsArticles(self.request)
+            # return views_articles.view_article()
+            article_route_url = self.request.route_url('article', article_system_name='index')
+            subreq = Request.blank(article_route_url)
+            response = self.request.invoke_subrequest(subreq, use_tweens=True)
+            return response
+        else:
+            return HTTPFound('/login')
 
     @view_config(route_name='profile_edit', renderer='templates/profile_edit.jinja2')
     def profile_edit_view(self):

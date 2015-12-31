@@ -17,7 +17,10 @@ from .widgets import (
     exception_for_schema_field
 )
 from .helpers import check_dev_mode
-from .models import User
+from .models import (
+    User,
+    Article
+)
 
 
 class LoginSchema(Schema):
@@ -68,6 +71,22 @@ def validate_user_edit_form(schema, values):
     found_by_email = User.by_email(values.get('email'), not_id)
     if found_by_email is not None:
         raise exception_for_schema_field(schema, 'email', 'Пользователь с таким адресом уже существует')
+
+
+def validate_article_edit_form(schema, values):
+    # found = User.by_login(value)
+    linked_article = None
+    not_id = None
+    if hasattr(schema, 'linked_article'):
+        linked_article = schema.linked_article
+    if linked_article is not None:
+        not_id = linked_article.id
+    found_by_system_name = Article.by_system_name(values.get('systemName'), not_id)
+    if found_by_system_name is not None:
+        raise exception_for_schema_field(schema, 'systemName', 'Статья с таким системным именем уже существует')
+    found_by_path = Article.by_path(values.get('path'), not_id)
+    if found_by_path is not None:
+        raise exception_for_schema_field(schema, 'path', 'Статья с таким путём уже существует')
 
 
 class RegisterSchema(SQLAlchemySchemaNode):
@@ -147,3 +166,5 @@ class ArticleEditSchema(SQLAlchemySchemaNode):
             # widget=widgets.TextAreaWidget(rows=20, cols=60),
             widget=BootstrapGridEditor(rows=20, cols=60),
         ))
+        self.linked_article = None
+        self.validator = validate_article_edit_form

@@ -327,20 +327,32 @@ class Article(Base):
         return DBSession.query(Article).filter(Article.id == article_id).first()
 
     @staticmethod
-    def by_system_name(article_system_name: str):
+    def by_system_name(article_system_name: str, not_id: int = None):
         """
         :return Article
         """
-        return DBSession.query(Article).filter(Article.systemName == article_system_name).first()
+        q = DBSession.query(Article) \
+            .filter(Article.systemName == article_system_name)
+        q = Article.filter_not_id(q, not_id)
+        return q.first()
 
     @staticmethod
-    def by_path(path: str):
+    def by_path(path: str, not_id: int = None):
         """
         :return Article
         """
-        if path is None or path == '':
+        if path is None or path == '' or path == colander.null:
             return None
-        return DBSession.query(Article).filter(Article.path == path).first()
+        q = DBSession.query(Article) \
+            .filter(Article.path == path)
+        q = Article.filter_not_id(q, not_id)
+        return q.first()
+
+    @staticmethod
+    def filter_not_id(query: Query, not_id):
+        if not_id is not None:
+            return query.filter(Article.id != not_id)
+        return query
 
 
 class ArticleRevision(Base):

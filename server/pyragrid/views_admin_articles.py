@@ -48,11 +48,11 @@ from .datatables_mod import DataTablesMod
 
 class ViewsAdminArticles(ViewsAdmin):
     @view_config(route_name='admin_articles', renderer='templates/admin/admin_articles.jinja2')
-    def admin_articles_view(self):
+    def view_admin_articles(self):
         return {}
 
     @view_config(route_name='admin_articles_grid', request_method='GET', renderer='json')
-    def admin_articles_grid_view(self):
+    def view_admin_articles_grid(self):
         columns = [
             ColumnDT('id'),
             ColumnDT('name'),
@@ -74,10 +74,11 @@ class ViewsAdminArticles(ViewsAdmin):
     @view_config(route_name='admin_article_new', renderer='templates/admin/admin_article_edit.jinja2')
     def view_admin_article_edit(self):
         article_id = self.request.matchdict.get('article_id')
+        article_is_new = self.request.matched_route.name == 'admin_article_new'
         if article_id is not None:
             article = Article.by_id(article_id)
         else:
-            if self.request.matched_route.name == 'admin_article_new':
+            if article_is_new:
                 article = Article()
             else:
                 return HTTPBadRequest('No article id specified')
@@ -85,6 +86,7 @@ class ViewsAdminArticles(ViewsAdmin):
         if not article:
             return HTTPNotFound('Article not found')
 
+        self.article = article
         current_revision = None
         if article.activeRevisionId is not None:
             current_revision = ArticleRevision.by_id(article.activeRevisionId)
@@ -103,7 +105,10 @@ class ViewsAdminArticles(ViewsAdmin):
         article_edit_form = widgets.FormEx(
             article_edit_schema.bind(),
             formid='articleEdit',
-            buttons=[widgets.ButtonEx(name='form_article_edit_submit', title='Изменить')],
+            buttons=[widgets.ButtonEx(
+                    name='form_article_edit_submit',
+                    title='Создать' if article_is_new else 'Изменить'
+            )],
         )
 
         if 'form_article_edit_submit' in self.request.params:
@@ -156,15 +161,19 @@ class ViewsAdminArticles(ViewsAdmin):
 
             self.add_success_flash('Статья успешно изменена')
 
+            if article_is_new:
+                return HTTPFound(self.request.route_url('admin_article_edit', article_id=article.id))
+
         appstruct = dictalchemy.utils.asdict(article)
         if current_revision is not None:
             appstruct['code'] = current_revision.code
 
         # TODO name validator
         appstruct = helpers.dict_set_empty_string_on_null(appstruct)
+
         # TODO fix vk_id
         # appstruct['vk_id'] = 0
-        return dict(rendered_form=article_edit_form.render(appstruct), article_id=article_id)
+        return dict(rendered_form=article_edit_form.render(appstruct))
 
     @view_config(route_name='admin_article_enable', renderer='json')
     def view_admin_article_enable(self):
@@ -219,7 +228,7 @@ class ViewsAdminArticles(ViewsAdmin):
         return dict(article=article, selected_revision=selected_revision)
 
     @view_config(route_name='admin_article_revisions_grid', request_method='GET', renderer='json')
-    def admin_article_revisions_grid_view(self):
+    def view_admin_article_revisions_grid(self):
         columns = [
             ColumnDT('id'),
             ColumnDT('article.systemName'),

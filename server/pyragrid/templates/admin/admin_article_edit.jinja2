@@ -1,10 +1,21 @@
-{% set header = 'Редактирование статьи' %}
+{% set article_is_new = False %}
+{% if view.article.id is none %}
+    {% set article_is_new = True %}
+{% endif %}
+
+{% if article_is_new %}
+    {% set header = 'Создание статьи' %}
+{% else %}
+    {% set header = 'Редактирование статьи ' + view.article.systemName %}
+{% endif %}
 {% set backlink = request.route_url('admin_articles') %}
 {% set enable_greeting = False %}
 {% extends "../base.jinja2" %}
 {% block content %}
     {% include '../_bootstrap_grid_editor_js.jinja2' %}
-    <p><a href="{{ request.route_path('admin_article_revisions', article_id=article_id) }}">История правок</a></p>
+    {% if not article_is_new %}
+        <p><a href="{{ request.route_path('admin_article_revisions', article_id=view.article.id) }}">История правок</a></p>
+    {% endif %}
     {{ rendered_form|safe }}
     {{ content }}
 {% endblock %}

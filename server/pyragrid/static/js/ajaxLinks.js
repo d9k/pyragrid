@@ -88,7 +88,7 @@
         },
         success: function(success_data, textStatus, request) {
           trace("ajax link success request");
-          $('.content').html(success_data);
+          $('#content').html(success_data);
           if (_addToHistory) {
             return addToHistory({
               url: url,

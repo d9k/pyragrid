@@ -131,3 +131,15 @@ form.no-red-stars .required::after
 .table.dataTable td.withButtons .btn
   display: inline
   margin-right: 7px
+
+.list-inline
+  display: block
+  &.withPostSeparator li
+    display: inline-block
+    padding-left: inherit
+    padding-right: inherit
+    &:last-child:after
+      content: ''
+    &:after
+      content: '|'
+      margin: 0 5px 0 10px

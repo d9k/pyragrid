@@ -71,7 +71,7 @@ $(document).ready () ->
                 return xhr;
             success: (success_data, textStatus, request) ->
                 trace "ajax link success request"
-                $('.content').html(success_data)
+                $('#content').html(success_data)
                 if _addToHistory
                     addToHistory({
                         url: url,

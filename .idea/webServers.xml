@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c45baea6-3693-4d4e-972f-befd69f835c5" name="zdorovie legkie vps#4" url="http://176.31.43.168">
+        <fileTransfer host="176.31.43.168" port="8991" rootFolder="/home/nikvascomm/" accessType="SFTP" username="nikvascomm">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

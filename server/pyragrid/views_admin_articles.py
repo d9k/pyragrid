@@ -47,6 +47,10 @@ from .datatables_mod import DataTablesMod
 
 
 class ViewsAdminArticles(ViewsAdmin):
+    def __init__(self, request):
+        super().__init__(request)
+        self.article = None
+
     @view_config(route_name='admin_articles', renderer='templates/admin/admin_articles.jinja2')
     def view_admin_articles(self):
         return {}

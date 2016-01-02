@@ -4,3 +4,8 @@
 {% block content %}
     {{ article_revision.code|safe }}
 {% endblock %}
+{% block additional_footer_links %}
+    {% if view.user.is_admin() %}
+        <li><a href="{{ request.route_url('admin_article_edit', article_id=article.id)}}">Редактировать текущую статью</a></li>
+    {% endif %}
+{% endblock %}

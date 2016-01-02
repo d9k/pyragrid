@@ -15,6 +15,7 @@
     {% include '../_bootstrap_grid_editor_js.jinja2' %}
     {% if not article_is_new %}
         <p><a href="{{ request.route_path('admin_article_revisions', article_id=view.article.id) }}">История правок</a></p>
+        <p><a href="{{ request.route_path('article', article_system_name=view.article.systemName) }}">Смотреть статью на сайте</a></p>
     {% endif %}
     {{ rendered_form|safe }}
     {{ content }}

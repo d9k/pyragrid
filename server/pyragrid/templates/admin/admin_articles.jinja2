@@ -10,13 +10,17 @@
         <thead>
         <tr>
             {# TODO строковые индексы колонок #}
-            <th>id</th>{# 0 #}
-            <th>Название</th>{# 1 #}
-            <th>Системное имя</th>{# 2 #}
-            <th>Путь</th>{# 3 #}
-            <th>Текущая ревизия</th>{# 4 #}
-            <th>Включена</th>{# 5 #}
-            <th>{# buttons col #}</th>{# 6 #}
+            <script type="text/javascript">
+                n = 0;
+                COL_ID = n++;                  document.write('<th>id</th>');
+                COL_NAME = n++;                document.write('<th>Название</th>');
+                COL_SYSTEMNAME = n++;         document.write('<th>Системное имя</th>');
+                COL_PATH = n++;                document.write('<th>Путь</th>');
+                COL_CURRENT_REVISION = n++;  document.write('<th>Текущая ревизия</th>');
+                COL_ENABLED = n++;            document.write('<th>Включена</th>');
+                COL_BUTTONS = n++;            document.write('<th><!-- buttons col --></th>');
+                colsCount = n;
+            </script>
         </tr>
         </thead>
         <tbody></tbody>
@@ -25,25 +29,16 @@
     {% compress 'js' %}
         <script type="text/coffeescript">
             $(document).ready ->
-               $table = $('#articlesGrid').dataTable
-                'bProcessing': true
-                'bServerSide': true
-                'sAjaxSource': '{{ request.route_path('admin_articles_grid') }}'
-                'aoColumns': [
-                  { 'mData': 0 }
-                  { 'mData': 1 }
-                  { 'mData': 2 }
-                  { 'mData': 3 }
-                  { 'mData': 4 }
-                  {
-                    'mData': 5
+               aoColumns = []
+               aoColumns[COL_ENABLED] = {
+{#                  'mData': COL_ENABLED#}
+                  'mRender': (value, type, data) ->
+                      UI.renderBool(data[COL_ENABLED])
+               }
+               aoColumns[COL_BUTTONS] = {
                     'mRender': (value, type, data) ->
-                       UI.renderBool(data[5])
-                  }
-                  {
-                    'mRender': (value, type, data) ->
-                          id = data[0]
-                          active = data[5] == 'True'
+                          id = data[COL_ID]
+                          active = data[COL_ENABLED] == 'True'
                           article_url_prefix = '/admin/article/' + id
                           rendered =
                               '<a href="' + article_url_prefix + '/edit" ' +
@@ -71,12 +66,17 @@
                           rendered
                     'sClass': 'withButtons'
                     'bSortable': false
-                  }
-                ]
+               }
+
+               $table = $('#articlesGrid').dataTable
+                'bProcessing': true
+                'bServerSide': true
+                'sAjaxSource': '{{ request.route_path('admin_articles_grid') }}'
+                'aoColumns': aoColumns
                 'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
                     $table = $(this).dataTable()
                     $row = $(nRow)
-                    $buttonsCol = $row.find('td:eq(6)')
+                    $buttonsCol = $row.find('td:eq(' + COL_BUTTONS + ')')
                     $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
                     $buttonSwitchActive.on('click', (e) ->
                         e.preventDefault()

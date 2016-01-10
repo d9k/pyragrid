@@ -2,10 +2,12 @@
 {#{% set backlink = request.route_url('index') %}#}
 {% extends "base.jinja2" %}
 {% block content %}
-    {% if view.user.is_admin() %}
-        <ul class="list-inline withPostSeparator">
-            <li><a href="{{ request.route_url('admin_article_edit', article_id=article.id)}}">Редактировать текущую статью</a></li>
-        </ul>
+    {% if view.user %}
+        {% if view.user.is_admin() %}
+            <ul class="list-inline withPostSeparator">
+                <li><a href="{{ request.route_url('admin_article_edit', article_id=article.id)}}">Редактировать текущую статью</a></li>
+            </ul>
+        {% endif %}
     {% endif %}
     {{ article_revision.code|safe }}
 {% endblock %}

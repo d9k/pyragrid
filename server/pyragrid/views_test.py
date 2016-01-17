@@ -5,7 +5,9 @@ from pyramid.view import (
     forbidden_view_config
 )
 
-from .models import (
+from enum import Enum
+
+from .db import (
     DBSession,
     User
 )
@@ -101,3 +103,40 @@ class Testiews(ViewsAdmin):
         db_connection_params = parse_config.db_connection_params_from_url(db_connection_url)
         return dict(header='Test script inclusion', content='db name is '+parse_config.quote(db_connection_params['name']))
 
+    @view_config(route_name='test_db_enum', renderer='templates/test/test_base.jinja2')
+    def view_test_db_enum(self):
+        # see http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
+
+        from pyragrid.db import (DeclEnum, SimpleEnum)
+
+        # class EmployeeType(DeclEnum):
+        #     part_time = "P", "Part Time"
+        #     full_time = "F", "Full Time"
+        #     contractor = "C", "Contractor"
+        #
+        # vals = EmployeeType.values()
+
+        class EmployeeTypeEnum(SimpleEnum):
+            part_time = '', 'Part time'
+            full_time = ''
+            contractor = ''
+
+        import sqlalchemy
+        from sqlalchemy import Column
+        from .db import Base
+
+        values = EmployeeTypeEnum.get_values()
+
+        # EmployeeTypeEnum = Enum('a', 'za', 'zaa')
+
+        enumDeclaration = sqlalchemy.Enum(*EmployeeTypeEnum.get_values())
+        nativeEnumDeclaration = sqlalchemy.Enum(*EmployeeTypeEnum.get_values(), native_enum=True)
+
+        class TestModel(Base):
+            __tablename__ = 'testModels'
+
+            id = Column(sqlalchemy.Integer, primary_key=True,)
+            enum_test = Column(sqlalchemy.Enum(*EmployeeTypeEnum.get_values(), native_enum=True))
+
+
+        return {'header': 'Test DB Enum', 'content': 'use debugger to see'}

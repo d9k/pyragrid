@@ -1,6 +1,8 @@
+#@IgnoreInspection BashAddShebang
 #must be included as `source ./db-params.inc`
 
-#TODO rewrite in python
+#TODO rewrite in python for x-platform etc
+#TODO check venv
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SERVER_DIR=$(readlink -f ${THIS_DIR}/..)

@@ -55,7 +55,7 @@ if config.get_main_option('sqlalchemy.url') is None:
 # target_metadata = mymodel.Base.metadata
 # target_metadata = None
 
-from pyragrid.models import Base
+from pyragrid.db import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

@@ -8,7 +8,7 @@ from colander import (
     null
 )
 import deform.widget as widgets
-from pyragrid import models, helpers
+from pyragrid import db, helpers
 from .widgets import (
     TextInputPlaceHolderWidget,
     PasswordPlaceholderWidget,
@@ -17,7 +17,7 @@ from .widgets import (
     exception_for_schema_field
 )
 from .helpers import check_dev_mode
-from .models import (
+from .db import (
     User,
     Article
 )
@@ -41,7 +41,7 @@ class LoginSchema(Schema):
 
 
 def create_edit_user_schema():
-    return SQLAlchemySchemaNode(models.User)
+    return SQLAlchemySchemaNode(db.User)
 
 
 def user_login_unique_validator(node, value):
@@ -91,7 +91,7 @@ def validate_article_edit_form(schema, values):
 
 class RegisterSchema(SQLAlchemySchemaNode):
 
-    def __init__(self, class_=models.User, includes=None,
+    def __init__(self, class_=db.User, includes=None,
                  excludes=None,
                  overrides=None,
                  unknown='ignore', **kw):
@@ -118,7 +118,7 @@ class RegisterSchema(SQLAlchemySchemaNode):
 
 
 class ProfileEditSchema(SQLAlchemySchemaNode):
-    def __init__(self, class_=models.User, includes=None,
+    def __init__(self, class_=db.User, includes=None,
                  excludes=None,
                  overrides=None,
                  unknown='ignore', **kw):
@@ -130,7 +130,7 @@ class ProfileEditSchema(SQLAlchemySchemaNode):
 
 
 class UserEditSchema(SQLAlchemySchemaNode):
-    def __init__(self, class_=models.User, includes=None,
+    def __init__(self, class_=db.User, includes=None,
                  excludes=None,
                  overrides=None,
                  unknown='ignore', **kw):
@@ -151,7 +151,7 @@ class UserEditSchema(SQLAlchemySchemaNode):
 
 
 class ArticleEditSchema(SQLAlchemySchemaNode):
-    def __init__(self, class_=models.Article, includes=None,
+    def __init__(self, class_=db.Article, includes=None,
                  excludes=None,
                  overrides=None,
                  unknown='ignore', **kw):

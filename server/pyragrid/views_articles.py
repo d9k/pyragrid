@@ -9,7 +9,7 @@ from pyramid.security import has_permission
 # from pyramid.url import route_url
 from sqlalchemy.exc import DBAPIError
 
-from .models import (
+from .db import (
     Base,
     DBSession,
     User,

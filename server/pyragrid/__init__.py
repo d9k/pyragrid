@@ -4,7 +4,7 @@ from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
-from .models import (
+from .db import (
     DBSession,
     Base,
     User
@@ -51,7 +51,7 @@ def main(global_config, **settings):
     # DBSession.configure(bind=engine)
     Base.metadata.bind = sql_engine
     session_factory = session_factory_from_settings(settings)
-    config = Configurator(settings=settings, root_factory='pyragrid.models.RootFactory')
+    config = Configurator(settings=settings, root_factory='pyragrid.db.RootFactory')
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
@@ -85,12 +85,17 @@ def main(global_config, **settings):
     config.add_route('profile_edit', '/profile/edit')
     config.add_route('vk_iframe_auth', '/vkIframeAuth')
     config.add_route('test', '/t')
+
+    # TODO delete:
     config.add_route('add_user', '/users/add')
     config.add_route('delete_user', '/users/delete/{any_data}')
+
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
+
     config.add_route('register', '/register')
     config.add_route('register_success', '/register_success')
+
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
     config.add_route('test_notify', '/test/notify')
@@ -100,6 +105,8 @@ def main(global_config, **settings):
     config.add_route('test_redirect', '/test/redirect')
     config.add_route('test_bootgrid_edit', '/test/bootgrid')
     config.add_route('test_script_inclusion', '/test/script_inclusion')
+    config.add_route('test_db_enum', '/test/db_enum')
+
     config.add_route('email_check_code', '/checkEmail/{code}')
 
     config.add_route('admin_index', '/admin')

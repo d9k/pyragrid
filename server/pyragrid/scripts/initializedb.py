@@ -13,7 +13,7 @@ from pyramid.paster import (
 
 from pyramid.scripts.common import parse_vars
 
-from pyragrid.models import (
+from pyragrid.db import (
     DBSession,
     # MyModel,
     Base,

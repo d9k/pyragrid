@@ -30,20 +30,19 @@ class EnumMeta(type):
 
     def __init__(cls, classname, bases, dict_):
         cls._reg = reg = cls._reg.copy()
-        for k, v in dict_.items():
+        for k, v in list(dict_.items()):
             if isinstance(v, tuple):
                 sym = reg[v[0]] = EnumSymbol(cls, k, *v)
                 setattr(cls, k, sym)
+        # return type.__init__(cls, classname, bases, dict_)
         type.__init__(cls, classname, bases, dict_)
 
     def __iter__(cls):
-        return iter(cls._reg.values())
+        return iter(list(cls._reg.values()))
 
 
-class DeclEnum(object):
+class DeclEnum(object, metaclass=EnumMeta):
     """Declarative enumeration."""
-
-    __metaclass__ = EnumMeta
     _reg = {}
 
     @classmethod
@@ -58,7 +57,7 @@ class DeclEnum(object):
 
     @classmethod
     def values(cls):
-        return cls._reg.keys()
+        return list(cls._reg.keys())
 
     @classmethod
     def db_type(cls):
@@ -66,11 +65,10 @@ class DeclEnum(object):
 
 
 class DeclEnumType(SchemaType, TypeDecorator):
-
     def __init__(self, enum):
         self.enum = enum
         self.impl = Enum(
-                        *enum.values(),
+                        *list(enum.values()),
                         name="ck%s" % re.sub(
                                     '([A-Z])',
                                     lambda m:"_" + m.group(1).lower(),
@@ -92,3 +90,42 @@ class DeclEnumType(SchemaType, TypeDecorator):
         if value is None:
             return None
         return self.enum.from_string(value.strip())
+
+
+class SimpleEnumMeta(type):
+    def __init__(_class, name, bases, dic: dict):
+        _class._values = []
+        _class._descriptions = {}
+        for property_name in dic.keys():
+            if property_name.startswith('_'):
+                continue
+            value = dic[property_name]
+            description = ''
+            if type(value) is classmethod:
+                continue
+            if type(value) is tuple:
+                description = value[1]
+                value = value[0]
+            if value == '':
+                value = property_name
+            if description == '':
+                description = property_name
+            setattr(_class, property_name, value)
+            _class._values.append(getattr(_class, property_name))
+            _class._descriptions[value] = description
+
+        super().__init__(name, bases, dic)
+
+
+class SimpleEnum(object, metaclass=SimpleEnumMeta):
+    """if the value of class field is '' (empty string), value of this field would be the same as fields name"""
+
+    @classmethod
+    def get_values(_class):
+        return _class._values
+
+    @classmethod
+    def get_descriptions(_class):
+        return _class._descriptions
+
+

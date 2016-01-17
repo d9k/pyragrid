@@ -4,7 +4,7 @@ from pyragrid import helpers
 from . import helpers
 import logging
 import hashlib
-from .models import User
+from .db import User
 
 log = logging.getLogger(__name__)
 

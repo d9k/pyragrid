@@ -1,4 +1,4 @@
-from .models import (
+from .db import (
     DBSession,
     User
 )
@@ -13,7 +13,7 @@ from pyramid.httpexceptions import (
 from . import helpers
 import hashlib
 from pyramid.response import Response
-from .models import (
+from .db import (
     DBSession,
 )
 import transaction

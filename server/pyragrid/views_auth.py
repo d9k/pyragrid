@@ -5,7 +5,7 @@ from pyramid.view import (
     forbidden_view_config
 )
 
-from .models import (
+from .db import (
     DBSession,
     User
 )

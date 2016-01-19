@@ -8,11 +8,12 @@ from .base import (Base, DBSession, NullableInt)
 from sqlalchemy.orm import (
     Query, relationship
 )
-from .enum import (DeclEnum)
+from .enum import (SimpleEnum)
 
-class EnumOrderState(DeclEnum):
-    created = "created", "Создан"
-    rejected = "rejected", "Отменён"
+class EnumOrderState(SimpleEnum):
+    created = '', 'Создан'
+    rejected = '', 'Отменён'
+    paid = '', 'Оплачен'
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -22,7 +23,7 @@ class Order(Base):
                     'title': 'id заказа',
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
-    state = Column(EnumOrderState.db_type(), primary_key=True,
+    state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
                 # info={'colanderalchemy': {
                 #     'title': 'id заказа',
                 #     'widget': deform.widget.TextInputWidget(readonly=True)

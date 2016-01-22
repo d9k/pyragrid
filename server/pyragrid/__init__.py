@@ -131,6 +131,13 @@ def main(global_config, **settings):
     config.add_route('article', '/article/{article_system_name}')
     config.add_route('article_revision', '/article/{article_system_name}')
 
+    config.add_route('admin_goods', '/admin/goods')
+    config.add_route('admin_goods_grid', '/admin/goods/grid')
+    config.add_route('admin_good_new', '/admin/good/new')
+    config.add_route('admin_good_edit', '/admin/good/{id}/edit')
+    config.add_route('admin_good_enable', '/admin/good/{id}/enable')
+    config.add_route('admin_good_disable', '/admin/good/{id}/disable')
+
     config.add_notfound_view(views_articles.view_custom_not_found)
 
     config.set_session_factory(session_factory)

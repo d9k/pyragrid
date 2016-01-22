@@ -1,12 +1,12 @@
-{% set header = 'Статьи' %}
+{% set header = 'Товары' %}
 {% set backlink = request.route_url('admin_index') %}
 {% extends "../base.jinja2" %}
 {% block content %}
     {% include '../_datatables_js.jinja2' %}
 
-    <p><a href="{{ request.route_url('admin_article_new') }}">Добавить статью [+]</a></p>
+    <p><a href="{{ request.route_url('admin_good_new') }}">Добавить товар [+]</a></p>
 
-    <table class="table" id="articlesGrid">
+    <table class="table" id="goodsGrid">
         <thead>
         <tr>
 
@@ -17,53 +17,42 @@
 
     {% compress 'js' %}
         <script type="text/coffeescript">
-            $grid = $('#articlesGrid')
-            $gridHeadRow = $grid.find('thead tr')
-
-            n = 0;
-{#            addRow () ->#}
-{#                n++#}
-            COL_ID = n++;                   $gridHeadRow.append('<th>id</th>');
-            COL_NAME = n++;                 $gridHeadRow.append('<th>Название</th>');
-            COL_SYSTEMNAME = n++;          $gridHeadRow.append('<th>Системное имя</th>');
-            COL_PATH = n++;                 $gridHeadRow.append('<th>Путь</th>');
-            COL_CURRENT_REVISION = n++;   $gridHeadRow.append('<th>Текущая ревизия</th>');
-            COL_ENABLED = n++;             $gridHeadRow.append('<th>Включена</th>');
-            COL_BUTTONS = n++;             $gridHeadRow.append('<th><!-- buttons col --></th>');
-            colsCount = n;
-
             $(document).ready ->
-               aoColumns = []
-               aoColumns[COL_ENABLED] = {
+                $grid = $('#goodsGrid')
+                $gridHeadRow = $grid.find('thead tr')
+
+                n = 0;
+                COL_ID = n++;                 $gridHeadRow.append('<th>id</th>');
+                COL_NAME = n++;               $gridHeadRow.append('<th>Название</th>');
+                COL_IS_EGODO = n++;          $gridHeadRow.append('<th>Электронный</th>');
+                COL_PRICE = n++;              $gridHeadRow.append('<th>Цена</th>');
+                COL_BUTTONS = n++;            $gridHeadRow.append('<th><!-- buttons col --></th>');
+                colsCount = n;
+
+                aoColumns = []
+                aoColumns[COL_ENABLED] = {
 {#                  'mData': COL_ENABLED#}
                   'mRender': (value, type, data) ->
                       UI.renderBool(data[COL_ENABLED])
-               }
-               aoColumns[COL_BUTTONS] = {
+                }
+                aoColumns[COL_BUTTONS] = {
                     'mRender': (value, type, data) ->
                           id = data[COL_ID]
                           active = data[COL_ENABLED] == 'True'
-                          article_url_prefix = '/admin/article/' + id
+                          good_url_prefix = '/admin/good/' + id
                           rendered =
-                              '<a href="' + article_url_prefix + '/edit" ' +
+                              '<a href="' + good_url_prefix + '/edit" ' +
                               '   class="btn btn-default btn-sm"' +
                               '   title="Править">' +
                                   '<span class="glyphicon glyphicon-pencil"></span>' +
                               '</a>'
 
                           rendered +=
-                              '<a href="' + article_url_prefix + '/revisions"' +
-                              '   class="btn btn-default btn-sm"' +
-                              '   title="Правки">' +
-                                  '<span class="glyphicon glyphicon-time"></span>' +
-                              '</a>'
-
-                          rendered +=
                               '<a href="#"' +
-                              '   data-url="' + article_url_prefix + '/' + (if active then 'disable' else 'enable') + '" ' +
+                              '   data-url="' + good_url_prefix + '/' + (if active then 'disable' else 'enable') + '" ' +
                               '   class="buttonSwitchActive btn btn-default btn-sm ' +
                                          'btn-' + (if active then 'danger' else 'success') + '"' +
-                              '   title="' + (if active then 'Отключить показ' else 'Включить показ') + ' на сайте">' +
+                              '   title="' + (if active then 'Отключить' else 'Включить') + '>' +
                                    '<span class="glyphicon glyphicon-' + (if active then 'remove' else 'ok') + '"></span>' +
                               '</a>'
 
@@ -75,7 +64,7 @@
                $table = $grid.dataTable
                 'bProcessing': true
                 'bServerSide': true
-                'sAjaxSource': '{{ request.route_path('admin_articles_grid') }}'
+                'sAjaxSource': '{{ request.route_path('admin_goods_grid') }}'
                 'aoColumns': aoColumns
                 'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
                     $table = $(this).dataTable()

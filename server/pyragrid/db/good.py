@@ -54,11 +54,11 @@ class Good(Base):
     # revisions = relationship('ArticleRevision', back_populates='article')
 
     @staticmethod
-    def by_id(good_id: int):
+    def by_id(id: int):
         """
         :return Article
         """
-        return DBSession.query(Good).filter(Good.id == good_id).first()
+        return DBSession.query(Good).filter(Good.id == id).first()
 
     @staticmethod
     def filter_not_id(query: Query, not_id):

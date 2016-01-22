@@ -19,7 +19,8 @@ from .widgets import (
 from .helpers import check_dev_mode
 from .db import (
     User,
-    Article
+    Article,
+    Good
 )
 
 
@@ -168,3 +169,15 @@ class ArticleEditSchema(SQLAlchemySchemaNode):
         ))
         self.linked_article = None
         self.validator = validate_article_edit_form
+
+
+class GoodEditSchema(SQLAlchemySchemaNode):
+    def __init__(self, class_=db.Good, includes=None,
+                 excludes=None,
+                 overrides=None,
+                 unknown='ignore', **kw):
+        if includes is None:
+            includes = ['name', ]
+        super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
+        self.linked_good = None
+        # self.validator = validate_user_edit_form

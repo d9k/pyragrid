@@ -18,18 +18,16 @@
     {% compress 'js' %}
         <script type="text/coffeescript">
             $grid = $('#articlesGrid')
-            $gridHeadRow = $grid.find('thead tr')
+            $gridHeaderCols = $grid.find('thead tr')
 
-            n = 0;
-{#            addRow () ->#}
-{#                n++#}
-            COL_ID = n++;                   $gridHeadRow.append('<th>id</th>');
-            COL_NAME = n++;                 $gridHeadRow.append('<th>Название</th>');
-            COL_SYSTEMNAME = n++;          $gridHeadRow.append('<th>Системное имя</th>');
-            COL_PATH = n++;                 $gridHeadRow.append('<th>Путь</th>');
-            COL_CURRENT_REVISION = n++;   $gridHeadRow.append('<th>Текущая ревизия</th>');
-            COL_ENABLED = n++;             $gridHeadRow.append('<th>Включена</th>');
-            COL_BUTTONS = n++;             $gridHeadRow.append('<th><!-- buttons col --></th>');
+            n = 0
+            COL_ID = n++;                   $gridHeaderCols.append('<th>id</th>');
+            COL_NAME = n++;                 $gridHeaderCols.append('<th>Название</th>');
+            COL_SYSTEMNAME = n++;          $gridHeaderCols.append('<th>Системное имя</th>');
+            COL_PATH = n++;                 $gridHeaderCols.append('<th>Путь</th>');
+            COL_CURRENT_REVISION = n++;   $gridHeaderCols.append('<th>Текущая ревизия</th>');
+            COL_ENABLED = n++;             $gridHeaderCols.append('<th>Включена</th>');
+            COL_BUTTONS = n++;             $gridHeaderCols.append('<th><!-- buttons col --></th>');
             colsCount = n;
 
             $(document).ready ->

@@ -44,6 +44,10 @@ from .datatables_mod import DataTablesMod
 
 
 class ViewsAdminGoods(ViewsAdmin):
+    def __init__(self, request):
+        super().__init__(request)
+        self.good = None
+
     @view_config(route_name='admin_goods', renderer='templates/admin/admin_goods.jinja2')
     def view_admin_goods_view(self):
         return {}
@@ -55,6 +59,7 @@ class ViewsAdminGoods(ViewsAdmin):
             ColumnDT('name'),
             ColumnDT('isEgood'),
             ColumnDT('price'),
+            ColumnDT('active'),
         ]
         query = DBSession.query(Good)
         # instantiating a DataTable for the query and table needed
@@ -91,31 +96,40 @@ class ViewsAdminGoods(ViewsAdmin):
             DBSession.add(good)
         return {'result': 'success', 'message': 'Товар отключен'}
 
+    @view_config(route_name='admin_good_new', renderer='templates/admin/admin_good_edit.jinja2')
     @view_config(route_name='admin_good_edit', renderer='templates/admin/admin_good_edit.jinja2')
     def view_admin_good_edit(self):
         id = self.request.matchdict.get('id')
-        if not id:
-            return HTTPBadRequest('No good id specified')
-        good = Good.by_id(id)
-        if not good:
-            return HTTPNotFound('Good not found')
+        is_new = self.request.matched_route.name == 'admin_good_new'
+
+        if is_new:
+            self.good = Good()
+        else:
+            if not id:
+                return HTTPBadRequest('No good id specified')
+            self.good = Good.by_id(id)
+            if not self.good:
+                return HTTPNotFound('Good not found')
 
         if 'good_delete' in self.request.params:
             try:
                 with transaction.manager:
-                    DBSession.delete(good)
+                    DBSession.delete(self.good)
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
             return HTTPFound(self.request.route_url('admin_goods'))
 
         good_edit_schema = forms.GoodEditSchema()
-        good_edit_schema.linked_good = good
+        good_edit_schema.linked_good = self.good
+
+        submit_button_title = 'Создать' if is_new else 'Изменить'
 
         good_edit_form = widgets.FormEx(
             good_edit_schema.bind(),
-            buttons=[widgets.ButtonEx(name='good_edit_form_submit', title='Изменить'),
-                     widgets.ButtonEx(name='good_delete', title='X', css_class='btn-danger',
-                                      description="Удалить пользователя")],
+            buttons=[widgets.ButtonEx(name='good_edit_form_submit', title=submit_button_title),
+                     # widgets.ButtonEx(name='good_delete', title='X', css_class='btn-danger',
+                     #                  description="Удалить пользователя")
+                     ],
         )
 
         if 'good_edit_form_submit' in self.request.params:
@@ -129,21 +143,21 @@ class ViewsAdminGoods(ViewsAdmin):
             # # user.name = data.get('name')
             # # user.vk_id = data.get('vk_id')
 
-            helpers.obj_set_fields_from_dict(good, data)
-            password = data.get('password')
-            if password:
-                good.set_password(password)
+            helpers.obj_set_fields_from_dict(self.good, data)
+            # password = data.get('password')
+            # if password:
+            #     good.set_password(password)
 
             try:
                 with transaction.manager:
-                    DBSession.add(good)
+                    DBSession.add(self.good)
             except DBAPIError:
                 return Response(conn_err_msg, content_type='text/plain', status_int=500)
 
-            self.add_success_flash('Пользователь успешно изменён')
+            self.add_success_flash('Товар успешно изменён')
 
-        # # TODO name validator
-        appstruct = dictalchemy.utils.asdict(good)
-        # # TODO fix vk_id
-        # # appstruct['vk_id'] = 0
+        appstruct = dictalchemy.utils.asdict(self.good)
+        if is_new:
+            appstruct = helpers.dict_set_empty_string_on_null(appstruct)
+
         return dict(rendered_form=good_edit_form.render(appstruct))

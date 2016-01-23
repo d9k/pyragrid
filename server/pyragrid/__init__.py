@@ -133,7 +133,7 @@ def main(global_config, **settings):
 
     config.add_route('admin_goods', '/admin/goods')
     config.add_route('admin_goods_grid', '/admin/goods/grid')
-    config.add_route('admin_good_new', '/admin/good/new')
+    config.add_route('admin_good_new', '/admin/new/good')
     config.add_route('admin_good_edit', '/admin/good/{id}/edit')
     config.add_route('admin_good_enable', '/admin/good/{id}/enable')
     config.add_route('admin_good_disable', '/admin/good/{id}/disable')

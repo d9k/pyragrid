@@ -19,15 +19,16 @@ class Good(Base):
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
     name = Column(Text,
+                  nullable=False,
                   unique=True,
                   info={'colanderalchemy': {
                       'title': 'Название товара',
                       # 'missing': None,
                   }})
-    price = Column(sqlalchemy.Numeric(12, 2),
+    price = Column(sqlalchemy.Numeric(12, 2), default=10.0,
                    info={'colanderalchemy': {
                        'title': 'Цена',
-                       # 'missing': None,
+                       'missing': 0,
                    }}
                    )
     isEgood = Column(Boolean, default=False, server_default='false',
@@ -42,7 +43,10 @@ class Good(Base):
                 # TODO file select field, translate to relative path
             }}
     )
-
+    active = Column(Boolean, default=False, server_default='false', nullable=False,
+                    info={'colanderalchemy': {
+                        'title': 'Товар включен'
+                    }})
     # downloadLinkBegin = Column(Text,
     #         info={'colanderalchemy': {
     #             'title': 'Путь к файлу',

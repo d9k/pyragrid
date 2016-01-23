@@ -177,7 +177,7 @@ class GoodEditSchema(SQLAlchemySchemaNode):
                  overrides=None,
                  unknown='ignore', **kw):
         if includes is None:
-            includes = ['name', ]
+            includes = ['name', 'price', 'isEgood', 'filePath']
         super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         self.linked_good = None
         # self.validator = validate_user_edit_form

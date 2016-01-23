@@ -1,0 +1,17 @@
+{% set is_new = False %}
+{% if view.good.id is none %}
+    {% set is_new = True %}
+{% endif %}
+
+{% if is_new %}
+    {% set header = 'Создание товара' %}
+{% else %}
+    {% set header = 'Редактирование товара ' + view.good.name %}
+{% endif %}
+{% set backlink = request.route_url('admin_goods') %}
+{% set enable_greeting = False %}
+{% extends "../base.jinja2" %}
+{% block content %}
+    {{ rendered_form|safe }}
+    {{ content }}
+{% endblock %}

@@ -7,6 +7,9 @@ from dictalchemy import DictableModel
 import colander
 import transaction
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import mapper
+import sqlalchemy.event
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension(), expire_on_commit=False))
 """:type: sqlalchemy.orm.Session """
@@ -33,3 +36,16 @@ def db_save_model(obj):
     except DBAPIError as db_api_error:
         return db_api_error
     return None
+
+
+# thx 2 http://stackoverflow.com/a/24893168/1760643
+def instant_defaults_listener(target, args, kwargs):
+    for key, column in inspect(target.__class__).columns.items():
+        if column.default is not None:
+            if callable(column.default.arg):
+                setattr(target, key, column.default.arg(target))
+            else:
+                setattr(target, key, column.default.arg)
+
+
+sqlalchemy.event.listen(mapper, 'init', instant_defaults_listener)

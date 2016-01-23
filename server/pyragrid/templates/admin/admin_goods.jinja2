@@ -19,19 +19,20 @@
         <script type="text/coffeescript">
             $(document).ready ->
                 $grid = $('#goodsGrid')
-                $gridHeadRow = $grid.find('thead tr')
+                $gridHeaderCols = $grid.find('thead tr')
 
                 n = 0;
-                COL_ID = n++;                 $gridHeadRow.append('<th>id</th>');
-                COL_NAME = n++;               $gridHeadRow.append('<th>Название</th>');
-                COL_IS_EGODO = n++;          $gridHeadRow.append('<th>Электронный</th>');
-                COL_PRICE = n++;              $gridHeadRow.append('<th>Цена</th>');
-                COL_BUTTONS = n++;            $gridHeadRow.append('<th><!-- buttons col --></th>');
+                COL_ID = n++;                 $gridHeaderCols.append('<th>id</th>');
+                COL_NAME = n++;               $gridHeaderCols.append('<th>Название</th>');
+                COL_IS_EGOOD = n++;           $gridHeaderCols.append('<th>Электронный</th>');
+                COL_PRICE = n++;              $gridHeaderCols.append('<th>Цена</th>');
+                COL_ENABLED = n++;            $gridHeaderCols.append('<th>Включен</th>');
+                COL_BUTTONS = n++;            $gridHeaderCols.append('<th><!-- buttons col --></th>');
                 colsCount = n;
 
                 aoColumns = []
                 aoColumns[COL_ENABLED] = {
-{#                  'mData': COL_ENABLED#}
+                {#                  'mData': COL_ENABLED#}
                   'mRender': (value, type, data) ->
                       UI.renderBool(data[COL_ENABLED])
                 }
@@ -52,38 +53,38 @@
                               '   data-url="' + good_url_prefix + '/' + (if active then 'disable' else 'enable') + '" ' +
                               '   class="buttonSwitchActive btn btn-default btn-sm ' +
                                          'btn-' + (if active then 'danger' else 'success') + '"' +
-                              '   title="' + (if active then 'Отключить' else 'Включить') + '>' +
+                              '   title="' + (if active then 'Отключить' else 'Включить') + '">' +
                                    '<span class="glyphicon glyphicon-' + (if active then 'remove' else 'ok') + '"></span>' +
                               '</a>'
 
                           rendered
                     'sClass': 'withButtons'
                     'bSortable': false
-               }
+                }
 
-               $table = $grid.dataTable
-                'bProcessing': true
-                'bServerSide': true
-                'sAjaxSource': '{{ request.route_path('admin_goods_grid') }}'
-                'aoColumns': aoColumns
-                'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
-                    $table = $(this).dataTable()
-                    $row = $(nRow)
-                    $buttonsCol = $row.find('td:eq(' + COL_BUTTONS + ')')
-                    $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
-                    $buttonSwitchActive.on('click', (e) ->
-                        e.preventDefault()
-                        url = $(this).attr('data-url')
-                        $.ajax(
-                            url: url,
-                            success: (data) -> # правильная ли функция?
-                                UI.notifyFromSuccessData(data)
-                                $table.fnDraw(false)
-                            error: (data) ->
-                                UI.notifyFromErrorData(data)
+                $table = $grid.dataTable
+                    'bProcessing': true
+                    'bServerSide': true
+                    'sAjaxSource': '{{ request.route_path('admin_goods_grid') }}'
+                    'aoColumns': aoColumns
+                    'fnRowCallback': (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
+                        $table = $(this).dataTable()
+                        $row = $(nRow)
+                        $buttonsCol = $row.find('td:eq(' + COL_BUTTONS + ')')
+                        $buttonSwitchActive = $buttonsCol.find('.buttonSwitchActive')
+                        $buttonSwitchActive.on('click', (e) ->
+                            e.preventDefault()
+                            url = $(this).attr('data-url')
+                            $.ajax(
+                                url: url,
+                                success: (data) -> # правильная ли функция?
+                                    UI.notifyFromSuccessData(data)
+                                    $table.fnDraw(false)
+                                error: (data) ->
+                                    UI.notifyFromErrorData(data)
+                            )
                         )
-                    )
-               return
+                return
         </script>
     {% endcompress %}
 

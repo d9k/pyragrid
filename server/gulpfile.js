@@ -59,9 +59,19 @@ gulp.task('js-copy', function(){
             config.bowerDir + '/jquery-ui/jquery-ui.*',
             config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap.*',
             config.bowerDir + '/datatables/media/js/jquery.dataTables.js',
+            config.bowerDir + '/jqueryfiletree/dist/'
         ]).pipe(gulp.dest(config.staticDir));
 
-    gulp.src([config.bowerDir + '/tinymce/**/*']).pipe(gulp.dest(config.staticDir + '/tinymce'))
+    gulp.src([
+        config.bowerDir + '/tinymce/**/*'
+    ]).pipe(gulp.dest(config.staticDir + '/tinymce'));
+
+    console.log('!' + config.bowerDir + '/jqueryfiletree/dist/connectors/**/*');
+
+    gulp.src([
+        config.bowerDir + '/jqueryfiletree/dist/**/*',
+        '!' + config.bowerDir + '/jqueryfiletree/dist/connectors',
+    ]).pipe(gulp.dest(config.staticDir + '/jqueryfiletree'));
 });
 
 

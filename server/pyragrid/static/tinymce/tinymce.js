@@ -1,4 +1,4 @@
-// 4.3.2 (2015-12-14)
+// 4.3.1 (2015-11-30)
 
 /**
  * Compiled inline version. (Library mode)
@@ -3322,11 +3322,7 @@ return Sizzle;
  */
 define("tinymce/Env", [], function() {
 	var nav = navigator, userAgent = nav.userAgent;
-	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi, phone, tablet;
-
-	function matchMediaQuery(query) {
-		return "matchMedia" in window ? matchMedia(query).matches : false;
-	}
+	var opera, webkit, ie, ie11, ie12, gecko, mac, iDevice, android, fileApi;
 
 	opera = window.opera && window.opera.buildNumber;
 	android = /Android/.test(userAgent);
@@ -3340,8 +3336,6 @@ define("tinymce/Env", [], function() {
 	mac = userAgent.indexOf('Mac') != -1;
 	iDevice = /(iPad|iPhone)/.test(userAgent);
 	fileApi = "FormData" in window && "FileReader" in window && "URL" in window && !!URL.createObjectURL;
-	phone = matchMediaQuery("only screen and (max-device-width: 480px)") && (android || iDevice);
-	tablet = matchMediaQuery("only screen and (min-width: 800px)") && (android || iDevice);
 
 	if (ie12) {
 		webkit = false;
@@ -3472,9 +3466,7 @@ define("tinymce/Env", [], function() {
 		 * @property ceFalse
 		 * @type Boolean
 		 */
-		ceFalse: (ie === false || ie > 8),
-
-		desktop: !phone && !tablet
+		ceFalse: (ie === false || ie > 8)
 	};
 });
 
@@ -21805,8 +21797,6 @@ define("tinymce/EnterKey", [
 					emptyBlock(parentBlock);
 				}
 
-				newBlock.normalize();
-
 				// New block might become empty if it's <p><b>a |</b></p>
 				if (dom.isEmpty(newBlock)) {
 					dom.remove(newBlock);
@@ -28998,7 +28988,7 @@ define("tinymce/ui/Window", [
 
 				$(window).trigger('resize');
 			}
-		}, 100);
+		});
 
 		function reposition() {
 			var i, rect = DomUtils.getWindowSize(), layoutRect;
@@ -34618,15 +34608,6 @@ define("tinymce/DragDropOverrides", [
 		}
 
 		editor.on('mousedown', start);
-
-		// Blocks drop inside cE=false on IE
-		editor.on('drop', function(e) {
-			var realTarget = editor.getDoc().elementFromPoint(e.clientX, e.clientY);
-
-			if (isContentEditableFalse(realTarget) || isContentEditableFalse(editor.dom.getContentEditableParent(realTarget))) {
-				e.preventDefault();
-			}
-		});
 	}
 
 	return {
@@ -34711,9 +34692,7 @@ define("tinymce/SelectionOverrides", [
 
 		function setRange(range) {
 			//console.log('setRange', range);
-			if (range) {
-				editor.selection.setRng(range);
-			}
+			editor.selection.setRng(range);
 		}
 
 		function getRange() {
@@ -34973,8 +34952,16 @@ define("tinymce/SelectionOverrides", [
 			}
 		}
 
-		function renderCaretAtRange(range) {
+		function renderRangeCaret(range) {
 			var caretPosition;
+
+			if (!range) {
+				return range;
+			}
+
+			if (!range.collapsed) {
+				return range;
+			}
 
 			range = CaretUtils.normalizeRange(1, rootNode, range);
 			caretPosition = CaretPosition.fromRangeStart(range);
@@ -34988,21 +34975,6 @@ define("tinymce/SelectionOverrides", [
 			}
 
 			fakeCaret.hide();
-
-			return null;
-		}
-
-		function renderRangeCaret(range) {
-			var caretRange;
-
-			if (!range || !range.collapsed) {
-				return range;
-			}
-
-			caretRange = renderCaretAtRange(range);
-			if (caretRange) {
-				return caretRange;
-			}
 
 			return range;
 		}
@@ -35113,7 +35085,7 @@ define("tinymce/SelectionOverrides", [
 				var range = getRange();
 
 				if (range.collapsed) {
-					setRange(renderCaretAtRange(range));
+					setRange(renderRangeCaret(range));
 				}
 			});
 
@@ -38142,7 +38114,7 @@ define("tinymce/EditorManager", [
 		 * @property minorVersion
 		 * @type String
 		 */
-		minorVersion: '3.2',
+		minorVersion: '3.1',
 
 		/**
 		 * Release date of TinyMCE build.
@@ -38150,7 +38122,7 @@ define("tinymce/EditorManager", [
 		 * @property releaseDate
 		 * @type String
 		 */
-		releaseDate: '2015-12-14',
+		releaseDate: '2015-11-30',
 
 		/**
 		 * Collection of editor instances.

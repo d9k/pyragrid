@@ -2468,9 +2468,8 @@ define("tinymce/tableplugin/Dialogs", [
  * @private
  */
 define("tinymce/tableplugin/ResizeBars", [
-	"tinymce/util/Tools",
-	"tinymce/util/VK"
-], function(Tools, VK) {
+	"tinymce/util/Tools"
+], function(Tools) {
 	return function(editor) {
 		var RESIZE_BAR_CLASS = 'mce-resize-bar',
 			RESIZE_BAR_ROW_CLASS = 'mce-resize-bar-row',
@@ -3172,13 +3171,13 @@ define("tinymce/tableplugin/ResizeBars", [
 
 			var newSizes = recalculateWidths(tableGrid, newWidths);
 			var styleExtension = percentageBased ? '%' : 'px';
-			var newTableWidth = percentageBased ? getNewTablePercentWidth() :
-				getNewTablePixelWidth();
+			setSizes(newSizes, styleExtension);
 
-			editor.undoManager.transact(function() {
-				setSizes(newSizes, styleExtension);
-				setTableSize(newTableWidth, styleExtension, percentageBased);
-			});
+			var newTableWidth = percentageBased ? getNewTablePercentWidth() :
+                getNewTablePixelWidth();
+
+			setTableSize(newTableWidth, styleExtension, percentageBased);
+
 		}
 
 		// Adjust the height of the row of table at index, with delta.
@@ -3198,21 +3197,18 @@ define("tinymce/tableplugin/ResizeBars", [
 			var newCellSizes = recalculateCellHeights(tableGrid, newHeights);
 			var newRowSizes = recalculateRowHeights(tableGrid, newHeights);
 
-			editor.undoManager.transact(function() {
-
-				Tools.each(newRowSizes, function(row) {
-					editor.dom.setStyle(row.element, 'height', row.height + 'px');
-					editor.dom.setAttrib(row.element, 'height', null);
-				});
-
-				Tools.each(newCellSizes, function(cell) {
-					editor.dom.setStyle(cell.element, 'height', cell.height + 'px');
-					editor.dom.setAttrib(cell.element, 'height', null);
-				});
-
-				editor.dom.setStyle(table, 'height', newTotalHeight + 'px');
-				editor.dom.setAttrib(table, 'height', null);
+			Tools.each(newRowSizes, function(row) {
+				editor.dom.setStyle(row.element, 'height', row.height + 'px');
+				editor.dom.setAttrib(row.element, 'height', null);
 			});
+
+			Tools.each(newCellSizes, function(cell) {
+				editor.dom.setStyle(cell.element, 'height', cell.height + 'px');
+				editor.dom.setAttrib(cell.element, 'height', null);
+			});
+
+			editor.dom.setStyle(table, 'height', newTotalHeight + 'px');
+			editor.dom.setAttrib(table, 'height', null);
 		}
 
 		function scheduleDelayedDropEvent() {
@@ -3282,7 +3278,6 @@ define("tinymce/tableplugin/ResizeBars", [
 					adjustHeight(hoverTable, delta, index);
 				}
 				refreshBars(hoverTable);
-				editor.nodeChanged();
 			}
 		}
 
@@ -3380,20 +3375,6 @@ define("tinymce/tableplugin/ResizeBars", [
 			}
 		});
 
-		// Prevents the user from moving the caret inside the resize bars on Chrome
-		// Only does it on arrow keys since clearBars might be an epxensive operation
-		// since it's querying the DOM
-		editor.on('keydown', function(e) {
-			switch (e.keyCode) {
-				case VK.LEFT:
-				case VK.RIGHT:
-				case VK.UP:
-				case VK.DOWN:
-					clearBars();
-					break;
-			}
-		});
-
 		return {
 			adjustWidth: adjustWidth,
 			adjustHeight: adjustHeight,
@@ -3445,12 +3426,7 @@ define("tinymce/tableplugin/Plugin", [
 	var each = Tools.each;
 
 	function Plugin(editor) {
-		var clipboardRows, self = this, dialogs = new Dialogs(editor), resizeBars;
-
-		if (editor.settings.object_resizing &&
-			(editor.settings.object_resizing === true || editor.settings.object_resizing === 'table')) {
-			resizeBars = ResizeBars(editor);
-		}
+		var clipboardRows, self = this, dialogs = new Dialogs(editor), resizeBars = ResizeBars(editor);
 
 		function cmd(command) {
 			return function() {
@@ -3799,9 +3775,7 @@ define("tinymce/tableplugin/Plugin", [
 			},
 
 			mceTableDelete: function(grid) {
-				if (resizeBars) {
-					resizeBars.clearBars();
-				}
+				resizeBars.clearBars();
 				grid.deleteTable();
 			}
 		}, function(func, name) {
@@ -3916,7 +3890,7 @@ define("tinymce/tableplugin/Plugin", [
 
 		function isTable(table) {
 
-			var selectorMatched = editor.dom.is(table, 'table') && editor.getBody().contains(table);
+			var selectorMatched = editor.dom.is(table, 'table');
 
 			return selectorMatched;
 		}

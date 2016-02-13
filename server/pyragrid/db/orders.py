@@ -10,10 +10,12 @@ from sqlalchemy.orm import (
 )
 from .enum import (SimpleEnum)
 
+
 class EnumOrderState(SimpleEnum):
     created = '', 'Создан'
     rejected = '', 'Отменён'
     paid = '', 'Оплачен'
+
 
 class Order(Base):
     __tablename__ = 'orders'

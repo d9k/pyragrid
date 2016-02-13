@@ -1,0 +1,21 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+     {% include '../_filetree_js.jinja2' %}
+
+    <div id="fileTree"></div>
+
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#fileTree').fileTree({
+                root: '/some/folder/',
+                script: '{{ request.route_url('test_ajax_filetree') }}',
+                expandSpeed: 1000,
+                collapseSpeed: 1000,
+                multiFolder: false
+            }, function(file) {
+                alert(file);
+            });
+        });
+    </script>
+{% endblock %}

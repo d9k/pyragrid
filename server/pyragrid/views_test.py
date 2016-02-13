@@ -138,5 +138,33 @@ class Testiews(ViewsAdmin):
             id = Column(sqlalchemy.Integer, primary_key=True,)
             enum_test = Column(sqlalchemy.Enum(*EmployeeTypeEnum.get_values(), native_enum=True))
 
-
         return {'header': 'Test DB Enum', 'content': 'use debugger to see'}
+
+    @view_config(route_name='test_filetree', renderer='templates/test/test_filetree.jinja2')
+    def view_test_filetree(self):
+
+        return {'header': 'Jqueryfiletree test'}
+
+    @view_config(route_name='test_ajax_filetree', renderer='json')
+    def view_ajax_filetree(self):
+        import os
+        import urllib
+
+        r = ['<ul class="jqueryFileTree" style="display: none;">']
+        try:
+            r = ['<ul class="jqueryFileTree" style="display: none;">']
+            d = self.request.POST.get('dir', 'upload')
+            # TODO d = server_dir_path + d
+            # for f in os.listdir(d):
+            #     ff = os.path.join(d, f)
+            #     if os.path.isdir(ff):
+            #         r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (ff,f))
+            #     else:
+            #         e = os.path.splitext(f)[1][1:]  # get .ext and remove dot
+            #         r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (e,ff,f))
+            # r.append('</ul>')
+        except Exception as e:
+            r.append('Could not load directory: %s' % str(e))
+        r.append('</ul>')
+        return ''.join(r)
+

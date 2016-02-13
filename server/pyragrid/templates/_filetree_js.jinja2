@@ -1,0 +1,16 @@
+{% compress 'js' %}
+ <script type="text/coffeescript">
+ if (! window._filetree_js_loaded?)
+     loadCSS = (filename)->
+       return if !filename
+       $('head').append("<link rel='stylesheet' type='text/css' href='#{filename}'>");
+
+     loadJS =(filename) ->
+        return if !filename
+        $('head').append("<script type='text/javascript' src='" + filename + "'><" + "/script>")
+
+     loadCSS('{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.css') }}')
+     loadJS("{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.js') }}")
+     window._filetree_js_loaded = true
+ </script>
+{% endcompress %}

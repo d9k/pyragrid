@@ -1,6 +1,6 @@
 {% compress 'js' %}
  <script type="text/coffeescript">
- if (! window.bootstrap_grid_editor_loaded?)
+ if (! window._bootstrap_grid_editor_loaded?)
     loadCSS = (filename)->
        return if !filename
        $('head').append("<link rel='stylesheet' type='text/css' href='#{filename}'>");
@@ -17,6 +17,6 @@
     loadJS("{{ request.static_url('pyragrid:static/tinymce/tinymce.js') }}")
     loadJS("{{ request.static_url('pyragrid:static/tinymce/jquery.tinymce.min.js') }}")
     loadJS("{{ request.static_url('pyragrid:static/jquery.grideditor.js') }}")
-    window.bootstrap_grid_editor_loaded = true
+    window._bootstrap_grid_editor_loaded = true
  </script>
 {% endcompress %}

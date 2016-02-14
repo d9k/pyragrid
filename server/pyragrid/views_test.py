@@ -145,26 +145,36 @@ class Testiews(ViewsAdmin):
 
         return {'header': 'Jqueryfiletree test'}
 
-    @view_config(route_name='test_ajax_filetree', renderer='json')
+    @view_config(route_name='test_ajax_filetree', renderer='string')
     def view_ajax_filetree(self):
         import os
         import urllib
 
         r = ['<ul class="jqueryFileTree" style="display: none;">']
         try:
-            r = ['<ul class="jqueryFileTree" style="display: none;">']
-            d = self.request.POST.get('dir', 'upload')
-            # TODO d = server_dir_path + d
-            # for f in os.listdir(d):
-            #     ff = os.path.join(d, f)
-            #     if os.path.isdir(ff):
-            #         r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (ff,f))
-            #     else:
-            #         e = os.path.splitext(f)[1][1:]  # get .ext and remove dot
-            #         r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (e,ff,f))
+            server_path = helpers.get_server_path()
+
+            uploads_path = os.path.join(server_path, 'uploads')
+
+            dir_ = self.request.POST.get('dir', '')
+            dir_ = dir_.strip(' /\\')
+
+            dir_path = os.path.join(uploads_path, dir_)
+            # r = ['<ul class="jqueryFileTree" style="display: none;">']
+
+            if os.path.isdir(dir_path):
+                # TODO d = server_dir_path + d
+                for node_name in os.listdir(dir_path):
+                    node_path = os.path.join(dir_path, node_name)
+                    node_rel_path = '/' + os.path.relpath(node_path, dir_path)
+                    if os.path.isdir(node_path):
+                        r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (node_rel_path, node_name))
+                    else:
+                        ext = os.path.splitext(node_name)[1][1:]  # get .ext and remove dot
+                        r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (ext, node_rel_path, node_name))
             # r.append('</ul>')
-        except Exception as e:
-            r.append('Could not load directory: %s' % str(e))
+        except Exception as exc:
+            r.append('Could not load directory: %s' % str(exc))
         r.append('</ul>')
         return ''.join(r)
 

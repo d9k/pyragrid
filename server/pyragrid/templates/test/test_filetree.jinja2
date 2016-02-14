@@ -3,12 +3,12 @@
 {% block content %}
      {% include '../_filetree_js.jinja2' %}
 
-    <div id="fileTree"></div>
+    <div id="fileTree" class="jqueryFileTree"></div>
 
     <script type="text/javascript">
         $(document).ready( function() {
             $('#fileTree').fileTree({
-                root: '/some/folder/',
+                root: '/',
                 script: '{{ request.route_url('test_ajax_filetree') }}',
                 expandSpeed: 1000,
                 collapseSpeed: 1000,

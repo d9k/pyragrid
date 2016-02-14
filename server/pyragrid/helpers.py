@@ -196,3 +196,12 @@ def dict_set_empty_string_on_null(obj):
         if obj[key] is None:
             obj[key] = ''
     return obj
+
+
+def get_pyragrid_path():
+    return os.path.dirname(os.path.realpath(__file__))
+
+
+def get_server_path():
+    return os.path.dirname(get_pyragrid_path())
+

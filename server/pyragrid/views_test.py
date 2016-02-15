@@ -145,10 +145,28 @@ class Testiews(ViewsAdmin):
 
         return {'header': 'Jqueryfiletree test'}
 
+    # thx 2 http://stackoverflow.com/a/9333816
+    @staticmethod
+    def toBool(val):
+        if str(val).lower() in ('yes', 'y', 'true',  't', '1'):
+            return True
+        if str(val).lower() in ('no',  'n', 'false', 'f', '0', '0.0', '', 'none', '[]', '{}'):
+            return False
+        raise Exception('Invalid value for boolean conversion: ' + str(val))
+
+
     @view_config(route_name='test_ajax_filetree', renderer='string')
     def view_ajax_filetree(self):
+        request = self.request
+
+        onlyFolders = self.toBool(request.POST.get('onlyFolders', False))
+        onlyFiles = self.toBool(request.POST.get('onlyFiles', False))
+        showFiles = not onlyFolders
+        showFolders = not onlyFiles
+        if not showFiles and not showFolders:
+            showFiles = True
+
         import os
-        import urllib
 
         r = ['<ul class="jqueryFileTree" style="display: none;">']
         try:
@@ -156,23 +174,24 @@ class Testiews(ViewsAdmin):
 
             uploads_path = os.path.join(server_path, 'uploads')
 
-            dir_ = self.request.POST.get('dir', '')
+            dir_ = request.POST.get('dir', '')
             dir_ = dir_.strip(' /\\')
 
             dir_path = os.path.join(uploads_path, dir_)
-            # r = ['<ul class="jqueryFileTree" style="display: none;">']
 
             if os.path.isdir(dir_path):
                 # TODO d = server_dir_path + d
                 for node_name in os.listdir(dir_path):
                     node_path = os.path.join(dir_path, node_name)
-                    node_rel_path = '/' + os.path.relpath(node_path, dir_path)
+                    node_rel_path = '/' + os.path.relpath(node_path, uploads_path)
                     if os.path.isdir(node_path):
-                        r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (node_rel_path, node_name))
+                        if showFolders:
+                            r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (node_rel_path, node_name))
                     else:
-                        ext = os.path.splitext(node_name)[1][1:]  # get .ext and remove dot
-                        r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (ext, node_rel_path, node_name))
-            # r.append('</ul>')
+                        if showFiles:
+                            ext = os.path.splitext(node_name)[1][1:]  # get .ext and remove dot
+                            r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (ext, node_rel_path, node_name))
+
         except Exception as exc:
             r.append('Could not load directory: %s' % str(exc))
         r.append('</ul>')

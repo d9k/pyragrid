@@ -3,19 +3,35 @@
 {% block content %}
      {% include '../_filetree_js.jinja2' %}
 
-    <div id="fileTree" class="jqueryFileTree"></div>
+    <div id="fileTreeFileSelect" ></div>
+    <hr />
+    <div id="fileTreeFolderSelect" ></div>
 
     <script type="text/javascript">
         $(document).ready( function() {
-            $('#fileTree').fileTree({
+            $('#fileTreeFileSelect').fileTree({
                 root: '/',
                 script: '{{ request.route_url('test_ajax_filetree') }}',
-                expandSpeed: 1000,
-                collapseSpeed: 1000,
+                expandSpeed: 120,
+                collapseSpeed: 120,
                 multiFolder: false
             }, function(file) {
                 alert(file);
             });
+            $('#fileTreeFolderSelect').fileTree({
+                root: '/',
+                script: '{{ request.route_url('test_ajax_filetree') }}',
+                expandSpeed: 120,
+                collapseSpeed: 120,
+                multiFolder: true,
+                onlyFolders: true
+            }, function(file) {
+                alert(file);
+            });
+            $('#fileTreeFolderSelect').on('filetreeclicked', function(e, data)    {
+                console.log(data);
+            });
         });
     </script>
+
 {% endblock %}

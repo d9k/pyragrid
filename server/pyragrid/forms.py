@@ -10,7 +10,7 @@ from colander import (
 import deform.widget as widgets
 from pyragrid import db, helpers
 from .widgets import (
-    TextInputPlaceHolderWidget,
+    TextInputPlaceholderWidget,
     PasswordPlaceholderWidget,
     RecaptchaWidget,
     BootstrapGridEditor,
@@ -28,7 +28,7 @@ class LoginSchema(Schema):
     login = SchemaNode(
         String(),
         title='Логин',
-        widget=TextInputPlaceHolderWidget(
+        widget=TextInputPlaceholderWidget(
             placeholder='email, id вконтакте или ник'
         ),
     )

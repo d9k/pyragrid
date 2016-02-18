@@ -154,17 +154,16 @@ class Testiews(ViewsAdmin):
             return False
         raise Exception('Invalid value for boolean conversion: ' + str(val))
 
-
     @view_config(route_name='test_ajax_filetree', renderer='string')
     def view_ajax_filetree(self):
         request = self.request
 
-        onlyFolders = self.toBool(request.POST.get('onlyFolders', False))
-        onlyFiles = self.toBool(request.POST.get('onlyFiles', False))
-        showFiles = not onlyFolders
-        showFolders = not onlyFiles
-        if not showFiles and not showFolders:
-            showFiles = True
+        only_folders = self.toBool(request.POST.get('onlyFolders', False))
+        only_files = self.toBool(request.POST.get('onlyFiles', False))
+        show_files = not only_folders
+        show_folders = not only_files
+        if not show_files and not show_folders:
+            show_files = True
 
         import os
 
@@ -185,10 +184,10 @@ class Testiews(ViewsAdmin):
                     node_path = os.path.join(dir_path, node_name)
                     node_rel_path = '/' + os.path.relpath(node_path, uploads_path)
                     if os.path.isdir(node_path):
-                        if showFolders:
+                        if show_folders:
                             r.append('<li class="directory collapsed"><a rel="%s/">%s</a></li>' % (node_rel_path, node_name))
                     else:
-                        if showFiles:
+                        if show_files:
                             ext = os.path.splitext(node_name)[1][1:]  # get .ext and remove dot
                             r.append('<li class="file ext_%s"><a rel="%s">%s</a></li>' % (ext, node_rel_path, node_name))
 

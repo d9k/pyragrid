@@ -9,3 +9,4 @@ from .utils import exception_for_schema_field
 from .recaptcha_widget import RecaptchaWidget
 from .form_ex import FormEx, FormWidgetEx, ButtonEx
 from .bootstrap_grid_editor import BootstrapGridEditor
+from .file_tree import FileTree

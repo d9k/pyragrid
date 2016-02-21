@@ -157,7 +157,6 @@ class ViewsAdminGoods(ViewsAdmin):
             self.add_success_flash('Товар успешно изменён')
 
         appstruct = dictalchemy.utils.asdict(self.good)
-        if is_new:
-            appstruct = helpers.dict_set_empty_string_on_null(appstruct)
+        appstruct = helpers.dict_set_empty_string_on_null(appstruct)
 
         return dict(rendered_form=good_edit_form.render(appstruct))

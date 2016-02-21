@@ -8,6 +8,8 @@ from .base import (Base, DBSession, NullableInt)
 from sqlalchemy.orm import (
     Query, relationship
 )
+from pyragrid import widgets
+# deform.widget.TextInputWidget(readonly=True)
 
 
 class Good(Base):
@@ -40,6 +42,7 @@ class Good(Base):
     filePath = Column(Text,
             info={'colanderalchemy': {
                 'title': 'Путь к файлу',
+                'widget': widgets.FileTree()
                 # TODO file select field, translate to relative path
             }}
     )

@@ -10,7 +10,8 @@
         $('head').append("<script type='text/javascript' src='" + filename + "'><" + "/script>")
 
      loadCSS('{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.css') }}')
-     loadJS("{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.js') }}")
+{#     loadJS("{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.js') }}")#}
+     loadJS("{{ request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.js') }}")
      window._filetree_js_loaded = true
  </script>
 {% endcompress %}

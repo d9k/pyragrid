@@ -23,7 +23,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {
                     'title': 'id заказа',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
+                    # 'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
     state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
                 # info={'colanderalchemy': {

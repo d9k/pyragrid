@@ -196,3 +196,7 @@ class Testiews(ViewsAdmin):
         r.append('</ul>')
         return ''.join(r)
 
+    @view_config(route_name='test_filedialog', renderer='templates/test/test_filedialog.jinja2')
+    def view_test_filetree(self):
+        return {'header': 'JqueryFileDialog test'}
+

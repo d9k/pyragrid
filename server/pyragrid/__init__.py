@@ -108,6 +108,7 @@ def main(global_config, **settings):
     config.add_route('test_db_enum', '/test/db_enum')
     config.add_route('test_filetree', '/test/filetree')
     config.add_route('test_ajax_filetree', '/test/ajax_filetree')
+    config.add_route('test_filedialog', '/test/filedialog')
 
     config.add_route('email_check_code', '/checkEmail/{code}')
 

@@ -141,7 +141,7 @@ def main(global_config, **settings):
     config.add_route('admin_good_enable', '/admin/good/{id}/enable')
     config.add_route('admin_good_disable', '/admin/good/{id}/disable')
 
-    config.add_notfound_view(views_articles.view_custom_not_found)
+    config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)
 
     config.set_session_factory(session_factory)
 

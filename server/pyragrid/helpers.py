@@ -205,3 +205,10 @@ def get_pyragrid_path():
 def get_server_path():
     return os.path.dirname(get_pyragrid_path())
 
+
+def to_bool(val):
+    if str(val).lower() in ('yes', 'y', 'true',  't', '1'):
+        return True
+    if str(val).lower() in ('no',  'n', 'false', 'f', '0', '0.0', '', 'none', '[]', '{}'):
+        return False
+    raise Exception('Invalid value for boolean conversion: ' + str(val))

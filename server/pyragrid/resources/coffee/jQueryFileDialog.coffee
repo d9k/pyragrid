@@ -7,16 +7,23 @@
             urlList: '/uploads/list'
             urlInfo: '/uploads/info'
             urlOperations: '/uploads/manage'
-            showFilesOrFolders: 'both' # 'both'|'files'|'folders'
-            selectFilesOrFolders: 'files'
+            showFilesOrFolders: 'any' # 'any'|'files'|'folders'
+            selectFilesOrFolders: 'file' # 'file'|'folder'|'none'
+            # TODO 'file'|'files'|'folder'|'folders'|'none'
             showInfo: true
             showOperations: true
             showClear: true
             showDelete: true
+            fileTreeOptions: {
+                expandSpeed: 120
+                collapseSpeed: 120
+                multiFolder: false
+            }
             # TODO translation
         }
         #TODO make from widget's `data-` attributes; class="jQueryFileDialog" runs functions automatically
         #TODO actions: openFileDialog, reset
+        #TODO configurable defaultOptions (dataTable ?)
         options = $.extend(true, defaultOptions, options)
 #        this.html()
 
@@ -29,6 +36,7 @@
         buttonBrowseId = id+'_browse'
         inputGroupId = id+'_group'
         modalId = id+'_modal'
+        fileTreeId = id+'_fileTree'
 
         buttonClear = fileInput.next('button#' + buttonClearId)
         if buttonClear.length
@@ -77,16 +85,27 @@
                     <h4 class="modal-title" id="myModalLabel">'+options.dialogTitle+'</h4>
                   </div>
                   <div class="modal-body">
-                    ...
+                    <div id="'+fileTreeId+'" ></div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                  </div>
+            '
+#                    <div class="modal-footer">
+#                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+#                    <button type="button" class="btn btn-primary">Save changes</button>
+#                  </div>
+            +'
                 </div>
               </div>
             </div>
         ')
+
+        fileTreeOptions = $.extend(true, options.fileTreeOptions, {
+            root: '/'
+            script: options.urlList
+        })
+
+        $('#'+fileTreeId).fileTree(fileTreeOptions, (file) ->
+            alert(file);
+        );
 
     ) jQuery
 # make file visible on source tree when dynamically loaded

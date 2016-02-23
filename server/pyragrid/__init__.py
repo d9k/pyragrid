@@ -141,6 +141,14 @@ def main(global_config, **settings):
     config.add_route('admin_good_enable', '/admin/good/{id}/enable')
     config.add_route('admin_good_disable', '/admin/good/{id}/disable')
 
+            # urlList: '/uploads/list'
+            # urlInfo: '/uploads/info'
+            # urlOperations: '/uploads/manage'
+
+    config.add_route('uploads_list', '/uploads/list')
+    config.add_route('uploads_info', '/uploads/info')
+    config.add_route('uploads_manage', '/uploads/manage')
+
     config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)
 
     config.set_session_factory(session_factory)

@@ -146,6 +146,12 @@
             $fileInput.val(data.selectedFile);
             $fileDialog.modal('hide')
 
+        # TODO edit-in-place file info (access rights, path)
+        # TODO so server passes json file info array to client, not rendered html
+
+        # TODO reload jQueryFileTree every dialog open and after file move
+        # TODO "upload file here" button
+        # TODO highlight selected folder in file tree
     ) jQuery
 # make file visible on source tree when dynamically loaded
 `

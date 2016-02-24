@@ -24,24 +24,31 @@
             # TODO translation
         }
         #TODO make from widget's `data-` attributes; class="jQueryFileDialog" runs functions automatically
-        #TODO actions: openFileDialog, reset
+        #TODO actions: openFileDialog, restoreOriginalHtml, getData
         #TODO configurable defaultOptions (dataTable ?)
         options = $.extend(true, defaultOptions, options)
         data = {
-            selectedFile: '',
+            selectedFile: ''
             selectedFolder: ''
-        };
+            inputHtml: ''
+            fileInfo: {
+                path: ''
+                size: ''
+                additionalHtml: ''
+            }
+        }
 
         fileInput = this
-        id = fileInput.attr('id')
-        if not id
+        fileInputId = fileInput.attr('id')
+        if not fileInputId
             error 'id of field is required'
             return
-        buttonClearId = id+'_clear'
-        buttonBrowseId = id+'_browse'
-        inputGroupId = id+'_group'
-        modalId = id+'_modal'
-        fileTreeId = id+'_fileTree'
+        buttonClearId = fileInputId+'_clear'
+        replaceMeId = 'replaceMeWith_'+fileInputId
+        buttonBrowseId = fileInputId+'_browse'
+        inputGroupId = fileInputId+'_group'
+        modalId = fileInputId+'_modal'
+        fileTreeId = fileInputId+'_fileTree'
 
         buttonClear = fileInput.next('button#' + buttonClearId)
         if buttonClear.length
@@ -51,9 +58,9 @@
         # TODO http://api.jquery.com/after/ - append buttons (clear/open dialog) next to element
         # TODO input groups http://getbootstrap.com/css/#forms-control-validation
         # TODO button groups http://getbootstrap.com/components/
-        fileInput.replaceWith('
+        fileInput.after('
             <div id="'+inputGroupId+'" class="input-group">
-              <input id="'+id+'" class="form-control" type="text">
+              <div id="'+replaceMeId+'" />
               <span class="input-group-btn">
                 <button id="'+buttonClearId+'" class="btn btn-default" type="button" title="Clear value"><span class="glyphicon glyphicon-remove"></span></button>
                 <button id="'+buttonBrowseId+'" class="btn btn-default" type="button" title="Browse..." data-toggle="modal" data-target="#'+modalId+'"><span class="glyphicon glyphicon-folder-open"></span></button>
@@ -61,25 +68,32 @@
             </div>
         ')
 
-        fileInput.replaceWith('<div id="test_azaza">test</div>');
+        formatFileSize = (bytes, _1000) ->
+            size = bytes
+            divisor = if _1000 then 1000 else 1024
+            if Math.abs(size) < divisor
+                return size + ' B'
+            units = if _1000
+                ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+            else
+                ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-        # TODO http://api.jquery.com/prepend/ - append bootstrap overlay dialog
-        # TODO
-        t = 1
-        #this.changer = $( "<button>", {
-        #  text: "change",
-        #  "class": "custom-colorize-changer"
-        #})
-        #.appendTo( this.element )
-        #$('#fileTreeFileSelect').fileTree({
-        #    root: '/',
-        #    script: '{{ request.route_url('test_ajax_filetree') }}',
-        #    expandSpeed: 120,
-        #    collapseSpeed: 120,
-        #    multiFolder: false
-        #}, function(file) {
-        #    alert(file);
-        #});
+            unitIndex = -1
+            loop
+                size /= divisor
+                ++unitIndex
+                if Math.abs(size) <= divisor or unitIndex > units.length - 1
+                    break
+
+            size.toFixed(1) + ' ' + units[unitIndex]
+
+        data.inputHtml = fileInput.html();
+        $('#'+fileInputId).replaceAll($('#'+replaceMeId))
+        $fileInput = $('#'+fileInputId)
+        $fileInput.addClass('form-control')
+        $fileInput.attr('type', 'text')
+
+        # <input id="'+id+'" class="form-control" type="text">
 
         $('body').prepend('
             <div class="fileDialogModal modal fade" id="'+modalId+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -114,7 +128,6 @@
             </div>
         ')
 
-        $fileInput = $('#'+id)
         $fileDialog = $('#'+modalId)
         $selectFileButton = $('.selectFileButton', $fileDialog)
         $fileInfo = $('.fileInfo', $fileInfo)
@@ -124,19 +137,30 @@
             script: options.urlList
         })
 
+        renderFileInfo = (data) ->
+            if !data.path
+                return 'Error: no data.path set'
+
+            html = '<p><b>file path:</b> ' + data.path + '</p>'
+
+            if data.size
+                html += '<p><b>size:</b> ' + formatFileSize(data.size) + '</p>'
+
+            return html
+
         $('#'+fileTreeId).fileTree(fileTreeOptions, (file) ->
             $selectFileButton.show();
 #            alert(file);
             data.selectedFile = file
-            $fileInfo.html('');
+            $fileInfo.html(renderFileInfo({path: file}));
             $.ajax({
                 type: "POST"
                 url: options.urlInfo
-                data: {filePath: file}
+                data: {path: file}
                 success: (data) ->
-                        $fileInfo.html(data);
+                        $fileInfo.html(renderFileInfo(data));
 
-                dataType: 'html'
+                dataType: 'json'
             });
             return
         );

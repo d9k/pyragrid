@@ -75,14 +75,19 @@ class ViewsUploads(ViewsAdmin):
         r.append('</ul>')
         return ''.join(r)
 
-    @view_config(route_name='uploads_info', renderer='string')
+    # @view_config(route_name='uploads_info', renderer='string')
+    @view_config(route_name='uploads_info', renderer='json')
     def view_uploads_info(self):
-        file_rel_path = self.request.POST.get('filePath', '')
+        file_rel_path = self.request.POST.get('path', '')
         file_path = get_abs_path(file_rel_path)
         file_size_bytes = os.path.getsize(file_path)
         file_size = file_size_format(file_size_bytes)
         # TODO access rights
         # TODO strip beginning /
-        return \
-            '<p><b>path: </b>' + file_rel_path + '</p>' \
-            '<p><b>size: </b>' + file_size + '</p>'
+        # return \
+        #     '<p><b>path: </b>' + file_rel_path + '</p>' \
+        #     '<p><b>size: </b>' + file_size + '</p>'
+        return {
+            'path': file_rel_path,
+            'size': file_size_bytes
+        }

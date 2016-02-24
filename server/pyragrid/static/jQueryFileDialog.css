@@ -1,0 +1,28 @@
+.fileDialogModal .column {
+    padding: 10px 10px 10px 20px;
+    border: 1px solid #DDD;
+}
+
+.fileDialogModal .modal-dialog{
+    width: 90%;
+    max-width: 1000px;
+}
+
+.fileDialogModal .fileTreeRoot{
+    min-height: 400px;
+    max-height: 800px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.fileDialogModal .fileInfo{
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.fileDialogModal .buttons{
+    text-align: right;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

@@ -1,3 +1,6 @@
 <script>
-    loadResource(['{{ request.static_url('pyragrid:static/js/jQueryFileDialog.js') }}']);
+    loadResource([
+        '{{ request.static_url('pyragrid:static/js/jQueryFileDialog.js') }}',
+        '{{ request.static_url('pyragrid:static/jQueryFileDialog.css') }}'
+    ]);
 </script>

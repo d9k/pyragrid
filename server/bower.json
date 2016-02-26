@@ -21,7 +21,8 @@
     "jqueryfiletree": "~2.0.4",
     "pnotify": "~2.1.0",
     "tinymce": "~4.3.1",
-    "lite-uploader": "^3.2.2"
+    "lite-uploader": "^3.2.2",
+    "blueimp-file-upload": "jquery-file-upload#^9.12.1"
   },
   "resolutions": {
     "jquery": "~2.1.4"

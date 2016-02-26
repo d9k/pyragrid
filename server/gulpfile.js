@@ -60,8 +60,14 @@ gulp.task('js-copy', function(){
             config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap.*',
             config.bowerDir + '/datatables/media/js/jquery.dataTables.js',
             config.bowerDir + '/jqueryfiletree/dist/',
-            config.bowerDir + '/lite-uploader/jquery.liteuploader*.js'
+            config.bowerDir + '/lite-uploader/jquery.liteuploader*.js',
+            config.bowerDir + '/blueimp-file-upload/js/jquery.fileupload.js',
+            config.bowerDir + '/blueimp-file-upload/js/jquery.iframe-transport.js',
+            config.bowerDir + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+            config.bowerDir + '/blueimp-file-upload/css/jquery.fileupload.css'
         ]).pipe(gulp.dest(config.staticDir));
+
+    // TODO ll bower_components/blueimp-file-upload/img
 
     gulp.src([
         config.bowerDir + '/tinymce/**/*'

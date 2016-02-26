@@ -48,9 +48,9 @@
             }
 
             // File size control
-            if (file.size > (s.maxsize * 1048576)) {
+            if (file.size > (s.maxSizeMb * 1024 * 1024)) {
                 s.error({
-                    'error':'max upload size: ' + s.maxsize + 'Mb'
+                    'error':'max upload size: ' + s.maxSizeMb + 'Mb'
                 }, input, area);
                 return false;
             }
@@ -62,80 +62,80 @@
 
             // If the file is an image and data-resize paramater is true,
             // before the uploading resize the imege on browser.
-            if((/image/i).test(file.type) && input.data('canvas'))
-                m.resize(file, input, area);
-            else
+            //if((/image/i).test(file.type) && input.data('canvas'))
+            //    m.resize(file, input, area);
+            //else
                 m.upload(file, input, area);
         },
-        resize: function(file, input, area){
-            // for using after the resize
-            var name = file.name;
-
-            // Create new objects
-            var canvas = document.createElement("canvas");
-            //$(canvas).appendTo(area);
-            var img = document.createElement("img");
-
-            var WIDTH  = 0 | input.data('width');
-            var HEIGHT = 0 | input.data('height');
-
-            // Read the file
-            var reader = new FileReader();
-            reader.onloadend = function(e) {
-                img.src = e.target.result;
-
-                // Calculate new sizes
-                // Get dimensions
-                var width = img.width;
-                var height = img.height;
-                var crop = input.data('crop');
-                if ((WIDTH && width > WIDTH) || (HEIGHT && height > HEIGHT)) {
-                    ratio = width / height;
-                    if ((ratio >= 1 || HEIGHT == 0) && WIDTH && !crop) {
-                        width  = WIDTH;
-                        height = WIDTH / ratio;
-                    } else if (crop && ratio <= (WIDTH / HEIGHT)) {
-                        width  = WIDTH;
-                        height = WIDTH / ratio;
-                    } else {
-                        width  = HEIGHT * ratio;
-                        height = HEIGHT;
-                    }
-                }
-
-                // Draw new image
-                canvas.width = width;
-                canvas.height = height;
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, width, height);
-
-                var data = canvas.toDataURL("image/jpeg");
-
-                // Data checking
-                if (data.length <= 6) {
-                    s.error({
-                        'error':'Image did not created. Please, try again.'
-                    }, input, area);
-                    return 0;
-                } else {
-
-                    // Get new file data from canvas and convert to blob
-                    file = m.dataURItoBlob(data);
-                    file.name = name;
-
-                    if(input.data('post')){
-                        // Start upload new file
-                        m.upload(file, input, area);
-                    } else {
-                        $(canvas).appendTo(area);
-                        input.attr('disabled','disabled');
-                        $('<input>').attr('name',input.attr('name'))
-                        .val(data).insertAfter(input);
-                    }
-                }
-            };
-            reader.readAsDataURL(file);
-        },
+        //resize: function(file, input, area){
+        //    // for using after the resize
+        //    var name = file.name;
+        //
+        //    // Create new objects
+        //    var canvas = document.createElement("canvas");
+        //    //$(canvas).appendTo(area);
+        //    var img = document.createElement("img");
+        //
+        //    var WIDTH  = 0 | input.data('width');
+        //    var HEIGHT = 0 | input.data('height');
+        //
+        //    // Read the file
+        //    var reader = new FileReader();
+        //    reader.onloadend = function(e) {
+        //        img.src = e.target.result;
+        //
+        //        // Calculate new sizes
+        //        // Get dimensions
+        //        var width = img.width;
+        //        var height = img.height;
+        //        var crop = input.data('crop');
+        //        if ((WIDTH && width > WIDTH) || (HEIGHT && height > HEIGHT)) {
+        //            ratio = width / height;
+        //            if ((ratio >= 1 || HEIGHT == 0) && WIDTH && !crop) {
+        //                width  = WIDTH;
+        //                height = WIDTH / ratio;
+        //            } else if (crop && ratio <= (WIDTH / HEIGHT)) {
+        //                width  = WIDTH;
+        //                height = WIDTH / ratio;
+        //            } else {
+        //                width  = HEIGHT * ratio;
+        //                height = HEIGHT;
+        //            }
+        //        }
+        //
+        //        // Draw new image
+        //        canvas.width = width;
+        //        canvas.height = height;
+        //        var ctx = canvas.getContext("2d");
+        //        ctx.drawImage(img, 0, 0, width, height);
+        //
+        //        var data = canvas.toDataURL("image/jpeg");
+        //
+        //        // Data checking
+        //        if (data.length <= 6) {
+        //            s.error({
+        //                'error':'Image did not created. Please, try again.'
+        //            }, input, area);
+        //            return 0;
+        //        } else {
+        //
+        //            // Get new file data from canvas and convert to blob
+        //            file = m.dataURItoBlob(data);
+        //            file.name = name;
+        //
+        //            if(input.data('post')){
+        //                // Start upload new file
+        //                m.upload(file, input, area);
+        //            } else {
+        //                $(canvas).appendTo(area);
+        //                input.attr('disabled','disabled');
+        //                $('<input>').attr('name',input.attr('name'))
+        //                .val(data).insertAfter(input);
+        //            }
+        //        }
+        //    };
+        //    reader.readAsDataURL(file);
+        //},
         upload: function(file, input, area){
             if (this.fileCnt > 1) {
                 area.empty();
@@ -228,7 +228,7 @@
             'nosupport'   : 'No support for the File API in this web browser',
             'noimage'     : 'Unsupported file type!',
             'uploaded'    : 'Uploaded',
-            'maxsize'     : '10', //Mb
+            'maxSizeMb'     : '10', //Mb
             'wrap_container': false,
             'handle_click': false
         };

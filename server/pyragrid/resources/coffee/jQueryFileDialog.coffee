@@ -24,8 +24,9 @@
             # TODO translation
         }
         #TODO make from widget's `data-` attributes; class="jQueryFileDialog" runs functions automatically
-        #TODO actions: openFileDialog, restoreOriginalHtml, getData
+        #TODO actions: openFileDialog, restoreOriginalHtml, getData - https://learn.jquery.com/plugins/basic-plugin-creation/
         #TODO configurable defaultOptions (dataTable ?)
+        #TODO each!
         options = $.extend(true, defaultOptions, options)
         data = {
             selectedFile: ''
@@ -176,6 +177,7 @@
         # TODO reload jQueryFileTree every dialog open and after file move
         # TODO "upload file here" button
         # TODO highlight selected folder in file tree
+        # TODO how to reload tree
     ) jQuery
 # make file visible on source tree when dynamically loaded
 `

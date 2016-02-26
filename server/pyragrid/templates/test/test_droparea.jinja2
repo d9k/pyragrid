@@ -1,0 +1,35 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+     {% include '../_filetree_js.jinja2' %}
+
+{#    <div id="fileTreeFileSelect" ></div>#}
+
+    <script type="text/javascript">
+{#        $(document).ready( function() {#}
+{#            $('#fileTreeFileSelect').fileTree({#}
+{#                root: '/',#}
+{#                script: '{{ request.route_url('test_ajax_filetree') }}',#}
+{#                expandSpeed: 120,#}
+{#                collapseSpeed: 120,#}
+{#                multiFolder: false#}
+{#            }, function(file) {#}
+{#                alert(file);#}
+{#            });#}
+{#            $('#fileTreeFolderSelect').fileTree({#}
+{#                root: '/',#}
+{#                script: '{{ request.route_url('test_ajax_filetree') }}',#}
+{#                expandSpeed: 120,#}
+{#                collapseSpeed: 120,#}
+{#                multiFolder: true,#}
+{#                onlyFolders: true#}
+{#            }, function(file) {#}
+{#                alert(file);#}
+{#            });#}
+{#            $('#fileTreeFolderSelect').on('filetreeclicked', function(e, data)    {#}
+{#                console.log(data);#}
+{#            });#}
+{#        });#}
+    </script>
+
+{% endblock %}

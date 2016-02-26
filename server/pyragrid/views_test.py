@@ -145,6 +145,11 @@ class Testiews(ViewsAdmin):
 
         return {'header': 'Jqueryfiletree test'}
 
+    @view_config(route_name='test_droparea', renderer='templates/test/test_droparea.jinja2')
+    def view_test_droparea(self):
+
+        return {'header': 'jquery droparea test'}
+
     # thx 2 http://stackoverflow.com/a/9333816
     @staticmethod
     def toBool(val):

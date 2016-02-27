@@ -6,13 +6,15 @@
             '{{ request.static_url('pyragrid:static/jquery.ui.widget.js') }}',
             '{{ request.static_url('pyragrid:static/jquery.iframe-transport.js') }}',
             '{{ request.static_url('pyragrid:static/jquery.fileupload.js') }}',
-            '{{ request.static_url('pyragrid:static/jquery.fileupload.css') }}'
+            '{{ request.static_url('pyragrid:static/jquery.fileupload-mod.css') }}'
         ]);
     </script>
 
-    <span class="btn btn-success fileinput-button">
+{#    <span class="btn btn-primary fileinput-button droparea">#}
+    <span id="dropzone" class="fileinput-button dropzone">
         <i class="glyphicon glyphicon-plus"></i>
-        <span>Select files...</span>
+        <span>Click and select files or drag them here...</span>
+        <p><span class="releaseHereNote">(release files here to upload)</span></p>
         <!-- The file input field used as target for the file upload widget -->
         <input id="fileupload" type="file" name="files[]" multiple>
     </span>
@@ -42,9 +44,16 @@
                         }
                         $('<p/>').text(text).appendTo('#files');
                     });
+                    $('#progress .progress-bar').css(
+                        'visibility', 'hidden'
+                    );
                 },
+{#                dropZone: $('#dropzone'),#}
                 progressall: function (e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css(
+                        'visibility', 'visible'
+                    );
                     $('#progress .progress-bar').css(
                         'width',
                         progress + '%'
@@ -55,6 +64,35 @@
                 console.log(errorThrown);
             }).prop('disabled', !$.support.fileInput)
                 .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+            $(document).bind('dragover', function (e) {
+                var dropZone = $('#dropzone'),
+                    timeout = window.dropZoneTimeout;
+                if (!timeout) {
+                    dropZone.addClass('in');
+                } else {
+                    clearTimeout(timeout);
+                }
+                var found = false,
+                    node = e.target;
+                do {
+                    if (node === dropZone[0]) {
+                        found = true;
+                        break;
+                    }
+                    node = node.parentNode;
+                } while (node != null);
+{#                if (found) {#}
+{#                    dropZone.addClass('hover');#}
+{#                } else {#}
+{#                    dropZone.removeClass('hover');#}
+{#                }#}
+                window.dropZoneTimeout = setTimeout(function () {
+                    window.dropZoneTimeout = null;
+                    dropZone.removeClass('in hover');
+                }, 200);
+            });
+
         });
     </script>
 

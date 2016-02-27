@@ -185,7 +185,7 @@ class ViewsUploads(ViewsAdmin):
         # echo json_encode($r);
 
     @view_config(route_name='uploads_handle_jquery_file_upload', renderer='json')
-    def view_handle_jquery_file_uploaf(self):
+    def view_handle_jquery_file_upload(self):
 
         post = self.request.POST
         # TODO read from settings:

@@ -1,0 +1,78 @@
+@charset "UTF-8";
+/*
+ * jQuery File Upload Plugin CSS
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2013, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.fileinput-button.dropzone {
+  width: 100%;
+  min-height: 100px;
+  padding-top: 30px;
+  font-size: 18px;
+  text-align: center;
+  background: #B7D9F6;
+}
+.dropzone:hover {
+    background: #8BC9FF;
+    color: #000;
+}
+.dropzone.in, .dropzone.in:hover {
+    /*line-height: 200px;*/
+    /*font-size: larger;*/
+    background: #299CFF;
+    color: #FFF;
+}
+.dropzone span.releaseHereNote{
+    display: none;
+    font-weight: 800;
+}
+.dropzone.in span.releaseHereNote{
+    display: inherit;
+}
+/*.dropzone.hover {*/
+    /*background: lawngreen;*/
+/*}*/
+.dropzone.fade {
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+    opacity: 1;
+}
+
+.fileinput-button input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  opacity: 0;
+  width: 100%;
+  overflow: hidden;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px !important;
+  direction: ltr;
+  cursor: pointer;
+}
+
+/* Fixes for IE < 8 */
+@media screen\9 {
+  .fileinput-button input {
+    filter: alpha(opacity=0);
+    font-size: 100%;
+    height: 100%;
+  }
+}

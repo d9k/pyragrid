@@ -27,7 +27,7 @@
             // Change this to the location of your server-side upload handler:
 {#            var url = window.location.hostname === 'blueimp.github.io' ?#}
 {#                        '//jquery-file-upload.appspot.com/' : 'server/php/';#}
-            var url = '/uploads/jqueryFileUploadAjax';
+            var url = '{{ request.route_url('uploads_handle_jquery_file_upload') }}';
             $('#fileupload').fileupload({
                 url: url,
                 dataType: 'json',

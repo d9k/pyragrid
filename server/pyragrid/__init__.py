@@ -151,6 +151,7 @@ def main(global_config, **settings):
     config.add_route('uploads_info', '/uploads/info')
     config.add_route('uploads_manage', '/uploads/manage')
     config.add_route('uploads_handle_droparea', '/uploads/handleDropArea')
+    config.add_route('uploads_handle_jquery_file_upload', '/uploads/handleJqueryFileUpload')
 
     config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)
 

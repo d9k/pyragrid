@@ -151,7 +151,7 @@ class Testiews(ViewsAdmin):
         return {'header': 'jquery droparea test'}
 
     @view_config(route_name='test_jquery_file_upload', renderer='templates/test/test_jquery_file_upload.jinja2')
-    def view_test_droparea(self):
+    def view_test_jquery_file_upload(self):
         return {'header': 'jquery file upload test'}
 
     # thx 2 http://stackoverflow.com/a/9333816

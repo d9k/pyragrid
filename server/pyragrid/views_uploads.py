@@ -4,7 +4,10 @@ from pyramid.view import (
 )
 from . import helpers
 import os
+import os.path
 from pyramid.response import Response
+import urllib.parse
+import shutil
 
 
 def get_uploads_path():
@@ -27,6 +30,13 @@ def file_size_format(bytes, suffix='B'):
         bytes /= 1024.0
     return "%d %s%s" % (bytes, 'Y', suffix)
     # return "%.1f%s%s" % (bytes, 'Yi', suffix)
+
+
+def get_file_size(file):
+    file.seek(0, 2)  # Seek to the end of the file
+    size = file.tell()  # Get the position of EOF
+    file.seek(0)  # Reset the file position to the beginning
+    return size
 
 
 class ViewsUploads(ViewsAdmin):
@@ -93,7 +103,10 @@ class ViewsUploads(ViewsAdmin):
         }
 
     @view_config(route_name='uploads_handle_droparea', renderer='json')
-    def view_uploads_info(self):
+    def view_handle_droparea(self):
+        return Response(body='Not implemented yet',
+                        content_type='text/plain',
+                        status_int=500)
         # <?php
         # // LOG
         # $log = '=== ' . @date('Y-m-d H:i:s') . ' ===============================' . "\n"
@@ -166,3 +179,60 @@ class ViewsUploads(ViewsAdmin):
         # $r->img = '<img src="' . $path . $filename . '" alt="image" />';
         # // Return to JSON
         # echo json_encode($r);
+
+    @view_config(route_name='uploads_handle_jquery_file_upload', renderer='json')
+    def view_handle_jquery_file_uploaf(self):
+
+        post = self.request.POST
+        # TODO read from settings:
+        max_file_size_mb = 20
+
+        results = []
+        for name, field_storage in post.items():
+            # if type(fieldStorage) is unicode:
+            #     continue
+            file_name = urllib.parse.unquote(field_storage.filename)
+            file_size = get_file_size(field_storage.file)
+            result = dict(
+                name=file_name,
+                type=field_storage.type,
+                size=file_size
+            )
+
+            uploads_path = get_uploads_path()
+            file_path = os.path.join(uploads_path, file_name)
+            file_rel_path = '/' + os.path.relpath(file_path, uploads_path)
+            if file_rel_path.find('..' + os.sep) != -1:
+                return Response(body='Error: I would NOT go upper in directory tree',
+                                content_type='text/plain',
+                                status_int=403)
+            # TODO check file size
+            if file_size > max_file_size_mb * 1024 * 1024:
+                return Response(body='Error: file is too big. Max file size is '+str(max_file_size_mb)+' mb',
+                                content_type='text/plain',
+                                status_int=400)
+
+            if os.path.isfile(file_path):
+                return Response(body='File "'+file_name+'" already exists',
+                                content_type='text/plain',
+                                status_int=400)
+                # result['error'] = 'File "'+file_name+'" already exists'
+                # results.append(result)
+                # continue
+
+            temp_file_path = file_path + '~'
+            input_file = field_storage.file
+
+            with open(temp_file_path, 'wb') as temp_file:
+                shutil.copyfileobj(input_file, temp_file)
+
+            os.rename(temp_file_path, file_path)
+
+            # TODO show error on client if file exists?
+            results.append(result)
+            # TODO actually save file
+
+        return results
+        # return Response(body='Not implemented yet',
+        #                 content_type='text/plain',
+        #                 status_int=500)

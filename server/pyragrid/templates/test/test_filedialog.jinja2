@@ -9,20 +9,19 @@
         <input id="form1_filePath" type="text" name="filePath" value="">
      </form>
 
+{#  <br />
+    <br />
+    <br />
+    <br />
     <p>Example:</p>
 
     <div class="input-group">
-      <input class="form-control" {# placeholder="Product name" #} type="text">
+      <input class="form-control" type="text">
       <span class="input-group-btn">
         <button class="btn btn-default" type="button" title="Clear value"><span class="glyphicon glyphicon-remove"></span></button>
-        <button class="btn btn-default" type="button" title="Browse..."><span class="glyphicon glyphicon-folder-open"></span></button>
+        <button class="btn btn-default" type="button" title="Browse..." data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-folder-open"></span></button>
       </span>
     </div>
-
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-      Launch demo modal
-    </button>
 
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -42,37 +41,7 @@
         </div>
       </div>
     </div>
-
-{#    <div id="fileTreeFileSelect" ></div>#}
-{#    <hr />#}
-{#    <div id="fileTreeFolderSelect" ></div>#}
-
-{#    <script type="text/javascript">#}
-{#        $(document).ready( function() {#}
-{#            $('#fileTreeFileSelect').fileTree({#}
-{#                root: '/',#}
-{#                script: '{{ request.route_url('test_ajax_filetree') }}',#}
-{#                expandSpeed: 120,#}
-{#                collapseSpeed: 120,#}
-{#                multiFolder: false#}
-{#            }, function(file) {#}
-{#                alert(file);#}
-{#            });#}
-{#            $('#fileTreeFolderSelect').fileTree({#}
-{#                root: '/',#}
-{#                script: '{{ request.route_url('test_ajax_filetree') }}',#}
-{#                expandSpeed: 120,#}
-{#                collapseSpeed: 120,#}
-{#                multiFolder: true,#}
-{#                onlyFolders: true#}
-{#            }, function(file) {#}
-{#                alert(file);#}
-{#            });#}
-{#            $('#fileTreeFolderSelect').on('filetreeclicked', function(e, data)    {#}
-{#                console.log(data);#}
-{#            });#}
-{#        });#}
-{#    </script>#}
+#}
 
     {% compress 'js' %}
     <script type="text/coffeescript">

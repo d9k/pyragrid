@@ -20,7 +20,8 @@
     <div id="progress" class="progress">
         <div class="progress-bar progress-bar-success"></div>
     </div>
-
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
 
     <script type="text/javascript">
         $(function () {
@@ -33,7 +34,13 @@
                 dataType: 'json',
                 done: function (e, data) {
                     $.each(data.result.files, function (index, file) {
-                        $('<p/>').text(file.name).appendTo('#files');
+                        text = '';
+                        if (file.error){
+                            text = '/!\\ ' + file.name + ': ' + file.error;
+                        } else {
+                            text = file.name;
+                        }
+                        $('<p/>').text(text).appendTo('#files');
                     });
                 },
                 progressall: function (e, data) {
@@ -43,6 +50,9 @@
                         progress + '%'
                     );
                 }
+            }).error(function (jqXHR, textStatus, errorThrown) {
+                console.log('Error: '+textStatus);
+                console.log(errorThrown);
             }).prop('disabled', !$.support.fileInput)
                 .parent().addClass($.support.fileInput ? undefined : 'disabled');
         });

@@ -39,6 +39,10 @@ def get_file_size(file):
     return size
 
 
+class Continue(Exception):
+    pass
+
+
 class ViewsUploads(ViewsAdmin):
 
     @view_config(route_name='uploads_list', renderer='string')
@@ -202,37 +206,30 @@ class ViewsUploads(ViewsAdmin):
             uploads_path = get_uploads_path()
             file_path = os.path.join(uploads_path, file_name)
             file_rel_path = '/' + os.path.relpath(file_path, uploads_path)
-            if file_rel_path.find('..' + os.sep) != -1:
-                return Response(body='Error: I would NOT go upper in directory tree',
-                                content_type='text/plain',
-                                status_int=403)
-            # TODO check file size
-            if file_size > max_file_size_mb * 1024 * 1024:
-                return Response(body='Error: file is too big. Max file size is '+str(max_file_size_mb)+' mb',
-                                content_type='text/plain',
-                                status_int=400)
 
-            if os.path.isfile(file_path):
-                return Response(body='File "'+file_name+'" already exists',
-                                content_type='text/plain',
-                                status_int=400)
-                # result['error'] = 'File "'+file_name+'" already exists'
-                # results.append(result)
-                # continue
+            try:
+                if file_rel_path.find('..' + os.sep) != -1:
+                    result['error'] = 'I would NOT go upper in directory tree'
+                    raise Continue
 
-            temp_file_path = file_path + '~'
-            input_file = field_storage.file
+                if file_size > max_file_size_mb * 1024 * 1024:
+                    result['error'] = 'File is too big. Max file size is '+str(max_file_size_mb)+' mb'
+                    raise Continue
 
-            with open(temp_file_path, 'wb') as temp_file:
-                shutil.copyfileobj(input_file, temp_file)
+                if os.path.isfile(file_path):
+                    result['error'] = 'File already exists'
+                    raise Continue
 
-            os.rename(temp_file_path, file_path)
+                temp_file_path = file_path + '~'
+                input_file = field_storage.file
 
-            # TODO show error on client if file exists?
+                with open(temp_file_path, 'wb') as temp_file:
+                    shutil.copyfileobj(input_file, temp_file)
+
+                os.rename(temp_file_path, file_path)
+            except Continue:
+                pass
+
             results.append(result)
-            # TODO actually save file
 
-        return results
-        # return Response(body='Not implemented yet',
-        #                 content_type='text/plain',
-        #                 status_int=500)
+        return {"files": results}

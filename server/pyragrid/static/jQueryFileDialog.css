@@ -26,3 +26,9 @@
     margin-top: 15px;
     margin-bottom: 15px;
 }
+
+.fileDialogModal .fileTreeRoot .selectedFolder > a{
+    font-style: italic;
+    font-weight: 800;
+    text-decoration: underline;
+}

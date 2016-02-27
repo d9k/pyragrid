@@ -4,6 +4,15 @@
      {% include '../_filetree_js.jinja2' %}
      {% include '../_filedialog_js.jinja2' %}
 
+     <script type="text/javascript">
+         loadResource([
+             '{{ request.static_url('pyragrid:static/jquery.ui.widget.js') }}',
+             '{{ request.static_url('pyragrid:static/jquery.iframe-transport.js') }}',
+             '{{ request.static_url('pyragrid:static/jquery.fileupload.js') }}',
+             '{{ request.static_url('pyragrid:static/jquery.fileupload-mod.css') }}'
+         ]);
+     </script>
+
      <form id="form1">
         <label for="form1_filePath">Path to file</label>
         <input id="form1_filePath" type="text" name="filePath" value="">

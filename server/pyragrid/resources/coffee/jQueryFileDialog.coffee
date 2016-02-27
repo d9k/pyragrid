@@ -132,6 +132,7 @@
         $fileDialog = $('#'+modalId)
         $selectFileButton = $('.selectFileButton', $fileDialog)
         $fileInfo = $('.fileInfo', $fileInfo)
+        $fileTree = $('#'+fileTreeId)
 
         fileTreeOptions = $.extend(true, options.fileTreeOptions, {
             root: '/'
@@ -149,7 +150,18 @@
 
             return html
 
-        $('#'+fileTreeId).fileTree(fileTreeOptions, (file) ->
+        updateSelectedFolder = () ->
+            $('.directory', $fileTree).removeClass('selectedFolder')
+            $selectedFolder = $('.directory.expanded', $fileTree).last()
+            if $selectedFolder? and $selectedFolder.length > 0
+                $anchor = $selectedFolder.children('a').first()
+                $selectedFolder.addClass('selectedFolder')
+                data.selectedFolder = $anchor.attr('rel')
+            else
+                data.selectedFolder = ''
+            console.log data.selectedFolder
+
+        $fileTree.fileTree(fileTreeOptions, (file) ->
             $selectFileButton.show();
 #            alert(file);
             data.selectedFile = file
@@ -164,6 +176,8 @@
                 dataType: 'json'
             });
             return
+        ).on('filetreeexpanded', (e, data) -> updateSelectedFolder()
+        ).on('filetreecollapsed', (e, data) -> updateSelectedFolder()
         );
 
         $selectFileButton.hide();

@@ -1,7 +1,7 @@
 (function() {
   (function($) {
     return $.fn.fileDialog = function(options) {
-      var $fileDialog, $fileInfo, $fileInput, $selectFileButton, buttonBrowseId, buttonClear, buttonClearId, data, defaultOptions, fileInput, fileInputId, fileTreeId, fileTreeOptions, formatFileSize, inputGroupId, modalId, renderFileInfo, replaceMeId;
+      var $fileDialog, $fileInfo, $fileInput, $fileTree, $selectFileButton, buttonBrowseId, buttonClear, buttonClearId, data, defaultOptions, fileInput, fileInputId, fileTreeId, fileTreeOptions, formatFileSize, inputGroupId, modalId, renderFileInfo, replaceMeId, updateSelectedFolder;
       options = options | {};
       defaultOptions = {
         dialogTitle: 'File select',
@@ -72,6 +72,7 @@
       $fileDialog = $('#' + modalId);
       $selectFileButton = $('.selectFileButton', $fileDialog);
       $fileInfo = $('.fileInfo', $fileInfo);
+      $fileTree = $('#' + fileTreeId);
       fileTreeOptions = $.extend(true, options.fileTreeOptions, {
         root: '/',
         script: options.urlList
@@ -87,7 +88,20 @@
         }
         return html;
       };
-      $('#' + fileTreeId).fileTree(fileTreeOptions, function(file) {
+      updateSelectedFolder = function() {
+        var $anchor, $selectedFolder;
+        $('.directory', $fileTree).removeClass('selectedFolder');
+        $selectedFolder = $('.directory.expanded', $fileTree).last();
+        if (($selectedFolder != null) && $selectedFolder.length > 0) {
+          $anchor = $selectedFolder.children('a').first();
+          $selectedFolder.addClass('selectedFolder');
+          data.selectedFolder = $anchor.attr('rel');
+        } else {
+          data.selectedFolder = '';
+        }
+        return console.log(data.selectedFolder);
+      };
+      $fileTree.fileTree(fileTreeOptions, function(file) {
         $selectFileButton.show();
         data.selectedFile = file;
         $fileInfo.html(renderFileInfo({
@@ -104,6 +118,10 @@
           },
           dataType: 'json'
         });
+      }).on('filetreeexpanded', function(e, data) {
+        return updateSelectedFolder();
+      }).on('filetreecollapsed', function(e, data) {
+        return updateSelectedFolder();
       });
       $selectFileButton.hide();
       return $selectFileButton.on('click', function() {

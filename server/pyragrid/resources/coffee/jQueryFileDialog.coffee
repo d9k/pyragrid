@@ -1,13 +1,13 @@
 (($) ->
     $.fn.fileDialog = (options) ->
-        options = options | {}
+        options = options || {}
         defaultOptions = {
             dialogTitle: 'File select',
             manualInput: false
             urlList: '/uploads/list'
             urlInfo: '/uploads/info'
             urlOperations: '/uploads/manage' # move, rename, delete
-            urlUpload: '/uploads/upload'
+            urlJQueryFileUpload: '/uploads/handleJqueryFileUpload'
 # TODO           showFilesOrFolders: 'any' # 'any'|'files'|'folders'
 # TODO           selectFilesOrFolders: 'file' # 'file'|'folder'|'none'
             # TODO 'file'|'files'|'folder'|'folders'|'none'
@@ -20,7 +20,11 @@
                 expandSpeed: 120
                 collapseSpeed: 120
                 multiFolder: false
-            }
+            },
+            fileUploadSuccess: () ->
+                return
+            fileUploadError: () ->
+                return
             # TODO translation
         }
         #TODO make from widget's `data-` attributes; class="jQueryFileDialog" runs functions automatically
@@ -50,6 +54,7 @@
         inputGroupId = fileInputId+'_group'
         modalId = fileInputId+'_modal'
         fileTreeId = fileInputId+'_fileTree'
+        filesDropZoneId = fileInputId+'_fileDropZone'
 
         buttonClear = fileInput.next('button#' + buttonClearId)
         if buttonClear.length
@@ -96,6 +101,9 @@
 
         # <input id="'+id+'" class="form-control" type="text">
 
+        renderDropZoneLabel = (uploadFolder) ->
+            return 'Click here or drag files to upload' + (if uploadFolder then ' to "'+uploadFolder+'"' else '...')
+
         $('body').prepend('
             <div class="fileDialogModal modal fade" id="'+modalId+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div class="modal-dialog" role="document">
@@ -108,6 +116,19 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="column">
+                                <span id="'+filesDropZoneId+'" class="fileinput-button dropzone">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span class="dropZoneLabel"></span>
+                                    <p><span class="releaseHereNote">(release files here to upload)</span></p>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileupload" type="file" name="files[]" multiple>
+                                </span>
+                                <!-- The global progress bar -->
+                                <div id="progress" class="progress">
+                                    <div class="progress-bar progress-bar-success"></div>
+                                </div>
+                                <!-- The container for the uploaded files -->
+                                <!-- <div id="files" class="files"></div>-->
                                 <div class="fileTreeRoot" id="'+fileTreeId+'" ></div>
                             </div>
                         </div>
@@ -131,8 +152,12 @@
 
         $fileDialog = $('#'+modalId)
         $selectFileButton = $('.selectFileButton', $fileDialog)
-        $fileInfo = $('.fileInfo', $fileInfo)
-        $fileTree = $('#'+fileTreeId)
+        $fileInfo = $('.fileInfo', $fileDialog)
+        $fileTree = $('#'+fileTreeId, $fileDialog)
+        $filesDropZone = $('#'+filesDropZoneId, $fileDialog)
+        $filesDropZoneLabel = $('.dropZoneLabel', $filesDropZone)
+        $filesDropZoneLabel.text(renderDropZoneLabel(options.selectedFolder))
+        $selectedFolder = null
 
         fileTreeOptions = $.extend(true, options.fileTreeOptions, {
             root: '/'
@@ -159,31 +184,114 @@
                 data.selectedFolder = $anchor.attr('rel')
             else
                 data.selectedFolder = ''
-            console.log data.selectedFolder
+#            console.log data.selectedFolder
+            $filesDropZoneLabel.text(renderDropZoneLabel(data.selectedFolder))
+            uploadUrl = options.urlJQueryFileUpload
+            if data.selectedFolder
+                uploadUrl += '?folder=' + encodeURIComponent(data.selectedFolder)
+            $filesDropZone.fileupload({
+                url: uploadUrl
+            })
 
-        $fileTree.fileTree(fileTreeOptions, (file) ->
-            $selectFileButton.show();
-#            alert(file);
-            data.selectedFile = file
-            $fileInfo.html(renderFileInfo({path: file}));
-            $.ajax({
-                type: "POST"
-                url: options.urlInfo
-                data: {path: file}
-                success: (data) ->
-                        $fileInfo.html(renderFileInfo(data));
+        reloadFileTree = () ->
+            $fileTree.empty()
+            $fileTree.data('fileTree', null)
+            $fileTree.fileTree(fileTreeOptions, (file) ->
+                $selectFileButton.show();
+    #            alert(file);
+                data.selectedFile = file
+                $fileInfo.html(renderFileInfo({path: file}));
+                $.ajax({
+                    type: "POST"
+                    url: options.urlInfo
+                    data: {path: file}
+                    success: (data) ->
+                            $fileInfo.html(renderFileInfo(data));
 
-                dataType: 'json'
-            });
-            return
-        ).on('filetreeexpanded', (e, data) -> updateSelectedFolder()
-        ).on('filetreecollapsed', (e, data) -> updateSelectedFolder()
-        );
+                    dataType: 'json'
+                });
+                return
+            ).on('filetreeexpanded', (e, data) -> updateSelectedFolder()
+            ).on('filetreecollapsed', (e, data) -> updateSelectedFolder()
+            );
+
+        reloadFileTree()
 
         $selectFileButton.hide();
         $selectFileButton.on 'click', () ->
             $fileInput.val(data.selectedFile);
             $fileDialog.modal('hide')
+
+        $filesDropZone.fileupload(
+            url: options.urlJQueryFileUpload
+            dataType: 'json'
+            done: (e, data) ->
+                $.each data.result.files, (index, file) ->
+                    text = ''
+                    if file.error
+                        options.fileUploadError(file)
+#                        text = '/!\\ ' + file.name + ': ' + file.error
+                    else
+                        options.fileUploadSuccess(file)
+#                        text = file.name
+                    $('<p/>').text(text).appendTo '#files'
+                    return
+                $('#progress .progress-bar').css 'visibility', 'hidden'
+                if $selectedFolder? and $selectedFolder.length > 0
+                    $_selectedFolder = $selectedFolder
+                    # refresh node = collapse + expand = click + click
+                    $_selectedFolder.children('a').click()
+                    $_selectedFolder.children('a').click()
+                else
+                    reloadFileTree()
+                return
+            progressall: (e, data) ->
+                progress = parseInt(data.loaded / data.total * 100, 10)
+                $('#progress .progress-bar').css 'visibility', 'visible'
+                $('#progress .progress-bar').css 'width', progress + '%'
+                return
+#            process: (e, data) ->
+#                console.log('Processing ' + data.files[data.index].name + '...');
+#                return
+
+#            add: (e, data) ->
+#                if e.isDefaultPrevented()
+#                    return false
+#                if data.autoUpload or data.autoUpload != false and $(this).fileupload('option', 'autoUpload')
+#                    data.process().done ->
+#                        data.submit()
+#                        return
+#                return
+
+        ).error((jqXHR, textStatus, errorThrown) ->
+            console.log 'Error: ' + textStatus
+            console.log errorThrown
+            return
+        ).prop('disabled', !$.support.fileInput).parent().addClass if $.support.fileInput then undefined else 'disabled'
+        $(document).bind 'dragover', (e) ->
+            timeout = window.dropZoneTimeout
+
+            if !timeout
+                $filesDropZone.addClass 'in'
+            else
+                clearTimeout timeout
+
+            found = false
+            node = e.target
+            loop
+                if node == $filesDropZone[0]
+                    found = true
+                    break
+                node = node.parentNode
+                unless node != null
+                    break
+
+            window.dropZoneTimeout = setTimeout((->
+                window.dropZoneTimeout = null
+                $filesDropZone.removeClass 'in hover'
+                return
+            ), 200)
+            return
 
         # TODO edit-in-place file info (access rights, path)
         # TODO so server passes json file info array to client, not rendered html

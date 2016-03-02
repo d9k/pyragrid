@@ -15,10 +15,10 @@ def get_uploads_path():
     return os.path.join(server_path, 'uploads')
 
 
-def get_abs_path(request_path):
+def get_abs_path(request_subfolder):
     uploads_path = get_uploads_path()
-    request_path = request_path.strip(' /\\')
-    return os.path.join(uploads_path, request_path)
+    request_subfolder = request_subfolder.strip(' /\\')
+    return os.path.join(uploads_path, request_subfolder)
 
 
 def file_size_format(bytes, suffix='B'):
@@ -187,6 +187,8 @@ class ViewsUploads(ViewsAdmin):
     @view_config(route_name='uploads_handle_jquery_file_upload', renderer='json')
     def view_handle_jquery_file_upload(self):
 
+        uploads_subfolder = self.request.GET.get('folder', '')
+
         post = self.request.POST
         # TODO read from settings:
         max_file_size_mb = 20
@@ -204,10 +206,11 @@ class ViewsUploads(ViewsAdmin):
             )
 
             uploads_path = get_uploads_path()
-            file_path = os.path.join(uploads_path, file_name)
-            file_rel_path = '/' + os.path.relpath(file_path, uploads_path)
+            file_folder_path = get_abs_path(uploads_subfolder)
+            file_path = os.path.join(file_folder_path, file_name)
 
             try:
+                file_rel_path = '/' + os.path.relpath(file_path, uploads_path)
                 if file_rel_path.find('..' + os.sep) != -1:
                     result['error'] = 'I would NOT go upper in directory tree'
                     raise Continue

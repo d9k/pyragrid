@@ -55,7 +55,12 @@
     {% compress 'js' %}
     <script type="text/coffeescript">
         $ ->
-            $('#form1_filePath').fileDialog()
+            $('#form1_filePath').fileDialog({
+                fileUploadSuccess: (file)->
+                    UI.notifyFromSuccessData({message: '"' + file.name + '" uploaded'})
+                fileUploadError: (file)->
+                    UI.notifyFromErrorData({message: '"' + file.name + '" upload failed: ' + file.error})
+            })
 
 {#            throw new Error('azaza')#}
 

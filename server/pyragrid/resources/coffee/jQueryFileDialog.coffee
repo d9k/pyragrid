@@ -1,4 +1,110 @@
 (($) ->
+
+    # file info subcomponent
+    $.fn.fileInfo = (createOptionsOrAction, noneOrActionParams) ->
+        $this = this
+
+        componentOptions = {}
+        actionParams = {}
+        if typeof createOptionsOrAction is 'string'
+            action = createOptionsOrAction
+            actionParams = noneOrActionParams || {}
+        else
+            action = 'create'
+            componentOptions = createOptionsOrAction || {}
+
+        state = {
+            file: {
+                path: undefined
+                sizeInBytes: undefined
+                previewHtml: undefined
+                accessRights: undefined #TODO
+            }
+        }
+
+        defaultComponentOptions = {
+            urlInfo: '/uploads/info'
+            urlOperations: '/uploads/manage'
+            callbackRenamed: () -> return
+            callbackDeleted: () -> return
+#            callbackFile: () -> return
+            callbackAjaxError: () -> return #TODO method signature?
+        }
+
+        componentOptions = $.extend(true, defaultComponentOptions, componentOptions)
+
+        formatFileSize = (bytes, _1000) ->
+            size = bytes
+            divisor = if _1000 then 1000 else 1024
+            if Math.abs(size) < divisor
+                return size + ' B'
+            units = if _1000
+                ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+            else
+                ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+            unitIndex = -1
+            loop
+                size /= divisor
+                ++unitIndex
+                if Math.abs(size) <= divisor or unitIndex > units.length - 1
+                    break
+
+            size.toFixed(1) + ' ' + units[unitIndex]
+
+        render = () ->
+            $this.html('')
+            if ! state.file? || ! state.file.path?
+                return
+
+            file = state.file
+            $this.append('<p><b>file path:</b> ' + file.path + '</p>')
+            #TODO http://www.appelsiini.net/projects/jeditable
+            if file.sizeInBytes?
+                $this.append('<p><b>size:</b> ' + formatFileSize(file.sizeInBytes) + '</p>')
+            if file.previewHtml?
+                $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml +'</div></p>')
+
+        createComponent = () ->
+            render()
+            $this.data('options', componentOptions)
+
+        selectFile = () ->
+            filePath = undefined
+            if typeof actionParams is 'string'
+                filePath = actionParams
+            else
+                filePath = actionParams.filePath
+
+            if ! filePath?
+                throw new Error('filePath in action params must be defined')
+
+            state.file = {path: filePath}
+            render()
+
+            $.ajax({
+                type: "POST"
+                url: componentOptions.urlInfo
+                data: state.file
+                success: (data) ->
+                    state.file = data
+                    render()
+                dataType: 'json'
+            });
+
+        if action != 'create'
+            componentOptions = $this.data('options')
+            state = $this.data('state')
+
+        switch action
+            when 'selectFile' then selectFile()
+            else
+                createComponent()
+
+        $this.data('state', state)
+        return $this
+
+    # главный компонент
     $.fn.fileDialog = (options) ->
         options = options || {}
         defaultOptions = {
@@ -74,25 +180,6 @@
             </div>
         ')
 
-        formatFileSize = (bytes, _1000) ->
-            size = bytes
-            divisor = if _1000 then 1000 else 1024
-            if Math.abs(size) < divisor
-                return size + ' B'
-            units = if _1000
-                ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-            else
-                ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-
-            unitIndex = -1
-            loop
-                size /= divisor
-                ++unitIndex
-                if Math.abs(size) <= divisor or unitIndex > units.length - 1
-                    break
-
-            size.toFixed(1) + ' ' + units[unitIndex]
-
         data.inputHtml = fileInput.html();
         $('#'+fileInputId).replaceAll($('#'+replaceMeId))
         $fileInput = $('#'+fileInputId)
@@ -164,17 +251,6 @@
             script: options.urlList
         })
 
-        renderFileInfo = (data) ->
-            if !data.path
-                return 'Error: no data.path set'
-
-            html = '<p><b>file path:</b> ' + data.path + '</p>'
-
-            if data.size
-                html += '<p><b>size:</b> ' + formatFileSize(data.size) + '</p>'
-
-            return html
-
         updateSelectedFolder = () ->
             $('.directory', $fileTree).removeClass('selectedFolder')
             $selectedFolder = $('.directory.expanded', $fileTree).last()
@@ -193,23 +269,18 @@
                 url: uploadUrl
             })
 
+        $fileInfo.fileInfo({
+            urlInfo: options.urlInfo,
+            urlOperations: options.urlOperations
+        })
+
         reloadFileTree = () ->
             $fileTree.empty()
             $fileTree.data('fileTree', null)
             $fileTree.fileTree(fileTreeOptions, (file) ->
-                $selectFileButton.show();
-    #            alert(file);
+                $selectFileButton.show()
                 data.selectedFile = file
-                $fileInfo.html(renderFileInfo({path: file}));
-                $.ajax({
-                    type: "POST"
-                    url: options.urlInfo
-                    data: {path: file}
-                    success: (data) ->
-                            $fileInfo.html(renderFileInfo(data));
-
-                    dataType: 'json'
-                });
+                $fileInfo.fileInfo('selectFile', data.selectedFile)
                 return
             ).on('filetreeexpanded', (e, data) -> updateSelectedFolder()
             ).on('filetreecollapsed', (e, data) -> updateSelectedFolder()

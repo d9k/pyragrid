@@ -103,7 +103,7 @@ class ViewsUploads(ViewsAdmin):
         #     '<p><b>size: </b>' + file_size + '</p>'
         return {
             'path': file_rel_path,
-            'size': file_size_bytes
+            'sizeInBytes': file_size_bytes
         }
 
     @view_config(route_name='uploads_handle_droparea', renderer='json')

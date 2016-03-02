@@ -1,7 +1,112 @@
 (function() {
   (function($) {
+    $.fn.fileInfo = function(createOptionsOrAction, noneOrActionParams) {
+      var $this, action, actionParams, componentOptions, createComponent, defaultComponentOptions, formatFileSize, render, selectFile, state;
+      $this = this;
+      componentOptions = {};
+      actionParams = {};
+      if (typeof createOptionsOrAction === 'string') {
+        action = createOptionsOrAction;
+        actionParams = noneOrActionParams || {};
+      } else {
+        action = 'create';
+        componentOptions = createOptionsOrAction || {};
+      }
+      state = {
+        file: {
+          path: void 0,
+          sizeInBytes: void 0,
+          previewHtml: void 0,
+          accessRights: void 0
+        }
+      };
+      defaultComponentOptions = {
+        urlInfo: '/uploads/info',
+        urlOperations: '/uploads/manage',
+        callbackRenamed: function() {},
+        callbackDeleted: function() {},
+        callbackAjaxError: function() {}
+      };
+      componentOptions = $.extend(true, defaultComponentOptions, componentOptions);
+      formatFileSize = function(bytes, _1000) {
+        var divisor, size, unitIndex, units;
+        size = bytes;
+        divisor = _1000 ? 1000 : 1024;
+        if (Math.abs(size) < divisor) {
+          return size + ' B';
+        }
+        units = _1000 ? ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] : ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        unitIndex = -1;
+        while (true) {
+          size /= divisor;
+          ++unitIndex;
+          if (Math.abs(size) <= divisor || unitIndex > units.length - 1) {
+            break;
+          }
+        }
+        return size.toFixed(1) + ' ' + units[unitIndex];
+      };
+      render = function() {
+        var file;
+        $this.html('');
+        if ((state.file == null) || (state.file.path == null)) {
+          return;
+        }
+        file = state.file;
+        $this.append('<p><b>file path:</b> ' + file.path + '</p>');
+        if (file.sizeInBytes != null) {
+          $this.append('<p><b>size:</b> ' + formatFileSize(file.sizeInBytes) + '</p>');
+        }
+        if (file.previewHtml != null) {
+          return $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml(+'</div></p>'));
+        }
+      };
+      createComponent = function() {
+        render();
+        return $this.data('options', componentOptions);
+      };
+      selectFile = function() {
+        var filePath;
+        filePath = void 0;
+        if (typeof actionParams === 'string') {
+          filePath = actionParams;
+        } else {
+          filePath = actionParams.filePath;
+        }
+        if (filePath == null) {
+          throw new Error('filePath in action params must be defined');
+        }
+        state.file = {
+          path: filePath
+        };
+        render();
+        return $.ajax({
+          type: "POST",
+          url: componentOptions.urlInfo,
+          data: state.file,
+          success: function(data) {
+            state.file = data;
+            return render();
+          },
+          dataType: 'json'
+        });
+      };
+      if (action !== 'create') {
+        componentOptions = $this.data('options');
+        state = $this.data('state');
+      }
+      switch (action) {
+        case 'selectFile':
+          selectFile();
+          break;
+        default:
+          createComponent();
+      }
+      $this.data('state', state);
+      return $this;
+    };
     return $.fn.fileDialog = function(options) {
-      var $fileDialog, $fileInfo, $fileInput, $fileTree, $filesDropZone, $filesDropZoneLabel, $selectFileButton, $selectedFolder, buttonBrowseId, buttonClear, buttonClearId, data, defaultOptions, fileInput, fileInputId, fileTreeId, fileTreeOptions, filesDropZoneId, formatFileSize, inputGroupId, modalId, reloadFileTree, renderDropZoneLabel, renderFileInfo, replaceMeId, updateSelectedFolder;
+      var $fileDialog, $fileInfo, $fileInput, $fileTree, $filesDropZone, $filesDropZoneLabel, $selectFileButton, $selectedFolder, buttonBrowseId, buttonClear, buttonClearId, data, defaultOptions, fileInput, fileInputId, fileTreeId, fileTreeOptions, filesDropZoneId, inputGroupId, modalId, reloadFileTree, renderDropZoneLabel, replaceMeId, updateSelectedFolder;
       options = options || {};
       defaultOptions = {
         dialogTitle: 'File select',
@@ -48,24 +153,6 @@
         return;
       }
       fileInput.after('<div id="' + inputGroupId + '" class="input-group"> <div id="' + replaceMeId + '" /> <span class="input-group-btn"> <button id="' + buttonClearId + '" class="btn btn-default" type="button" title="Clear value"><span class="glyphicon glyphicon-remove"></span></button> <button id="' + buttonBrowseId + '" class="btn btn-default" type="button" title="Browse..." data-toggle="modal" data-target="#' + modalId + '"><span class="glyphicon glyphicon-folder-open"></span></button> </span> </div>');
-      formatFileSize = function(bytes, _1000) {
-        var divisor, size, unitIndex, units;
-        size = bytes;
-        divisor = _1000 ? 1000 : 1024;
-        if (Math.abs(size) < divisor) {
-          return size + ' B';
-        }
-        units = _1000 ? ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] : ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        unitIndex = -1;
-        while (true) {
-          size /= divisor;
-          ++unitIndex;
-          if (Math.abs(size) <= divisor || unitIndex > units.length - 1) {
-            break;
-          }
-        }
-        return size.toFixed(1) + ' ' + units[unitIndex];
-      };
       data.inputHtml = fileInput.html();
       $('#' + fileInputId).replaceAll($('#' + replaceMeId));
       $fileInput = $('#' + fileInputId);
@@ -87,17 +174,6 @@
         root: '/',
         script: options.urlList
       });
-      renderFileInfo = function(data) {
-        var html;
-        if (!data.path) {
-          return 'Error: no data.path set';
-        }
-        html = '<p><b>file path:</b> ' + data.path + '</p>';
-        if (data.size) {
-          html += '<p><b>size:</b> ' + formatFileSize(data.size) + '</p>';
-        }
-        return html;
-      };
       updateSelectedFolder = function() {
         var $anchor, uploadUrl;
         $('.directory', $fileTree).removeClass('selectedFolder');
@@ -118,26 +194,17 @@
           url: uploadUrl
         });
       };
+      $fileInfo.fileInfo({
+        urlInfo: options.urlInfo,
+        urlOperations: options.urlOperations
+      });
       reloadFileTree = function() {
         $fileTree.empty();
         $fileTree.data('fileTree', null);
         return $fileTree.fileTree(fileTreeOptions, function(file) {
           $selectFileButton.show();
           data.selectedFile = file;
-          $fileInfo.html(renderFileInfo({
-            path: file
-          }));
-          $.ajax({
-            type: "POST",
-            url: options.urlInfo,
-            data: {
-              path: file
-            },
-            success: function(data) {
-              return $fileInfo.html(renderFileInfo(data));
-            },
-            dataType: 'json'
-          });
+          $fileInfo.fileInfo('selectFile', data.selectedFile);
         }).on('filetreeexpanded', function(e, data) {
           return updateSelectedFolder();
         }).on('filetreecollapsed', function(e, data) {

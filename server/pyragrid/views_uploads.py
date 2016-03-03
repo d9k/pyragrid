@@ -79,7 +79,7 @@ class ViewsUploads(ViewsAdmin):
                                 content_type='text/plain',
                                 status_int=403)
 
-            for node_name in os.listdir(dir_path):
+            for node_name in sorted(os.listdir(dir_path)):
                 node_path = os.path.join(dir_path, node_name)
                 node_rel_path = get_rel_path(node_path)
                 if path_goes_upper(node_path):

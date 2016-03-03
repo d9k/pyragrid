@@ -82,7 +82,10 @@
                         },
                         dataType: 'text',
                         success: (resultValue) ->
-                            componentOptions.callbackRenamed(file.path, resultValue)
+                            fromPath = file.path
+                            state.file = undefined
+                            render()
+                            componentOptions.callbackRenamed(fromPath, resultValue)
                             return
                         error: (e) ->
                             return

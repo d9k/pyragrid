@@ -71,7 +71,11 @@
               },
               dataType: 'text',
               success: function(resultValue) {
-                componentOptions.callbackRenamed(file.path, resultValue);
+                var fromPath;
+                fromPath = file.path;
+                state.file = void 0;
+                render();
+                componentOptions.callbackRenamed(fromPath, resultValue);
               },
               error: function(e) {}
             });

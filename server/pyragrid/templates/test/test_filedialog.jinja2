@@ -2,14 +2,17 @@
 
 {% block content %}
      {% include '../_filetree_js.jinja2' %}
-     {% include '../_filedialog_js.jinja2' %}
+{#     {% include '../_filedialog_js.jinja2' %}#}
 
      <script type="text/javascript">
          loadResource([
              '{{ request.static_url('pyragrid:static/jquery.ui.widget.js') }}',
              '{{ request.static_url('pyragrid:static/jquery.iframe-transport.js') }}',
              '{{ request.static_url('pyragrid:static/jquery.fileupload.js') }}',
-             '{{ request.static_url('pyragrid:static/jquery.fileupload-mod.css') }}'
+             '{{ request.static_url('pyragrid:static/jquery.fileupload-mod.css') }}',
+             '{{ request.static_url('pyragrid:static/js/jQueryFileDialog.js') }}',
+             '{{ request.static_url('pyragrid:static/jinplace.js') }}',
+             '{{ request.static_url('pyragrid:static/jQueryFileDialog.css') }}'
          ]);
      </script>
 
@@ -60,6 +63,7 @@
                     UI.notifyFromSuccessData({message: '"' + file.name + '" uploaded'})
                 fileUploadError: (file)->
                     UI.notifyFromErrorData({message: '"' + file.name + '" upload failed: ' + file.error})
+                urlOperations: '{{ request.route_url('uploads_manage') }}'
             })
 
 {#            throw new Error('azaza')#}

@@ -6,6 +6,7 @@ from . import helpers
 import os
 import os.path
 from pyramid.response import Response
+from pyramid.exceptions import HTTPBadRequest
 import urllib.parse
 import shutil
 
@@ -14,23 +15,33 @@ def get_uploads_path():
     server_path = helpers.get_server_path()
     return os.path.join(server_path, 'uploads')
 
+def get_rel_path(abs_path):
+    uploads_path = get_uploads_path()
+    return '/' + os.path.relpath(abs_path, uploads_path)
 
 def get_abs_path(request_subfolder):
     uploads_path = get_uploads_path()
     request_subfolder = request_subfolder.strip(' /\\')
     return os.path.join(uploads_path, request_subfolder)
 
+def path_goes_upper(abs_path: str) -> bool:
+    """
+    checks whether path goes upper from uploads in directory tree
+    TODO maybe make jail function within with block
+    """
+    uploads_path = get_uploads_path()
+    file_rel_path = os.path.relpath(abs_path, uploads_path)
+    return file_rel_path.find('..' + os.sep) != -1
 
-def file_size_format(bytes, suffix='B'):
-    # for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
-    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
-        if abs(bytes) < 1024.0:
-            # return "%3.1f%s%s" % (bytes, unit, suffix)
-            return "%d %s%s" % (bytes, unit, suffix)
-        bytes /= 1024.0
-    return "%d %s%s" % (bytes, 'Y', suffix)
-    # return "%.1f%s%s" % (bytes, 'Yi', suffix)
-
+# def file_size_format(bytes, suffix='B'):
+#     # for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+#     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+#         if abs(bytes) < 1024.0:
+#             # return "%3.1f%s%s" % (bytes, unit, suffix)
+#             return "%d %s%s" % (bytes, unit, suffix)
+#         bytes /= 1024.0
+#     return "%d %s%s" % (bytes, 'Y', suffix)
+#     # return "%.1f%s%s" % (bytes, 'Yi', suffix)
 
 def get_file_size(file):
     file.seek(0, 2)  # Seek to the end of the file
@@ -70,8 +81,8 @@ class ViewsUploads(ViewsAdmin):
 
             for node_name in os.listdir(dir_path):
                 node_path = os.path.join(dir_path, node_name)
-                node_rel_path = '/' + os.path.relpath(node_path, uploads_path)
-                if node_rel_path.find('..' + os.sep) != -1:
+                node_rel_path = get_rel_path(node_path)
+                if path_goes_upper(node_path):
                     return Response(body='Error: I would NOT go upper in directory tree',
                                     content_type='text/plain',
                                     status_int=403)
@@ -95,9 +106,8 @@ class ViewsUploads(ViewsAdmin):
         file_rel_path = self.request.POST.get('path', '')
         file_path = get_abs_path(file_rel_path)
         file_size_bytes = os.path.getsize(file_path)
-        file_size = file_size_format(file_size_bytes)
+        # file_size = file_size_format(file_size_bytes)
         # TODO access rights
-        # TODO strip beginning /
         # return \
         #     '<p><b>path: </b>' + file_rel_path + '</p>' \
         #     '<p><b>size: </b>' + file_size + '</p>'
@@ -205,13 +215,11 @@ class ViewsUploads(ViewsAdmin):
                 size=file_size
             )
 
-            uploads_path = get_uploads_path()
             file_folder_path = get_abs_path(uploads_subfolder)
             file_path = os.path.join(file_folder_path, file_name)
 
             try:
-                file_rel_path = '/' + os.path.relpath(file_path, uploads_path)
-                if file_rel_path.find('..' + os.sep) != -1:
+                if path_goes_upper(file_path):
                     result['error'] = 'I would NOT go upper in directory tree'
                     raise Continue
 
@@ -236,3 +244,36 @@ class ViewsUploads(ViewsAdmin):
             results.append(result)
 
         return {"files": results}
+
+    @view_config(route_name='uploads_manage', renderer='string')
+    def view_manage(self):
+        post = self.request.POST
+        action = post.get('action')
+        if action == 'move':
+            _from = post.get('from')
+            _to = post.get('to')
+            if _from is None or _to is None:
+                # return Response(body='"from" and "to" request params are missing',
+                #                 content_type='text/plain',
+                #                 status_int=400)
+                return HTTPBadRequest('"from" and "to" request params are missing')
+            from_path = get_abs_path(_from)
+            to_path = get_abs_path(_to)
+            if not os.path.isfile(from_path):
+                return HTTPBadRequest('There no file at the path passed with "to" parameter')
+            if os.path.isdir(to_path):
+                return HTTPBadRequest('The "to" path is directory. Full end path of file must be specified')
+            try:
+                os.rename(from_path, to_path)
+            except Exception:
+                # TODO log exception?
+                return HTTPBadRequest('error during file moving')
+
+            rel_to_path = get_rel_path(to_path)
+            return rel_to_path
+        else:
+            # return Response(body='"action" request param is missing',
+            #                 content_type='text/plain',
+            #                 status_int=400)
+            return HTTPBadRequest('"action" request param is missing')
+

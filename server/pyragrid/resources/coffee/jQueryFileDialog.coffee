@@ -25,8 +25,8 @@
         defaultComponentOptions = {
             urlInfo: '/uploads/info'
             urlOperations: '/uploads/manage'
-            callbackRenamed: () -> return
-            callbackDeleted: () -> return
+            callbackRenamed: (from, to) -> return
+            callbackDeleted: (path) -> return
 #            callbackFile: () -> return
             callbackAjaxError: () -> return #TODO method signature?
         }
@@ -58,12 +58,37 @@
                 return
 
             file = state.file
-            $this.append('<p><b>file path:</b> ' + file.path + '</p>')
-            #TODO http://www.appelsiini.net/projects/jeditable
+            $this.append(
+                '<p><b>file path:</b><br/>
+                    <span class="filePath edit-in-place" title="Click to move/rename" data-type="textarea"  data-ok-button="Move/Rename" data-cancel-button="Cancel">' +
+                        file.path +
+                   '</span>' +
+                '</p>'
+            )
+            #TODO https://github.com/itinken/jinplace
             if file.sizeInBytes?
-                $this.append('<p><b>size:</b> ' + formatFileSize(file.sizeInBytes) + '</p>')
+                $this.append('<p><b>size:</b>'+ formatFileSize(file.sizeInBytes) + '</p>')
             if file.previewHtml?
                 $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml +'</div></p>')
+            # TODO
+            $('.filePath.edit-in-place', $this).jinplace({
+                submitFunction: (opts, value) ->
+                    return $.ajax(componentOptions.urlOperations, {
+                        type: "post",
+                        data: {
+                            action: 'move'
+                            from: file.path
+                            to: value
+                        },
+                        dataType: 'text',
+                        success: (resultValue) ->
+                            componentOptions.callbackRenamed(file.path, resultValue)
+                            return
+                        error: (e) ->
+                            return
+                    });
+
+                })
 
         createComponent = () ->
             render()
@@ -269,11 +294,6 @@
                 url: uploadUrl
             })
 
-        $fileInfo.fileInfo({
-            urlInfo: options.urlInfo,
-            urlOperations: options.urlOperations
-        })
-
         reloadFileTree = () ->
             $fileTree.empty()
             $fileTree.data('fileTree', null)
@@ -285,6 +305,14 @@
             ).on('filetreeexpanded', (e, data) -> updateSelectedFolder()
             ).on('filetreecollapsed', (e, data) -> updateSelectedFolder()
             );
+
+        $fileInfo.fileInfo({
+            urlInfo: options.urlInfo
+            urlOperations: options.urlOperations
+            callbackRenamed: (from, to) ->
+                # TODO make arg selectedNode
+                reloadFileTree()
+        })
 
         reloadFileTree()
 

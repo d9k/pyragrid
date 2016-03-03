@@ -5805,7 +5805,7 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
-input, select {
+input, select, textarea {
   color: #333;
   background: #fff; }
 
@@ -7944,6 +7944,9 @@ form.no-red-stars .required::after {
     .list-inline.withPostSeparator li:after {
       content: "|";
       margin: 0 5px 0 10px; }
+
+.edit-in-place {
+  border-bottom: 1px dashed #84AE84; }
 
 #pDebug a#pShowToolBarButton {
   opacity: 0.5 !important; }

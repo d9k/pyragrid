@@ -64,7 +64,8 @@ gulp.task('js-copy', function(){
             config.bowerDir + '/blueimp-file-upload/js/jquery.fileupload.js',
             config.bowerDir + '/blueimp-file-upload/js/jquery.iframe-transport.js',
             config.bowerDir + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-            config.bowerDir + '/blueimp-file-upload/css/jquery.fileupload.css'
+            config.bowerDir + '/blueimp-file-upload/css/jquery.fileupload.css',
+            config.bowerDir + '/jinplace/js/jinplace.js'
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img

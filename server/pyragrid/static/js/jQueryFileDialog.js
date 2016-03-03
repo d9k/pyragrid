@@ -23,8 +23,8 @@
       defaultComponentOptions = {
         urlInfo: '/uploads/info',
         urlOperations: '/uploads/manage',
-        callbackRenamed: function() {},
-        callbackDeleted: function() {},
+        callbackRenamed: function(from, to) {},
+        callbackDeleted: function(path) {},
         callbackAjaxError: function() {}
       };
       componentOptions = $.extend(true, defaultComponentOptions, componentOptions);
@@ -53,13 +53,30 @@
           return;
         }
         file = state.file;
-        $this.append('<p><b>file path:</b> ' + file.path + '</p>');
+        $this.append('<p><b>file path:</b><br/> <span class="filePath edit-in-place" title="Click to move/rename" data-type="textarea"  data-ok-button="Move/Rename" data-cancel-button="Cancel">' + file.path + '</span>' + '</p>');
         if (file.sizeInBytes != null) {
-          $this.append('<p><b>size:</b> ' + formatFileSize(file.sizeInBytes) + '</p>');
+          $this.append('<p><b>size:</b>' + formatFileSize(file.sizeInBytes) + '</p>');
         }
         if (file.previewHtml != null) {
-          return $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml(+'</div></p>'));
+          $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml(+'</div></p>'));
         }
+        return $('.filePath.edit-in-place', $this).jinplace({
+          submitFunction: function(opts, value) {
+            return $.ajax(componentOptions.urlOperations, {
+              type: "post",
+              data: {
+                action: 'move',
+                from: file.path,
+                to: value
+              },
+              dataType: 'text',
+              success: function(resultValue) {
+                componentOptions.callbackRenamed(file.path, resultValue);
+              },
+              error: function(e) {}
+            });
+          }
+        });
       };
       createComponent = function() {
         render();
@@ -194,10 +211,6 @@
           url: uploadUrl
         });
       };
-      $fileInfo.fileInfo({
-        urlInfo: options.urlInfo,
-        urlOperations: options.urlOperations
-      });
       reloadFileTree = function() {
         $fileTree.empty();
         $fileTree.data('fileTree', null);
@@ -211,6 +224,13 @@
           return updateSelectedFolder();
         });
       };
+      $fileInfo.fileInfo({
+        urlInfo: options.urlInfo,
+        urlOperations: options.urlOperations,
+        callbackRenamed: function(from, to) {
+          return reloadFileTree();
+        }
+      });
       reloadFileTree();
       $selectFileButton.hide();
       $selectFileButton.on('click', function() {

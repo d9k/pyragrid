@@ -259,10 +259,10 @@ class ViewsUploads(ViewsAdmin):
                 return HTTPBadRequest('"from" and "to" request params are missing')
             from_path = get_abs_path(_from)
             to_path = get_abs_path(_to)
-            if not os.path.isfile(from_path):
-                return HTTPBadRequest('There no file at the path passed with "to" parameter')
             if os.path.isdir(to_path):
                 return HTTPBadRequest('The "to" path is directory. Full end path of file must be specified')
+            if not os.path.isfile(from_path):
+                return HTTPBadRequest('There no file at the path passed with "to" parameter')
             try:
                 os.rename(from_path, to_path)
             except Exception:
@@ -271,6 +271,22 @@ class ViewsUploads(ViewsAdmin):
 
             rel_to_path = get_rel_path(to_path)
             return rel_to_path
+        elif action == 'delete':
+            _path = post.get('path')
+            if _path is None:
+                return HTTPBadRequest('"path" request param is missing')
+            delete_path = get_abs_path(_path)
+            if os.path.isdir(delete_path):
+                return HTTPBadRequest('The "to" path is directory. Full end path of file must be specified')
+            if not os.path.isfile(delete_path):
+                return HTTPBadRequest('There no file at the path passed with "path" parameter')
+            try:
+                os.remove(delete_path)
+            except Exception:
+                return HTTPBadRequest('error during file deletion')
+
+            rel_delete_path = get_rel_path(delete_path)
+            return rel_delete_path
         else:
             # return Response(body='"action" request param is missing',
             #                 content_type='text/plain',

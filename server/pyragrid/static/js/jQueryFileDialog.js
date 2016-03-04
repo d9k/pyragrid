@@ -25,7 +25,8 @@
         urlOperations: '/uploads/manage',
         callbackRenamed: function(from, to) {},
         callbackDeleted: function(path) {},
-        callbackAjaxError: function() {}
+        callbackRenameError: function(from, to, e) {},
+        callbackDeleteError: function(path, e) {}
       };
       componentOptions = $.extend(true, defaultComponentOptions, componentOptions);
       formatFileSize = function(bytes, _1000) {
@@ -60,14 +61,15 @@
         if (file.previewHtml != null) {
           $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml(+'</div></p>'));
         }
-        return $('.filePath.edit-in-place', $this).jinplace({
-          submitFunction: function(opts, value) {
+        $this.append('<button class="deleteFile btn btn-sm btn-danger" title="Delete file &quot;' + file.path + '&quot;?" data-toggle="confirmation" data-btn-ok-label="Delete!" data-btn-ok-icon="glyphicon glyphicon-remove" data-btn-ok-class="btn-danger" data-btn-cancel-label="Do nothing" data-btn-cancel-icon="glyphicon glyphicon-time" data-btn-cancel-class="btn-default" data-popout="true" data-placement="bottom" > <span class="glyphicon glyphicon-trash"></span> </button>');
+        $('.filePath.edit-in-place', $this).jinplace({
+          submitFunction: function(opts, valueToPath) {
             return $.ajax(componentOptions.urlOperations, {
               type: "post",
               data: {
                 action: 'move',
                 from: file.path,
-                to: value
+                to: valueToPath
               },
               dataType: 'text',
               success: function(resultValue) {
@@ -77,7 +79,39 @@
                 render();
                 componentOptions.callbackRenamed(fromPath, resultValue);
               },
-              error: function(e) {}
+              error: function(e) {
+                var fromPath;
+                fromPath = file.path;
+                componentOptions.callbackRenameError(fromPath, valueToPath, e);
+              }
+            });
+          }
+        });
+        return $('button.deleteFile', $this).confirmation({
+          onConfirm: function() {
+            return $.ajax(componentOptions.urlOperations, {
+              type: "post",
+              data: {
+                action: 'delete',
+                path: file.path
+              },
+              dataType: 'text',
+              success: function(resultValue) {
+                var deletedPath;
+                deletedPath = file.path;
+                if (resultValue !== deletedPath) {
+                  componentOptions.callbackDeleteError(deletedPath, e);
+                  return;
+                }
+                state.file = void 0;
+                render();
+                componentOptions.callbackDeleted(deletedPath);
+              },
+              error: function(e) {
+                var deletedPath;
+                deletedPath = file.path;
+                componentOptions.callbackDeleteError(deletedPath, e);
+              }
             });
           }
         });
@@ -179,6 +213,10 @@
       $fileInput = $('#' + fileInputId);
       $fileInput.addClass('form-control');
       $fileInput.attr('type', 'text');
+      $('#' + buttonClearId).click(function(e) {
+        $fileInput.val('');
+        return $fileInput.focus();
+      });
       renderDropZoneLabel = function(uploadFolder) {
         return 'Click here or drag files to upload' + (uploadFolder ? ' to "' + uploadFolder + '"' : '...');
       };
@@ -232,6 +270,9 @@
         urlInfo: options.urlInfo,
         urlOperations: options.urlOperations,
         callbackRenamed: function(from, to) {
+          return reloadFileTree();
+        },
+        callbackDeleted: function(path) {
           return reloadFileTree();
         }
       });

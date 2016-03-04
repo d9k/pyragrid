@@ -28,7 +28,8 @@
             callbackRenamed: (from, to) -> return
             callbackDeleted: (path) -> return
 #            callbackFile: () -> return
-            callbackAjaxError: () -> return #TODO method signature?
+            callbackRenameError: (from, to, e) -> return
+            callbackDeleteError: (path, e) -> return
         }
 
         componentOptions = $.extend(true, defaultComponentOptions, componentOptions)
@@ -70,15 +71,31 @@
                 $this.append('<p><b>size:</b>'+ formatFileSize(file.sizeInBytes) + '</p>')
             if file.previewHtml?
                 $this.append('<p><b>preview:</b> <div class="fileInfoPreview">' + file.previewHtml +'</div></p>')
-            # TODO
+            $this.append('
+                <button
+                    class="deleteFile btn btn-sm btn-danger"
+                    title="Delete file &quot;' + file.path + '&quot;?"
+                    data-toggle="confirmation"
+                    data-btn-ok-label="Delete!"
+                    data-btn-ok-icon="glyphicon glyphicon-remove"
+                    data-btn-ok-class="btn-danger"
+                    data-btn-cancel-label="Do nothing"
+                    data-btn-cancel-icon="glyphicon glyphicon-time"
+                    data-btn-cancel-class="btn-default"
+                    data-popout="true"
+                    data-placement="bottom"
+                >
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>')
+
             $('.filePath.edit-in-place', $this).jinplace({
-                submitFunction: (opts, value) ->
+                submitFunction: (opts, valueToPath) ->
                     return $.ajax(componentOptions.urlOperations, {
                         type: "post",
                         data: {
                             action: 'move'
                             from: file.path
-                            to: value
+                            to: valueToPath
                         },
                         dataType: 'text',
                         success: (resultValue) ->
@@ -88,10 +105,39 @@
                             componentOptions.callbackRenamed(fromPath, resultValue)
                             return
                         error: (e) ->
+                            # TODO check for errors handling
+                            fromPath = file.path
+                            componentOptions.callbackRenameError(fromPath, valueToPath, e)
                             return
                     });
 
-                })
+            })
+
+            $('button.deleteFile', $this).confirmation {
+                onConfirm: () ->
+                    $.ajax(componentOptions.urlOperations, {
+                        type: "post",
+                        data: {
+                            action: 'delete'
+                            path: file.path
+                        },
+                        dataType: 'text',
+                        success: (resultValue) ->
+                            deletedPath = file.path
+                            if resultValue != deletedPath
+                                componentOptions.callbackDeleteError(deletedPath, e)
+                                return
+                            state.file = undefined
+                            render()
+                            componentOptions.callbackDeleted(deletedPath)
+                            return
+                        error: (e) ->
+                            deletedPath = file.path
+                            componentOptions.callbackDeleteError(deletedPath, e)
+                            return
+                    });
+            }
+
 
         createComponent = () ->
             render()
@@ -132,7 +178,9 @@
         $this.data('state', state)
         return $this
 
-    # главный компонент
+    ########################
+    # Main Component
+    #########################
     $.fn.fileDialog = (options) ->
         options = options || {}
         defaultOptions = {
@@ -161,6 +209,7 @@
                 return
             # TODO translation
         }
+        #TODO check dependencies!!
         #TODO make from widget's `data-` attributes; class="jQueryFileDialog" runs functions automatically
         #TODO actions: openFileDialog, restoreOriginalHtml, getData - https://learn.jquery.com/plugins/basic-plugin-creation/
         #TODO configurable defaultOptions (dataTable ?)
@@ -213,6 +262,10 @@
         $fileInput = $('#'+fileInputId)
         $fileInput.addClass('form-control')
         $fileInput.attr('type', 'text')
+
+        $('#'+buttonClearId).click (e) ->
+            $fileInput.val('')
+            $fileInput.focus()
 
         # <input id="'+id+'" class="form-control" type="text">
 
@@ -314,6 +367,8 @@
             urlOperations: options.urlOperations
             callbackRenamed: (from, to) ->
                 # TODO make arg selectedNode
+                reloadFileTree()
+            callbackDeleted: (path) ->
                 reloadFileTree()
         })
 

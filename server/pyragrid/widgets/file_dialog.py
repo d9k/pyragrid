@@ -1,9 +1,11 @@
 from deform.widget import Widget
 from colander import null
+from pyramid.threadlocal import get_current_request
+import json
 
 
 # TODO code just copied from TextInputWidget, transform to FileTree
-class FileTree(Widget):
+class FileDialog(Widget):
     """
     Renders an ``<input type="text"/>`` widget.
 
@@ -48,11 +50,9 @@ class FileTree(Widget):
         is used.  Default: ``_`` (underscore).
 
     """
-    template = 'pyragrid:templates/deform_mod/file_tree.pt'
+    template = 'pyragrid:templates/deform_mod/file_dialog.pt'
     readonly_template = 'readonly/textinput'
     strip = True
-    mask = None
-    mask_placeholder = "_"
     requirements = ( ('jquery.maskedinput', None), )
 
     def serialize(self, field, cstruct, **kw):
@@ -61,6 +61,25 @@ class FileTree(Widget):
         readonly = kw.get('readonly', self.readonly)
         template = readonly and self.readonly_template or self.template
         values = self.get_template_values(field, cstruct, kw)
+        request = get_current_request()
+        # TODO restructure resources load. Must be ajax and non-dependant on pyragrid
+        values['resourcesJson'] = json.dumps([
+            # fileTree
+            request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.css'),
+            request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.min.js'),
+            request.static_url('pyragrid:static/jqueryfiletree/jQueryFileTree.js'),
+            # fileDialog
+            request.static_url('pyragrid:static/jquery.ui.widget.js'),
+            request.static_url('pyragrid:static/jquery.iframe-transport.js'),
+            request.static_url('pyragrid:static/jquery.fileupload.js'),
+            request.static_url('pyragrid:static/jquery.fileupload-mod.css'),
+            request.static_url('pyragrid:static/js/jQueryFileDialog.js'),
+            request.static_url('pyragrid:static/jinplace.js'),
+            request.static_url('pyragrid:static/bootstrap-confirmation.js'),
+            request.static_url('pyragrid:static/jQueryFileDialog.css')
+        ])
+
+        #TODO  '{{ request.static_url('pyragrid:static/jquery.fileupload.js') }}',
         return field.renderer(template, **values)
 
     def deserialize(self, field, pstruct):

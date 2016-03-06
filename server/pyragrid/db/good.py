@@ -42,7 +42,7 @@ class Good(Base):
     filePath = Column(Text,
             info={'colanderalchemy': {
                 'title': 'Путь к файлу',
-                'widget': widgets.FileTree()
+                'widget': widgets.FileDialog()
                 # TODO file select field, translate to relative path
             }}
     )

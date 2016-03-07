@@ -1,0 +1,60 @@
+@startuml
+
+participant "page with buy button"
+participant "/goods/[id]/oneClickBuy"
+participant "/orders/[id]/pay"
+participant "(SomePaymentSystem.com)"
+participant "/orders/[id]/statusAjax"
+participant "[api handler]"
+
+"page with buy button" -> "/goods/[id]/oneClickBuy": "buy in one click"\nbutton clicked
+note right
++ order
++ shopCart
++ shopCardItem
++ orderStatus = ..._INIT
+end note
+
+"/goods/[id]/oneClickBuy" -> "/orders/[id]/pay": redirect if no errors
+note right
+Payment form is shown:
+name,
+email,
+recaptcha if no login
+[select payment system if > 1]
+end note
+
+"/orders/[id]/pay" -> "(SomePaymentSystem.com)": form correct, buy click
+note left
++ orderStatus = ..._FORM_SENT
+
+mail "Payment had begun" to user
+end note
+
+"(SomePaymentSystem.com)" -> "/orders/[id]/pay": redirect to the shop\nfrom the payment system
+note left
+"please wait, your payment
+is being processed"
+(spinner shown)
+
++ orderStatus = ..._PROCESSING
+end note
+
+"/orders/[id]/pay" --> "/orders/[id]/statusAjax": payment status ajax request
+"/orders/[id]/pay" <-- "/orders/[id]/statusAjax": still ""status = "..._PROCESSING"""
+
+"(SomePaymentSystem.com)" --> "[api handler]": api call to our server\n(like ""/somePaymentSystemApiHandler""\n/""paymentMade"")
+note right
++ orderStatus = ..._PAID
+end note
+
+"/orders/[id]/pay" --> "/orders/[id]/statusAjax": payment status ajax request
+"/orders/[id]/pay" <-- "/orders/[id]/statusAjax": ""status = "..._PAID"""
+note left
+after some waiting
+user sees that payment made successfully
+
+mail "Payment was successfull" to user
+end note
+
+@enduml

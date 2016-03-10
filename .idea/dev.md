@@ -32,24 +32,31 @@ id, name, systemPath
 id, articleId, code, datetime, userId
 
 ### goods
-id, name, price, egood, filePath, downloadPath
+id, name, price, total, isEgood, filePath
 
 ### orders
-id, status, shopCartId, username, email, status
+id, status, total, paid, rejected, userId
 
-### orderStatuses
-id, dateTime, orderId, status, data
+### orders_goods
+id, price, count, rejectedCount, total, shopCartId, goodId
 
-### shopCarts
-id, createTime, status, total, isRejectCart,
+### orders_goods_statuses
+id, order_good_id, dateTime, (succeed), isLast, status, rejectCount, moneyTransactionId, moneyTransactionStatusId
 
-### shopCartItems
-id, price, total, shopCartId, goodId, addTime
+### rejects
+
+id, orderId, reason, status, total
+
+### rejects_orders_goods
+
+id, rejectId, order_good_id, count, total, status
 
 ### egoodsDownloadLinks
-id, domain, link, forUserId, expires
+id, domain, goodId, downloadCode, forUserId, expires
 
-### transactions
-id, type, status, shopCashflow, orderId, requestData, answerData
+### moneyTransactions
+id, orderGoodId, type (buy/reject) , shopMoneyDelta, orderId, ended, succeed, status
 
+### moneyTransactionStatus
+id, moneyTransactions, provider, status, dateTime, requestData, answerData, error
 

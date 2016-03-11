@@ -83,6 +83,17 @@ ReST docstrings
 
 https://www.python.org/dev/peps/pep-0287/
 
+SQLAlchemy ER diagram generator
+-------------------------------
+
+https://github.com/pygraphviz/pygraphviz/issues/20
+
+http://stackoverflow.com/questions/15661384/python-does-not-see-pygraphviz
+sudo apt-get install graphviz libgraphviz-dev pkg-config
+
+https://github.com/pygraphviz/pygraphviz/issues/71
+pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz/"
+
 PRODUCTION DEPLOYMENT
 =====================
 

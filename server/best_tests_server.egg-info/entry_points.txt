@@ -1,5 +1,0 @@
-      [paste.app_factory]
-      main = pyragrid:main
-      [console_scripts]
-      initialize_pyragrid_db = pyragrid.scripts.initializedb:main
-      

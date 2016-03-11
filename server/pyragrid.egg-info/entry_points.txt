@@ -2,4 +2,4 @@
       main = pyragrid:main
       [console_scripts]
       initialize_pyragrid_db = pyragrid.scripts.initializedb:main
-      
+      gen_db_erd_schema = pyragrid.scripts.gen_db_erd_schema:main

@@ -10,7 +10,7 @@ from sqlalchemy.orm import (
 
 
 class Article(Base):
-    __tablename__ = 'articles'
+    __tablename__ = 'Article'
 
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {

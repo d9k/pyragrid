@@ -8,7 +8,7 @@ from sqlalchemy.orm import (relationship)
 
 
 class ArticleRevision(Base):
-    __tablename__ = 'articles_revisions'
+    __tablename__ = 'ArticleRevision'
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {
                     'title': 'глобальный id ревизии',

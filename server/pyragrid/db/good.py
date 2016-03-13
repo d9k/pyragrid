@@ -13,7 +13,7 @@ from pyragrid import widgets
 
 
 class Good(Base):
-    __tablename__ = 'goods'
+    __tablename__ = 'Good'
 
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {

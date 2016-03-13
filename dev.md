@@ -38,17 +38,15 @@ id, name, price, total, isEgood, filePath
 id, status, total, paid, rejected, userId
 
 ### orders_goods
-id, price, count, rejectedCount, total, shopCartId, goodId
+id, price, count, rejectedCount, total, status, goodId
 
 ### orders_goods_statuses
 id, order_good_id, dateTime, (succeed), isLast, status, rejectCount, moneyTransactionId, moneyTransactionStatusId
 
 ### rejects
-
 id, orderId, reason, status, total
 
 ### rejects_orders_goods
-
 id, rejectId, order_good_id, count, total, status
 
 ### egoodsDownloadLinks

@@ -17,8 +17,8 @@ class EnumOrderState(SimpleEnum):
     paid = '', 'Оплачен'
 
 
-class Order(Base):
-    __tablename__ = 'Order'
+class OrderGood(Base):
+    __tablename__ = 'OrderGood'
 
     id = Column(sqlalchemy.Integer, primary_key=True,
                 info={'colanderalchemy': {
@@ -42,19 +42,19 @@ class Order(Base):
 
     paid = Column(sqlalchemy.Float(2),
                   info={'colanderalchemy': {
-                      'title': 'Оплачено',
+                      'title': 'Оплаченная сумма',
                       'widget': deform.widget.TextInputWidget(readonly=True)
                   }}
                   )
 
     rejected = Column(sqlalchemy.Float(2),
                       info={'colanderalchemy': {
-                          'title': 'Возврат',
+                          'title': 'Сумма возврата',
                           'widget': deform.widget.TextInputWidget(readonly=True)
                       }}
                       )
 
-    userId = Column(sqlalchemy.Integern,
+    userId = Column(sqlalchemy.Integer,
                     info={'colanderalchemy': {
                         'title': 'Пользователь',
                         'widget': deform.widget.TextInputWidget(readonly=True)

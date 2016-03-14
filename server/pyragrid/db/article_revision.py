@@ -15,7 +15,7 @@ class ArticleRevision(Base):
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
     articleId = Column(Integer,
-                       ForeignKey('articles.id'),
+                       ForeignKey('article.id'),
                        nullable=False,
                        info={'colanderalchemy': {
                            'title': 'id статьи',
@@ -35,7 +35,7 @@ class ArticleRevision(Base):
                       'widget': deform.widget.TextAreaWidget()
                   }})
     authorId = Column(Integer,
-                      ForeignKey('users.id'),
+                      ForeignKey('_user.id'),
                       nullable=False,
                       info={'colanderalchemy': {
                           'title': 'id автора',

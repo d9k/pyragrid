@@ -1,13 +1,9 @@
+import deform.widget
+import sqlalchemy
 from sqlalchemy import (
     Column
 )
-import sqlalchemy
-import deform.widget
-import colander
-from .base import (Base, DBSession, NullableInt)
-from sqlalchemy.orm import (
-    Query, relationship
-)
+from .base import (Base)
 from .enum import (SimpleEnum)
 
 
@@ -18,7 +14,7 @@ class EnumOrderState(SimpleEnum):
 
 
 class Order(Base):
-    __tablename__ = 'Order'
+    __tablename__ = 'order'
 
     id = Column(sqlalchemy.Integer, primary_key=True,
                 info={'colanderalchemy': {
@@ -26,12 +22,12 @@ class Order(Base):
                     # 'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
     state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
-                # TODO readonly select
+                   # TODO readonly select
                 info={'colanderalchemy': {
                     'title': 'Состояние заказа',
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }}
-                )
+                   )
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
     total = Column(sqlalchemy.Float(2),
                    info={'colanderalchemy': {
@@ -54,7 +50,7 @@ class Order(Base):
                       }}
                       )
 
-    userId = Column(sqlalchemy.Integern,
+    userId = Column(sqlalchemy.Integer,
                     info={'colanderalchemy': {
                         'title': 'Пользователь',
                         'widget': deform.widget.TextInputWidget(readonly=True)

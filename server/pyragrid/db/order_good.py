@@ -11,7 +11,7 @@ from sqlalchemy.orm import (
 from .enum import (SimpleEnum)
 
 
-class EnumOrderState(SimpleEnum):
+class EnumOrderGoodState(SimpleEnum):
     created = '', 'Создан'
     rejected = '', 'Отменён'
     paid = '', 'Оплачен'
@@ -25,7 +25,7 @@ class OrderGood(Base):
                     'title': 'Id заказа',
                     # 'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
-    state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
+    state = Column(sqlalchemy.Enum(*EnumOrderGoodState.get_values(), name='EnumOrderState', native_enum=False),
                 # TODO readonly select
                 info={'colanderalchemy': {
                     'title': 'Состояние заказа',

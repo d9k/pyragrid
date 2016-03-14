@@ -58,3 +58,32 @@ id, orderGoodId, type (buy/reject) , shopMoneyDelta, orderId, ended, succeed, st
 ### moneyTransactionStatus
 id, moneyTransactions, provider, status, dateTime, requestData, answerData, error
 
+Naming conventions
+==================
+
+Python
+------
+
+http://stackoverflow.com/a/160830/1760643
+
+David Goodger (in "Code Like a Pythonista" here) describes the PEP 8 recommendations as follows:
+
+    joined_lower for functions, methods, attributes, variables
+
+    joined_lower or ALL_CAPS for constants
+
+    StudlyCaps for classes (but joined_lowercase.py for modules)
+
+    camelCase only to conform to pre-existing conventions
+
+(end of citation)
+
+http://www.alberton.info/dbms_identifiers_and_case_sensitivity.html
+
+Database
+--------
+
+PostgreSql is NOT case-sensitive and quoted identifiers are pain so conventions for databases:
+
+table names: joined_lower, singular (as in drupal)
+fields: joined_lower, singular

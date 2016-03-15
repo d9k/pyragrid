@@ -25,37 +25,40 @@ TODO check this:
 DB
 ===
 
-### articles
+### user_
+id, login, name, email, group, email_check_code, email_checked
+
+### article
 id, name, systemPath
 
-### articles revisions
+### article_revision
 id, articleId, code, datetime, userId
 
-### goods
+### good
 id, name, price, total, isEgood, filePath
 
-### orders
-id, status, total, paid, rejected, userId
+### order
+id, status, total, paid_amount, refund_amount, user_id
 
-### orders_goods
-id, price, count, rejectedCount, total, status, goodId
+### order_good
+id, price, count, refund_count, total, refund_amount, status, goodId
 
-### orders_goods_statuses
-id, order_good_id, dateTime, (succeed), isLast, status, rejectCount, moneyTransactionId, moneyTransactionStatusId
+### order_good_status
+id, order_good_id, dateTime, (succeed), isLast, status, refund_count, money_transaction_id, money_transaction_status_id
 
-### rejects
+### reject
 id, orderId, reason, status, total
 
-### rejects_orders_goods
+### reject_order_good
 id, rejectId, order_good_id, count, total, status
 
-### egoodsDownloadLinks
+### egood_download_link
 id, domain, goodId, downloadCode, forUserId, expires
 
-### moneyTransactions
+### money_transaction
 id, orderGoodId, type (buy/reject) , shopMoneyDelta, orderId, ended, succeed, status
 
-### moneyTransactionStatus
+### money_transaction_status
 id, moneyTransactions, provider, status, dateTime, requestData, answerData, error
 
 Naming conventions

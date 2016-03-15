@@ -7,10 +7,10 @@ from .base import (Base)
 from .enum import (SimpleEnum)
 
 
-class EnumOrderState(SimpleEnum):
-    created = '', 'Создан'
-    rejected = '', 'Отменён'
-    paid = '', 'Оплачен'
+# class EnumOrderState(SimpleEnum):
+#     created = '', 'Создан'
+#     rejected = '', 'Отменён'
+#     paid = '', 'Оплачен'
 
 
 class Order(Base):
@@ -21,13 +21,13 @@ class Order(Base):
                     'title': 'Id заказа',
                     # 'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
-    state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
-                   # TODO readonly select
-                info={'colanderalchemy': {
-                    'title': 'Состояние заказа',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                }}
-                   )
+    # state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
+    #                # TODO readonly select
+    #             info={'colanderalchemy': {
+    #                 'title': 'Состояние заказа',
+    #                 'widget': deform.widget.TextInputWidget(readonly=True)
+    #             }}
+    #                )
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
     total = Column(sqlalchemy.Float(2),
                    info={'colanderalchemy': {
@@ -45,12 +45,12 @@ class Order(Base):
 
     rejected = Column(sqlalchemy.Float(2),
                       info={'colanderalchemy': {
-                          'title': 'Возврат',
+                          'title': 'Сумма возврата',
                           'widget': deform.widget.TextInputWidget(readonly=True)
                       }}
                       )
 
-    userId = Column(sqlalchemy.Integer,
+    user_id = Column(sqlalchemy.Integer,
                     info={'colanderalchemy': {
                         'title': 'Пользователь',
                         'widget': deform.widget.TextInputWidget(readonly=True)

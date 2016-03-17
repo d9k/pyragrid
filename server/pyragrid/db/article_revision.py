@@ -8,46 +8,61 @@ from sqlalchemy.orm import (relationship)
 
 
 class ArticleRevision(Base):
+
     __tablename__ = 'article_revision'
-    id = Column(Integer, primary_key=True,
-                info={'colanderalchemy': {
-                    'title': 'глобальный id ревизии',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                }})
-    articleId = Column(Integer,
-                       ForeignKey('article.id'),
-                       nullable=False,
-                       info={'colanderalchemy': {
-                           'title': 'id статьи',
-                           'widget': deform.widget.TextInputWidget(readonly=True)
-                       }})
-    parentRevisionId = Column(Integer,
-                              nullable=True,
-                              info={'colanderalchemy': {
-                                    'title': 'id предыдущей ревизии',
-                                    'widget': deform.widget.TextInputWidget(readonly=True),
-                                    'typ': NullableInt
-                              }})
-    code = Column(Text,
-                  nullable=False,
-                  info={'colanderalchemy': {
-                      'title': 'Код статьи',
-                      'widget': deform.widget.TextAreaWidget()
-                  }})
-    authorId = Column(Integer,
-                      ForeignKey('user_.id'),
-                      nullable=False,
-                      info={'colanderalchemy': {
-                          'title': 'id автора',
-                          'widget': deform.widget.TextInputWidget(readonly=True)
-                      }})
-    dateTime = Column(DateTime,
-                      default=datetime.datetime.utcnow,
-                      nullable=False,
-                      info={'colanderalchemy': {
-                          'title': 'Время создания',
-                          'widget': deform.widget.DateTimeInputWidget(readonly=True)
-                      }})
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        info={'colanderalchemy': {
+            'title': 'глобальный id ревизии',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    articleId = Column(
+        Integer,
+        ForeignKey('article.id'),
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'id статьи',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    parentRevisionId = Column(
+        Integer,
+        nullable=True,
+        info={'colanderalchemy': {
+              'title': 'id предыдущей ревизии',
+              'widget': deform.widget.TextInputWidget(readonly=True),
+              'typ': NullableInt
+        }})
+
+    code = Column(
+        Text,
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Код статьи',
+            'widget': deform.widget.TextAreaWidget()
+        }})
+
+    authorId = Column(
+        Integer,
+        ForeignKey('user_.id'),
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'id автора',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    dateTime = Column(
+        DateTime,
+        default=datetime.datetime.utcnow,
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Время создания',
+            'widget': deform.widget.DateTimeInputWidget(readonly=True)
+        }})
+
     # relations
     article = relationship("Article", back_populates='revisions')
     author = relationship("User")

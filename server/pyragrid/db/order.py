@@ -16,11 +16,13 @@ from .enum import (SimpleEnum)
 class Order(Base):
     __tablename__ = 'order'
 
-    id = Column(sqlalchemy.Integer, primary_key=True,
-                info={'colanderalchemy': {
-                    'title': 'Id заказа',
-                    # 'widget': deform.widget.TextInputWidget(readonly=True)
-                }})
+    id = Column(
+        sqlalchemy.Integer,
+        primary_key=True,
+        info={'colanderalchemy': {
+            'title': 'Id заказа',
+            # 'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
     # state = Column(sqlalchemy.Enum(*EnumOrderState.get_values(), name='EnumOrderState', native_enum=False),
     #                # TODO readonly select
     #             info={'colanderalchemy': {
@@ -29,31 +31,31 @@ class Order(Base):
     #             }}
     #                )
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
-    total = Column(sqlalchemy.Float(2),
-                   info={'colanderalchemy': {
-                    'title': 'Общая сумма заказа',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                    }}
-                   )
+    total = Column(
+        sqlalchemy.Float(2),
+        info={'colanderalchemy': {
+            'title': 'Общая сумма заказа',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 
-    paid = Column(sqlalchemy.Float(2),
-                  info={'colanderalchemy': {
-                      'title': 'Оплачено',
-                      'widget': deform.widget.TextInputWidget(readonly=True)
-                  }}
-                  )
+    paid_amount = Column(
+        sqlalchemy.Float(2),
+        info={'colanderalchemy': {
+            'title': 'Оплачено',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 
-    rejected = Column(sqlalchemy.Float(2),
-                      info={'colanderalchemy': {
-                          'title': 'Сумма возврата',
-                          'widget': deform.widget.TextInputWidget(readonly=True)
-                      }}
-                      )
+    rejected_amount = Column(
+        sqlalchemy.Float(2),
+        info={'colanderalchemy': {
+            'title': 'Сумма возврата',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 
-    user_id = Column(sqlalchemy.Integer,
-                    info={'colanderalchemy': {
-                        'title': 'Пользователь',
-                        'widget': deform.widget.TextInputWidget(readonly=True)
-                    }}
-                    )
+    user_id = Column(
+        sqlalchemy.Integer,
+        info={'colanderalchemy': {
+            'title': 'Пользователь',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 

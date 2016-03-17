@@ -32,19 +32,19 @@ id, login, name, email, group, email_check_code, email_checked
 id, name, systemPath
 
 ### article_revision
-id, articleId, code, datetime, userId
+id, article_id, code, datetime, user_id
 
 ### good
-id, name, price, total, isEgood, filePath
+id, name, price, is_egood, file_path
 
 ### order
 id, status, total, paid_amount, refund_amount, user_id
 
 ### order_good
-id, price, count, refund_count, total, refund_amount, status, goodId
+id, order_id, _good_id, price, count, refund_count, total, paid_amount,refund_amount, status
 
 ### order_good_status
-id, order_good_id, dateTime, (succeed), isLast, status, refund_count, money_transaction_id, money_transaction_status_id
+id, order_good_id, date_time, (succeed), is_last, status, shop_money_delta, money_transaction_id
 
 ### reject
 id, orderId, reason, status, total
@@ -53,13 +53,13 @@ id, orderId, reason, status, total
 id, rejectId, order_good_id, count, total, status
 
 ### egood_download_link
-id, domain, goodId, downloadCode, forUserId, expires
+id, domain, egood_id, download_code, for_user_id, expires
 
 ### money_transaction
-id, orderGoodId, type (buy/reject) , shopMoneyDelta, orderId, ended, succeed, status
+id, orderGoodId, type (buy/reject) , shop_money_delta, order_id, ended, succeed, status
 
 ### money_transaction_status
-id, moneyTransactions, provider, status, dateTime, requestData, answerData, error
+id, money_transaction_id, provider, status, date_time, request_data, answer_data, error
 
 Naming conventions
 ==================

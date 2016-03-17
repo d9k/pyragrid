@@ -25,7 +25,7 @@ class RootFactory(object):
 
 
 class User(Base):
-    __tablename__ = '_user'
+    __tablename__ = 'user_'
 
     id = Column(Integer, primary_key=True,
                 info={'colanderalchemy': {

@@ -8,13 +8,8 @@ from .base import (Base, DBSession, NullableInt)
 from sqlalchemy.orm import (
     Query, relationship
 )
-from .enum import (SimpleEnum)
 
-
-class EnumOrderGoodStatus(SimpleEnum):
-    created = '', 'Создан'
-    rejected = '', 'Отменён'
-    paid = '', 'Оплачен'
+from .enum_order_good_status import EnumOrderGoodStatus
 
 
 class OrderGoodStatus(Base):
@@ -25,19 +20,13 @@ class OrderGoodStatus(Base):
                     'title': 'Id позиции заказа',
                     # 'widget': deform.widget.TextInputWidget(readonly=True)
                 }})
-    status = Column(sqlalchemy.Enum(*EnumOrderGoodStatus.get_values(), name='EnumOrderState', native_enum=False),
+    status = Column(sqlalchemy.Enum(*EnumOrderGoodStatus.get_values(), name='EnumOrderStatus', native_enum=False),
                 # TODO readonly select
                 info={'colanderalchemy': {
                     'title': 'Состояние',
                     'widget': deform.widget.TextInputWidget(readonly=True)
                 }}
                 )
-    total = Column(sqlalchemy.Float(2),
-                   info={'colanderalchemy': {
-                    'title': 'Общая сумма заказа',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                    }}
-                   )
 
     paid = Column(sqlalchemy.Float(2),
                   info={'colanderalchemy': {
@@ -53,7 +42,7 @@ class OrderGoodStatus(Base):
                       }}
                       )
 
-    userId = Column(sqlalchemy.Integern,
+    user_id = Column(sqlalchemy.Integer,
                     info={'colanderalchemy': {
                         'title': 'Пользователь',
                         'widget': deform.widget.TextInputWidget(readonly=True)

@@ -8,17 +8,8 @@ from .base import (Base, DBSession, NullableInt)
 from sqlalchemy.orm import (
     Query, relationship
 )
-from .enum import (SimpleEnum)
+from .enum_order_good_status import EnumOrderGoodStatus
 
-
-class EnumOrderGoodStatus(SimpleEnum):
-    created = '', 'Создан'
-    payment_began = '', 'Оплпата начата'
-    payment_failed = '', 'Неуспешная оплата'
-    paid = '', 'Оплачен'
-    refund_began = '', 'Возврат средств'
-    refund_failed = '', 'Неуспешный возврат'
-    refunded = '', 'Средства возвращены'
 
 
 class OrderGood(Base):
@@ -33,10 +24,11 @@ class OrderGood(Base):
         }}
     )
 
+    # TODO or not TODO? redundant data
     status = Column(
         sqlalchemy.Enum(
             *EnumOrderGoodStatus.get_values(),
-            name='EnumOrderState',
+            name='EnumOrderStatus',
             native_enum=False
         ),
         default=EnumOrderGoodStatus.created,
@@ -75,7 +67,7 @@ class OrderGood(Base):
     refund_amount = Column(
         sqlalchemy.Float(2),
         info={'colanderalchemy': {
-            'title': 'Сумма возврата',
+            'title': 'Возвращённая сумма',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }}
     )

@@ -10,5 +10,5 @@ class EnumOrderGoodStatus(SimpleEnum):
     refund_began = '', 'Возврат средств'
     refund_failed = '', 'Неуспешный возврат'
     refunded = '', 'Средства возвращены'
-    # TODO test enum migration
+    # TODO see ../../alembic/versions/test_enum_mod.py.example
     # i_am_here_for_test = '', 'Тестирование миграции на добавление значения в enum'

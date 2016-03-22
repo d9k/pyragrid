@@ -1,0 +1,49 @@
+"""test_enum_mod
+
+Revision ID: 32f3897f2328
+Revises: 7c4c374fb95e
+Create Date: 2016-03-22 04:42:23.067281
+
+"""
+
+# revision identifiers, used by Alembic.
+revision = '32f3897f2328'
+down_revision = '7c4c374fb95e'
+branch_labels = None
+depends_on = None
+
+from alembic import op
+import sqlalchemy as sa
+from sqlalchemy import sql
+
+def upgrade():
+	# thx to @inklesspen for help with connection info get
+    connection = op.get_bind()
+    engine_name = connection.engine.name
+
+	# @zzzeek, sqlalchemy developer, doesn't want to fix non-native enums
+	# (https://bitbucket.org/zzzeek/alembic/issues/363)
+	# so here is the hack:
+    if engine_name == 'postgresql':
+        op.drop_constraint('enum_order_status', 'order_good_status')
+        op.drop_constraint('enum_order_status', 'order_good')
+
+    op.alter_column('order_good', 'status',
+               existing_type=sa.VARCHAR(length=14),
+               type_=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
+               existing_nullable=True)
+    op.alter_column('order_good_status', 'status',
+               existing_type=sa.VARCHAR(length=14),
+               type_=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
+               existing_nullable=True)
+
+
+def downgrade():
+    op.alter_column('order_good_status', 'status',
+               existing_type=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
+               type_=sa.VARCHAR(length=14),
+               existing_nullable=True)
+    op.alter_column('order_good', 'status',
+               existing_type=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
+               type_=sa.VARCHAR(length=14),
+               existing_nullable=True)

@@ -32,21 +32,21 @@ class Order(Base):
     #                )
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
     total = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Общая сумма заказа',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     paid_amount = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Оплачено',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     rejected_amount = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Сумма возврата',
             'widget': deform.widget.TextInputWidget(readonly=True)

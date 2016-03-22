@@ -55,21 +55,21 @@ class OrderGoodStatus(Base):
         }})
 
     paid = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
           'title': 'Оплачено',
           'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     rejected = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Возврат',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     shop_money_delta = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Изменение счёта магазина',
             'widget': deform.widget.TextInputWidget(readonly=True)

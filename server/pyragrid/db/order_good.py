@@ -47,7 +47,7 @@ class OrderGood(Base):
         }})
 
     count = Column(
-        sqlalchemy.Float(4),
+        sqlalchemy.Numeric(12, 4),
         default=1,
         info={'colanderalchemy': {
            'title': 'Общая сумма заказа',
@@ -55,21 +55,21 @@ class OrderGood(Base):
         }})
 
     total = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Общая сумма заказа',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }} )
 
     paid_amount = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Оплаченная сумма',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     refund_count = Column(
-        sqlalchemy.Float(4),
+        sqlalchemy.Numeric(12, 4),
         default=0,
         info={'colanderalchemy': {
             'title': 'Общая сумма заказа',
@@ -77,7 +77,7 @@ class OrderGood(Base):
         }})
 
     refund_amount = Column(
-        sqlalchemy.Float(2),
+        sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Возвращённая сумма',
             'widget': deform.widget.TextInputWidget(readonly=True)

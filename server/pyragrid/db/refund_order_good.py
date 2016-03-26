@@ -14,14 +14,23 @@ import datetime
 from .enum_order_good_status import EnumOrderGoodStatus
 
 
-class OrderGoodStatus(Base):
-    __tablename__ = 'order_good_status'
+class RefundOrderGood(Base):
+    __tablename__ = 'refund_order_good'
 
     id = Column(
         sqlalchemy.Integer,
         primary_key=True,
         info={'colanderalchemy': {
-            'title': 'Id статуса позиции заказа',
+            'title': 'Id возврата позиции заказа',
+            # 'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+
+    refund_id = Column(
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey('order_good.id'),
+        info={'colanderalchemy': {
+            'title': 'Возврат',
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
@@ -33,13 +42,19 @@ class OrderGoodStatus(Base):
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    datetime = Column(
-        sqlalchemy.DateTime,
-        default=datetime.datetime.utcnow,
-        nullable=False,
+    count = Column(
+        sqlalchemy.Numeric(12, 4),
+        default=1,
         info={'colanderalchemy': {
-            'title': 'Время',
-            'widget': deform.widget.DateTimeInputWidget(readonly=True)
+            'title': 'Количество возвращаемого товара',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    total = Column(
+        sqlalchemy.Numeric(12, 2),
+        info={'colanderalchemy': {
+            'title': 'Сумма возвращаемого товара',
+            'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     status = Column(
@@ -50,31 +65,9 @@ class OrderGoodStatus(Base):
         ),
         # TODO readonly select
         info={'colanderalchemy': {
-            'title': 'Состояние',
+            'title': 'Состояние возврата товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
-
-    paid = Column(
-        sqlalchemy.Numeric(12, 2),
-        info={'colanderalchemy': {
-          'title': 'Оплачено',
-          'widget': deform.widget.TextInputWidget(readonly=True)
-        }})
-
-    rejected = Column(
-        sqlalchemy.Numeric(12, 2),
-        info={'colanderalchemy': {
-            'title': 'Возврат',
-            'widget': deform.widget.TextInputWidget(readonly=True)
-        }})
-
-    shop_money_delta = Column(
-        sqlalchemy.Numeric(12, 2),
-        info={'colanderalchemy': {
-            'title': 'Изменение счёта магазина',
-            'widget': deform.widget.TextInputWidget(readonly=True)
-        }}
-    )
 
     user_id = Column(
         sqlalchemy.Integer,

@@ -41,22 +41,24 @@ id, name, price, is_egood, file_path
 id, status, total, paid_amount, refund_amount, user_id
 
 ### order_good
-id, order_id, _good_id, price, count, refund_count, total, paid_amount,refund_amount, status
+id, order_id, good_id, price, count, refund_count, total, paid_amount,refund_amount, status
 
 ### order_good_status
 id, order_good_id, date_time, (succeed), is_last, status, shop_money_delta, money_transaction_id
 
-### reject
-id, orderId, reason, status, total
+TODO иногда total -> sum переименовать
 
-### reject_order_good
-id, rejectId, order_good_id, count, total, status
+### refund
+id, order_id, reason, datetime, status, total, refunded, userId, (datetime?)
+
+### refund_order_good
+id, refund__Id, order_good_id, count, total, status, userId
 
 ### egood_download_link
-id, domain, egood_id, download_code, for_user_id, expires
+id, (domain?), egood_id, download_code, for_user_id, datetime, expires, active, downloads_count
 
 ### money_transaction
-id, orderGoodId, type (buy/reject) , shop_money_delta, order_id, ended, succeed, status
+id, orderGoodId, type (buy/reject), shop_money_delta, order_id, ended, succeed, status
 
 ### money_transaction_status
 id, money_transaction_id, provider, status, date_time, request_data, answer_data, error
@@ -100,7 +102,8 @@ If identifier already exists in database management system, use underscore at th
 кошке джук
 
 TODO
------
+----
+
 datatables font size--
 register user by buying (email)
 merge user accounts (different email)

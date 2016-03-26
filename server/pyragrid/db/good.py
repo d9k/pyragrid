@@ -15,41 +15,51 @@ from pyragrid import widgets
 class Good(Base):
     __tablename__ = 'good'
 
-    id = Column(Integer, primary_key=True,
-                info={'colanderalchemy': {
-                    'title': 'id товара',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                }})
-    name = Column(Text,
-                  nullable=False,
-                  unique=True,
-                  info={'colanderalchemy': {
-                      'title': 'Название товара',
-                      # 'missing': None,
-                  }})
-    price = Column(sqlalchemy.Numeric(12, 2), default=10.0,
-                   info={'colanderalchemy': {
-                       'title': 'Цена',
-                       'missing': 0,
-                   }}
-                   )
-    isEgood = Column(Boolean, default=False, server_default='false',
-                        nullable=False,
-                        info={'colanderalchemy': {
-                            'title': 'Это электронный товар',
-                        }})
+    id = Column(
+        Integer, primary_key=True,
+        info={'colanderalchemy': {
+            'title': 'id товара',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 
-    filePath = Column(Text,
-            info={'colanderalchemy': {
-                'title': 'Путь к файлу',
-                'widget': widgets.FileDialog()
-                # TODO file select field, translate to relative path
-            }}
-    )
-    active = Column(Boolean, default=False, server_default='false', nullable=False,
-                    info={'colanderalchemy': {
-                        'title': 'Товар включен'
-                    }})
+    name = Column(
+        Text,
+        nullable=False,
+        unique=True,
+        info={'colanderalchemy': {
+          'title': 'Название товара',
+          # 'missing': None,
+        }})
+
+    price = Column(
+        sqlalchemy.Numeric(12, 2), default=10.0,
+        info={'colanderalchemy': {
+            'title': 'Цена',
+            'missing': 0,
+        }}
+        )
+
+    isEgood = Column(
+        Boolean, default=False, server_default='false',
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Это электронный товар',
+        }})
+
+    filePath = Column(
+        Text,
+        info={'colanderalchemy': {
+            'title': 'Путь к файлу',
+            'widget': widgets.FileDialog()
+            # TODO file select field, translate to relative path
+        }})
+
+    active = Column(
+        Boolean, default=False, server_default='false', nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Товар включен'
+        }})
+
     # downloadLinkBegin = Column(Text,
     #         info={'colanderalchemy': {
     #             'title': 'Путь к файлу',

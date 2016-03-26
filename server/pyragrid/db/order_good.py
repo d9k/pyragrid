@@ -19,7 +19,7 @@ class OrderGood(Base):
         sqlalchemy.Integer,
         primary_key=True,
         info={'colanderalchemy': {
-            'title': 'Id заказа',
+            'title': 'Id заказанного товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }}
     )
@@ -32,7 +32,14 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-# TODO or not TODO? redundant data
+    good_id = Column(
+        sqlalchemy.Integer,
+        ForeignKey('good.id'),
+        info={'colanderalchemy': {
+            'title': 'Товар',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     status = Column(
         sqlalchemy.Enum(
             *EnumOrderGoodStatus.get_values(),
@@ -41,7 +48,7 @@ class OrderGood(Base):
         ),
         default=EnumOrderGoodStatus.created,
         info={'colanderalchemy': {
-            'title': 'Состояние заказа',
+            'title': 'Состояние заказанного товара',
             # TODO readonly select widget
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
@@ -50,14 +57,14 @@ class OrderGood(Base):
         sqlalchemy.Numeric(12, 4),
         default=1,
         info={'colanderalchemy': {
-           'title': 'Общая сумма заказа',
+           'title': 'Количество заказанного товара',
            'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     total = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
-            'title': 'Общая сумма заказа',
+            'title': 'Сумма заказанного товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }} )
 
@@ -72,7 +79,7 @@ class OrderGood(Base):
         sqlalchemy.Numeric(12, 4),
         default=0,
         info={'colanderalchemy': {
-            'title': 'Общая сумма заказа',
+            'title': 'Количество возвращённого товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 

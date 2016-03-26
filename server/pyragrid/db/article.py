@@ -12,57 +12,70 @@ from sqlalchemy.orm import (
 class Article(Base):
     __tablename__ = 'article'
 
-    id = Column(Integer, primary_key=True,
-                info={'colanderalchemy': {
-                    'title': 'id статьи',
-                    'widget': deform.widget.TextInputWidget(readonly=True)
-                }})
-    name = Column(Text,
-                  info={'colanderalchemy': {
-                      'title': 'Название статьи',
-                      'missing': None,
-                  }})
-    systemName = Column(Text,
-                        nullable=False,
-                        unique=True,
-                        info={'colanderalchemy': {
-                            'title': 'Системное имя',
-                            'description': '(index для главной страницы)',
-                            'validator': colander.Regex(
-                                    '^[a-z0-9_\-/]+$',
-                                    'Логин должен содержать только цифры и английские буквы'
-                            ),
-                            'missing': colander.required
-                        }})
-    path = Column(Text,
-                  unique=True,
-                  info={'colanderalchemy': {
-                      'title': 'Путь к статье',
-                      # TODO description to validator
-                      'description': '(должен начинаться с /)',
-                      'validator': colander.Regex(
-                              '^[a-z0-9_\-/]+$',
-                              'Путь должен содержать только цифры и английские буквы'
-                      ),
-                      # 'missing': colander.required
-                  }})
-    activeRevisionId = Column(Integer,
-                              nullable=True,
-                              info={'colanderalchemy': {
-                                  'title': 'id активной ревизии',
-                                  'widget': deform.widget.TextInputWidget(readonly=True),
-                                  'typ': NullableInt
-                              }})
-    active = Column(Boolean, default=True, server_default='true',
-                        nullable=False,
-                        info={'colanderalchemy': {
-                            'title': 'Статья активна',
-                        }})
-    isTemplate = Column(Boolean, default=False, server_default='false',
-                        nullable=False,
-                        info={'colanderalchemy': {
-                            'title': 'Является шаблоном',
-                        }})
+    id = Column(
+        Integer, primary_key=True,
+        info={'colanderalchemy': {
+            'title': 'id статьи',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    name = Column(
+        Text,
+        info={'colanderalchemy': {
+            'title': 'Название статьи',
+            'missing': None,
+        }})
+
+    systemName = Column(
+        Text,
+        nullable=False,
+        unique=True,
+        info={'colanderalchemy': {
+            'title': 'Системное имя',
+            'description': '(index для главной страницы)',
+            'validator': colander.Regex(
+                    '^[a-z0-9_\-/]+$',
+                    'Логин должен содержать только цифры и английские буквы'
+            ),
+            'missing': colander.required
+        }})
+
+    path = Column(
+        Text,
+        unique=True,
+        info={'colanderalchemy': {
+          'title': 'Путь к статье',
+          # TODO description to validator
+          'description': '(должен начинаться с /)',
+          'validator': colander.Regex(
+                  '^[a-z0-9_\-/]+$',
+                  'Путь должен содержать только цифры и английские буквы'
+          ),
+          # 'missing': colander.required
+        }})
+
+    activeRevisionId = Column(
+        Integer,
+        nullable=True,
+        info={'colanderalchemy': {
+          'title': 'id активной ревизии',
+          'widget': deform.widget.TextInputWidget(readonly=True),
+          'typ': NullableInt
+        }})
+
+    active = Column(
+        Boolean, default=True, server_default='true',
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Статья активна',
+        }})
+
+    isTemplate = Column(
+        Boolean, default=False, server_default='false',
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Является шаблоном',
+        }})
 
     # relations
     revisions = relationship('ArticleRevision', back_populates='article')

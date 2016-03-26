@@ -1,16 +1,9 @@
 import deform.widget
 import sqlalchemy
 from sqlalchemy import (
-    Column
+    Column, ForeignKey
 )
 from .base import (Base)
-from .enum import (SimpleEnum)
-
-
-# class EnumOrderState(SimpleEnum):
-#     created = '', 'Создан'
-#     rejected = '', 'Отменён'
-#     paid = '', 'Оплачен'
 
 
 class Order(Base):
@@ -54,6 +47,7 @@ class Order(Base):
 
     user_id = Column(
         sqlalchemy.Integer,
+        ForeignKey('user_.id'),
         info={'colanderalchemy': {
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)

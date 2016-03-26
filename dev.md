@@ -91,4 +91,16 @@ PostgreSql is NOT case-sensitive and quoted identifiers are pain so conventions 
 table names: joined_lower, singular (as in drupal)
 fields: joined_lower, singular
 
-If identifier already exists in database management system, use underscore at the end of identifier: joined_lower_. Why at the end? Because for autocompletion by first letter. 
+If identifier already exists in database management system, use underscore at the end of identifier: joined_lower_. Why at the end? Because for autocompletion by first letter.
+ 
+Бизнес-объекты
+--------------
+
+(deprecated, need review) существующий заказ: добавлять товары нельзя, убирать тоже, можно делать частичный или полный возврат, подтверждать доставку (для электронных товаров подтверждается при скачивании). админ может подтверждать оплату.
+кошке джук
+
+TODO
+-----
+datatables font size--
+register user by buying (email)
+merge user accounts (different email)

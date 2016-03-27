@@ -90,10 +90,12 @@ Database
 
 PostgreSql is NOT case-sensitive and quoted identifiers are pain so conventions for databases:
 
-table names: joined_lower, singular (as in drupal)
-fields: joined_lower, singular
+table names: `joined_lower`, singular (as in drupal)
+fields: `joined_lower`, singular
 
-If identifier already exists in database management system, use underscore at the end of identifier: joined_lower_. Why at the end? Because for autocompletion by first letter.
+If identifier already exists in database management system, use underscore at the end of identifier: `joined_lower_`. Why at the end? Because for autocompletion by first letter.
+ 
+`datetime` considered as prohibited identifier (to not be confused with python's library `datetime` in code and mysql's `DATETIME` column type)
  
 Бизнес-объекты
 --------------

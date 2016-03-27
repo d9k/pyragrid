@@ -58,10 +58,10 @@ id, refund__Id, order_good_id, count, total, status, userId
 id, (domain?), egood_id, download_code, for_user_id, datetime, expires, active, downloads_count
 
 ### money_transaction
-id, orderGoodId, type (buy/reject), shop_money_delta, order_id, ended, succeed, status
+id, order_id, type (buy/reject), shop_money_delta, (ended?), (succeed?), status
 
 ### money_transaction_status
-id, money_transaction_id, provider, status, date_time, request_data, answer_data, error
+id, money_transaction_id, provider, status, datetime, request_data, answer_data, error
 
 Naming conventions
 ==================

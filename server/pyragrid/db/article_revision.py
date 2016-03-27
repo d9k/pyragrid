@@ -54,7 +54,7 @@ class ArticleRevision(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    dateTime = Column(
+    created_at = Column(
         DateTime,
         default=datetime.datetime.utcnow,
         nullable=False,

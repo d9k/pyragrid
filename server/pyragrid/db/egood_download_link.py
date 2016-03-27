@@ -47,7 +47,7 @@ class EgoodDownloadLink(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})\
 
-    datetime = Column(
+    created_at = Column(
         sqlalchemy.DateTime,
         default=datetime.datetime.utcnow,
         nullable=False,
@@ -72,6 +72,5 @@ class EgoodDownloadLink(Base):
             'title': 'Количество скачиваний',
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
-
 
 

@@ -33,7 +33,7 @@ class OrderGoodStatus(Base):
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    datetime = Column(
+    created_at = Column(
         sqlalchemy.DateTime,
         default=datetime.datetime.utcnow,
         nullable=False,

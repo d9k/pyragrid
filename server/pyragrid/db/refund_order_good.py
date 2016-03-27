@@ -25,7 +25,6 @@ class RefundOrderGood(Base):
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-
     refund_id = Column(
         sqlalchemy.Integer,
         sqlalchemy.ForeignKey('order_good.id'),

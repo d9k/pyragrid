@@ -82,9 +82,9 @@ def validate_article_edit_form(schema, values):
         linked_article = schema.linked_article
     if linked_article is not None:
         not_id = linked_article.id
-    found_by_system_name = Article.by_system_name(values.get('systemName'), not_id)
+    found_by_system_name = Article.by_system_name(values.get('system_name'), not_id)
     if found_by_system_name is not None:
-        raise exception_for_schema_field(schema, 'systemName', 'Статья с таким системным именем уже существует')
+        raise exception_for_schema_field(schema, 'system_name', 'Статья с таким системным именем уже существует')
     found_by_path = Article.by_path(values.get('path'), not_id)
     if found_by_path is not None:
         raise exception_for_schema_field(schema, 'path', 'Статья с таким путём уже существует')
@@ -157,7 +157,7 @@ class ArticleEditSchema(SQLAlchemySchemaNode):
                  overrides=None,
                  unknown='ignore', **kw):
         if includes is None:
-            includes = ['name', 'systemName',  'path', 'active']
+            includes = ['name', 'system_name',  'path', 'active']
         super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         # code is loaded from article_revision
         self.add(SchemaNode(

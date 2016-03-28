@@ -60,9 +60,9 @@ class ViewsAdminArticles(ViewsAdmin):
         columns = [
             ColumnDT('id'),
             ColumnDT('name'),
-            ColumnDT('systemName'),
+            ColumnDT('system_name'),
             ColumnDT('path'),
-            ColumnDT('activeRevisionId'),
+            ColumnDT('active_revision_id'),
             ColumnDT('active'),
         ]
         query = DBSession.query(Article)
@@ -92,8 +92,8 @@ class ViewsAdminArticles(ViewsAdmin):
 
         self.article = article
         current_revision = None
-        if article.activeRevisionId is not None:
-            current_revision = ArticleRevision.by_id(article.activeRevisionId)
+        if article.active_revision_id is not None:
+            current_revision = ArticleRevision.by_id(article.active_revision_id)
 
         # if 'article_delete' in self.request.params:
         #     try:
@@ -145,16 +145,16 @@ class ViewsAdminArticles(ViewsAdmin):
                         if error is not None:
                             return self.db_error_response(error)
 
-                    new_revision.articleId = article.id
-                    new_revision.authorId = self.user.id
+                    new_revision.article_id = article.id
+                    new_revision.author_id = self.user.id
                     new_revision.code = new_code
-                    new_revision.parentRevisionId = parent_revision_id
+                    new_revision.parent_revision_id = parent_revision_id
 
                     error = db_save_model(new_revision)
                     if error is not None:
                         return self.db_error_response(error)
 
-                    article.activeRevisionId = new_revision.id
+                    article.active_revision_id = new_revision.id
                     current_revision = new_revision
 
             # raise Exception('not implemented yet')
@@ -226,7 +226,7 @@ class ViewsAdminArticles(ViewsAdmin):
         article_revision_id = self.request.matchdict.get('article_revision_id')
 
         if article_revision_id is None:
-            article_revision_id = article.activeRevisionId
+            article_revision_id = article.active_revision_id
         selected_revision = ArticleRevision.by_id(article_revision_id, article_id)
 
         return dict(article=article, selected_revision=selected_revision)
@@ -235,17 +235,17 @@ class ViewsAdminArticles(ViewsAdmin):
     def view_admin_article_revisions_grid(self):
         columns = [
             ColumnDT('id'),
-            ColumnDT('article.systemName'),
-            ColumnDT('parentRevisionId'),
-            ColumnDT('dateTime'),
+            ColumnDT('article.system_name'),
+            ColumnDT('parent_revision_id'),
+            ColumnDT('created_at'),
             ColumnDT('author.login'),
         ]
         article_id = self.request.matchdict.get('article_id')
         query = DBSession.query(ArticleRevision)\
             .join(Article)\
             .join(User)\
-            .filter(ArticleRevision.articleId == article_id)\
-            .order_by(desc(ArticleRevision.dateTime))
+            .filter(ArticleRevision.article_id == article_id)\
+            .order_by(desc(ArticleRevision.created_at))
         # instantiating a DataTable for the query and table needed
         row_table = DataTablesMod(self.request.GET, ArticleRevision, query, columns)
 
@@ -274,7 +274,7 @@ class ViewsAdminArticles(ViewsAdmin):
         if selected_revision is None:
             return HTTPNotFound('Ревизия статьи не найдена')
 
-        article.activeRevisionId = selected_revision.id
+        article.active_revision_id = selected_revision.id
 
         error = db_save_model(article)
         if error is not None:

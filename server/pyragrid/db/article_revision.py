@@ -74,5 +74,5 @@ class ArticleRevision(Base):
         """
         q = DBSession.query(ArticleRevision).filter(ArticleRevision.id == article_revision_id)
         if article_id is not None:
-            q = q.filter(ArticleRevision.articleId == article_id)
+            q = q.filter(ArticleRevision.article_id == article_id)
         return q.first()

@@ -7,7 +7,7 @@ from .base import (Base)
 
 
 class Order(Base):
-    __tablename__ = 'order'
+    __tablename__ = 'order_'
 
     id = Column(
         sqlalchemy.Integer,

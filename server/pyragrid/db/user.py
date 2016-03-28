@@ -68,8 +68,8 @@ class User(Base):
                        #     confirm_subject='Подтвердите E-mail'
                        # )
                    }})
-    group = Column(Text,
-                   info={'colanderalchemy': {
+    group_ = Column(Text,
+                    info={'colanderalchemy': {
                        'title': 'Группа пользователя'
                    }})
     email_check_code = Column(Text)
@@ -104,9 +104,9 @@ class User(Base):
         """:type user:User"""
         if not user:
             return []
-        if user.group not in GROUPS:
+        if user.group_ not in GROUPS:
             return []
-        return GROUPS[user.group]
+        return GROUPS[user.group_]
 
     @staticmethod
     def by_id(user_id: int):
@@ -186,7 +186,7 @@ class User(Base):
         self.active = False
 
     def is_admin(self):
-        return self.group == ADMIN_GROUP
+        return self.group_ == ADMIN_GROUP
 
     def before_save(self):
         if not self.name:

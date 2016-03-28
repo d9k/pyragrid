@@ -39,14 +39,14 @@ class Good(Base):
         }}
         )
 
-    isEgood = Column(
+    is_egood = Column(
         Boolean, default=False, server_default='false',
         nullable=False,
         info={'colanderalchemy': {
             'title': 'Это электронный товар',
         }})
 
-    filePath = Column(
+    filepath = Column(
         Text,
         info={'colanderalchemy': {
             'title': 'Путь к файлу',

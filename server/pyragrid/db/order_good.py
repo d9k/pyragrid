@@ -26,7 +26,7 @@ class OrderGood(Base):
 
     order_id = Column(
         sqlalchemy.Integer,
-        ForeignKey('user_.id'),
+        ForeignKey('order_.id'),
         info={'colanderalchemy': {
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)

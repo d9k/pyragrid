@@ -70,7 +70,7 @@ def main(argv=sys.argv):
     admin = User()
     admin.login = 'admin'
     admin.set_password('changeme')
-    admin.group = ADMIN_GROUP
+    admin.group_ = ADMIN_GROUP
     admin.email = 'noemail@changeme.org'
     admin.active = True
     admin.email_checked = True

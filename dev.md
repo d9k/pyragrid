@@ -98,6 +98,8 @@ If identifier already exists in database management system, use underscore at th
 `datetime` considered as prohibited identifier (to not be confused with python's library `datetime` in code and mysql's `DATETIME` column type)
 
 `group` may be confused with sql's `GROUP`.
+
+`order` may be confused with sql's `ORDER BY`.
  
 Бизнес-объекты
 --------------

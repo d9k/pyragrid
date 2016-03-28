@@ -26,7 +26,7 @@ class Article(Base):
             'missing': None,
         }})
 
-    systemName = Column(
+    system_name = Column(
         Text,
         nullable=False,
         unique=True,
@@ -54,7 +54,7 @@ class Article(Base):
           # 'missing': colander.required
         }})
 
-    activeRevisionId = Column(
+    active_revision_id = Column(
         Integer,
         nullable=True,
         info={'colanderalchemy': {
@@ -70,7 +70,7 @@ class Article(Base):
             'title': 'Статья активна',
         }})
 
-    isTemplate = Column(
+    is_template = Column(
         Boolean, default=False, server_default='false',
         nullable=False,
         info={'colanderalchemy': {

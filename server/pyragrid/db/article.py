@@ -93,7 +93,7 @@ class Article(Base):
         :return Article
         """
         q = DBSession.query(Article) \
-            .filter(Article.systemName == article_system_name)
+            .filter(Article.system_name == article_system_name)
         q = Article.filter_not_id(q, not_id)
         return q.first()
 

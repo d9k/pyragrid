@@ -18,7 +18,12 @@
     <meta name="author" content="Pylons Project">
     <link rel="shortcut icon" href="{{ request.static_url('pyragrid:static/pyramid-16x16.png') }}">
 
-    <title>Alchemy Scaffold for The Pyramid Web Framework</title>
+    <title>
+        {% if header %}
+            {{ header }}
+            {# TODO " - {{ site_name }}" #}
+        {% endif %}
+    </title>
 
     <!-- Bootstrap core CSS -->
 {#    <link href="//oss.maxcdn.com/libs/twitter-bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">#}

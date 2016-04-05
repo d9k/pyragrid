@@ -66,8 +66,8 @@ class ViewsArticles(ViewsBase):
 
         article_revision = None
 
-        if article.activeRevisionId is not None:
-            article_revision = ArticleRevision.by_id(article.activeRevisionId)
+        if article.active_revision_id is not None:
+            article_revision = ArticleRevision.by_id(article.active_revision_id)
 
         # schema = ProfileEditSchema()
         # profile_edit_form = Form(

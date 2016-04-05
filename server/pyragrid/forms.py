@@ -181,3 +181,20 @@ class GoodEditSchema(SQLAlchemySchemaNode):
         super().__init__(class_, includes=includes, overrides=overrides, excludes=excludes, unknown=unknown, **kw)
         self.linked_good = None
         # self.validator = validate_user_edit_form
+
+
+# class BuySchema(Schema):
+#     email = SchemaNode(
+#         String(),
+#         title='email',
+#         widget=TextInputPlaceholderWidget(
+#             placeholder='email'
+#         ),
+#     )
+#
+#     password = SchemaNode(
+#         String(),
+#         title='Пароль',
+#         placeholder='*****',
+#         widget=PasswordPlaceholderWidget(placeholder='*****'),
+#     )

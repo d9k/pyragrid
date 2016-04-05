@@ -29,6 +29,7 @@ def nullable_int(self, value):
 class NullableInt(colander.Number):
     num = nullable_int
 
+
 def db_save_model(obj):
     try:
         with transaction.manager:

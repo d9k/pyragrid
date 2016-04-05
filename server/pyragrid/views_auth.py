@@ -79,12 +79,15 @@ class AuthViews(ViewsBase):
                 raise exception_for_schema_field(form, 'login', 'Аккаунт пользователя заблокирован')
             if user.password_hash is None:
                 if user.email is None:
-                    raise exception_for_schema_field(form, 'password', 'Вход по паролю отключен. Почта не была привязана к аккаунту')
+                    raise exception_for_schema_field(form, 'password',
+                                                     'Вход по паролю отключен. Почта не была привязана к аккаунту')
                 raise exception_for_schema_field(form, 'password', 'Вход по паролю отключен')
             if not user.check_password(password):
                 raise exception_for_schema_field(form, 'password', 'Неверный пароль')
             if not user.email_checked:
-                raise exception_for_schema_field(form, 'login', 'Email пользователя не подтверждён. Проверьте почтовый ящик') #TODO показывать email "в звёздочках"
+                raise exception_for_schema_field(form, 'login',
+                                                 'Email пользователя не подтверждён. Проверьте почтовый ящик')
+                # TODO показывать email "в звёздочках"
             authed_user = user
 
         login_form = Form(

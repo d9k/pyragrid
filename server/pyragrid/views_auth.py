@@ -47,7 +47,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class AuthViews(ViewsBase):
+class ViewsAuth(ViewsBase):
     # def __init__(self, request):
     #     super.__init__(request)
 

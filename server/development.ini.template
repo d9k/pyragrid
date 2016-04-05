@@ -9,6 +9,8 @@ use = egg:pyragrid
 
 dev_mode = true
 
+site_name = Pyragrid site
+
 ;moved to *_passwords.ini
 ;sqlalchemy.url = postgresql://user:password@localhost/pyragrid
 

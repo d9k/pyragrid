@@ -44,7 +44,6 @@ class ViewsBase:
         self.login_from_vk_iframe = self.request.session.get('login_from_vk_iframe')
         self.pnotify = []
 
-
     def check_logined(self, request):
         self.user_id = security.authenticated_userid(request)
         if not self.user_id:

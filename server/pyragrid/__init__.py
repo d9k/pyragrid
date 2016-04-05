@@ -29,10 +29,13 @@ from jac import CompressorExtension
 
 import os.path
 
+
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
     event['helpers'] = helpers
     event['json'] = json
+    settings = pyramid.threadlocal.get_current_registry().settings
+    event['site_name'] = settings.get('site_name')
 
 
 def main(global_config, **settings):

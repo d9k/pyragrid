@@ -19,6 +19,8 @@ from .db import (
     db_save_model
 )
 
+from .forms import OneClickBuySchema
+
 from colanderalchemy import SQLAlchemySchemaNode
 
 from pyramid.httpexceptions import (
@@ -56,7 +58,21 @@ class ViewsGoods(ViewsBase):
         if self.user is not None:
             email = self.user.email
 
-        if 'form_good_one_click_buy_submit' in self.request.params:
+        one_click_buy_schema = OneClickBuySchema()
+        submit_button_name = 'form_good_one_click_buy_submit'
+
+        one_click_buy_form = Form(
+            one_click_buy_schema.bind(),
+            buttons=[Button(name=submit_button_name, title='Приобрести')],
+            # css_class='no-red-stars'
+        )
+
+        if submit_button_name in self.request.params:
+            controls = self.request.POST.items()
+            try:
+                one_click_buy_form.validate(controls)
+            except deform.ValidationFailure as e:
+                return dict(email=email, good=good, rendered_login_form=e.render())
             # captch check!
 
             # self.request.params()
@@ -65,14 +81,16 @@ class ViewsGoods(ViewsBase):
                 user = User.by_email(self.request.params.get('email'))
 
             if user is None:
+                # register
                 user = User()
                 password = User.generate_password()
                 user.set_password(password)
                 error = db_save_model(user)
-                helpers.send_html_mail(user.email, 'registered',
-                                       {'user_name': user.name, 'password': password})
                 if error is not None:
                     return self.db_error_response(error)
+
+            helpers.send_html_mail(user.email, 'registered',
+                                       {'user_name': user.name, 'password': password})
 
             new_order = Order()
             new_order.user_id = user.id
@@ -93,7 +111,7 @@ class ViewsGoods(ViewsBase):
             # refirect to payment
 
         # TODO backlink
-        return dict(email=email, good=good)
+        return dict(email=email, good=good, rendered_one_click_buy_form=one_click_buy_form.render())
         # TODO one click buy form: email / login / logined => username.
 
 

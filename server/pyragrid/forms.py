@@ -198,3 +198,33 @@ class GoodEditSchema(SQLAlchemySchemaNode):
 #         placeholder='*****',
 #         widget=PasswordPlaceholderWidget(placeholder='*****'),
 #     )
+
+class OneClickBuySchema(Schema):
+    # t = (SchemaNode(
+    #     colander.String(),
+    #     name='email',
+    #     title='Адрес электронной почты',
+    #     widget=TextInputPlaceholderWidget(
+    #         # placeholder='email, id вконтакте или ник'
+    #     ),
+    # ))
+
+    def __init__(self, typ=colander.Mapping()):
+        super().__init__(typ=typ)
+        self.add(SchemaNode(
+            colander.String(),
+            name='email',
+            title='Адрес электронной почты',
+            widget=TextInputPlaceholderWidget(
+                # placeholder='email, id вконтакте или ник'
+            ),
+        ))
+        if not check_dev_mode():
+            self.add(SchemaNode(
+                colander.String(),
+                name='captcha',
+                title='Капча',
+                widget=RecaptchaWidget(lang='ru', theme='clean'),
+                order=1000
+            ))
+        # self.validator = validate_user_edit_form

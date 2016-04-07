@@ -212,3 +212,12 @@ def to_bool(val):
     if str(val).lower() in ('no',  'n', 'false', 'f', '0', '0.0', '', 'none', '[]', '{}'):
         return False
     raise Exception('Invalid value for boolean conversion: ' + str(val))
+
+
+def multidict_rm_values(multidict, key):
+    p = True
+    while p:
+        try:
+            p = multidict.pop(key)
+        except KeyError as e:
+            p = None

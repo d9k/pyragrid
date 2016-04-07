@@ -45,6 +45,7 @@ from .views_base import (
 )
 
 from .widgets import FormMod
+from webob.multidict import MultiDict
 
 
 @view_defaults(route_name='index')
@@ -58,6 +59,7 @@ class ViewsGoods(ViewsBase):
             return HTTPNotFound('Товар не найден')
         appstruct = dict()
         user_logined = self.user is not None
+        email = None
         if user_logined:
             email = self.user.email
             appstruct['email'] = email
@@ -76,10 +78,16 @@ class ViewsGoods(ViewsBase):
         )
 
         if submit_button_name in self.request.params:
-            controls = self.request.POST.items()
+            post = MultiDict()
+            post._items = list(self.request.POST.items())
+            if user_logined:
+                helpers.multidict_rm_values(post, 'email')
+                if email is not None:
+                    post.add('email', email)
+            controls = post.items()
             # TODO add email to controls if email is not None
             try:
-                one_click_buy_form.validate(controls)
+                one_click_buy_form.validate(post.items())
             except deform.ValidationFailure as e:
                 return dict(good=good, rendered_one_click_buy_form=e.render(),)
             # captch check!

@@ -10,3 +10,4 @@ from .recaptcha_widget import RecaptchaWidget
 from .form_mod import FormMod, FormWidgetMod, ButtonMod
 from .bootstrap_grid_editor import BootstrapGridEditor
 from .file_dialog import FileDialog
+from .order_email import OrderEmailWidget

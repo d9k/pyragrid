@@ -1,0 +1,7 @@
+<p class="form-control-static"
+   id="${oid|field.oid}">
+  ${cstruct}
+</p>
+<div tal:condition="logout_url">
+    <a href="${logout_url}">Другой пользователь</a>
+</div>

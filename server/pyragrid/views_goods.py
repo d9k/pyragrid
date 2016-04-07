@@ -62,11 +62,15 @@ class ViewsGoods(ViewsBase):
             email = self.user.email
             appstruct['email'] = email
 
-        one_click_buy_schema = OneClickBuySchema(user_logined=user_logined)
+        one_click_buy_schema = OneClickBuySchema()
         submit_button_name = 'form_good_one_click_buy_submit'
 
         one_click_buy_form = FormMod(
-            one_click_buy_schema.bind(),
+            one_click_buy_schema.bind(
+                user_logined=user_logined,
+                # TODO logout return url param
+                logout_url=self.request.route_url('logout')
+            ),
             buttons=[Button(name=submit_button_name, title='Приобрести')],
             # css_class='no-red-stars'
         )
@@ -76,7 +80,7 @@ class ViewsGoods(ViewsBase):
             try:
                 one_click_buy_form.validate(controls)
             except deform.ValidationFailure as e:
-                return dict(good=good, rendered_login_form=e.render())
+                return dict(good=good, rendered_login_form=e.render(),)
             # captch check!
 
             # self.request.params()

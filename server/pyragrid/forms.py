@@ -14,7 +14,8 @@ from .widgets import (
     PasswordPlaceholderWidget,
     RecaptchaWidget,
     BootstrapGridEditor,
-    exception_for_schema_field
+    exception_for_schema_field,
+    OrderEmailWidget
 )
 from .helpers import check_dev_mode
 from .db import (
@@ -199,33 +200,35 @@ class GoodEditSchema(SQLAlchemySchemaNode):
 #         widget=PasswordPlaceholderWidget(placeholder='*****'),
 #     )
 
-class OneClickBuySchema(Schema):
-    # t = (SchemaNode(
-    #     colander.String(),
-    #     name='email',
-    #     title='Адрес электронной почты',
-    #     widget=TextInputPlaceholderWidget(
-    #         # placeholder='email, id вконтакте или ник'
-    #     ),
-    # ))
+@colander.deferred
+def deferred_order_email_widget(node, kw):
+    user_logined = kw.get('user_logined', False)
+    logout_url = kw.get('logout_url', None)
+    return OrderEmailWidget(readonly=user_logined, logout_url=logout_url)
 
-    def __init__(self, typ=colander.Mapping(), user_logined=False):
+
+@colander.deferred
+def deferred_one_click_buy_captcha_widget(node, kw):
+    user_logined = kw.get('user_logined', False)
+    if user_logined or not check_dev_mode():
+        return widgets.HiddenWidget()
+    return RecaptchaWidget(lang='ru', theme='clean')
+
+
+class OneClickBuySchema(Schema):
+    def __init__(self, typ=colander.Mapping()):
         super().__init__(typ=typ)
         self.add(SchemaNode(
             colander.String(),
             name='email',
             title='Адрес электронной почты',
-            widget=TextInputPlaceholderWidget(
-                readonly=user_logined
-                # placeholder='email, id вконтакте или ник'
-            ),
+            widget=deferred_order_email_widget
         ))
-        if not user_logined and not check_dev_mode():
-            self.add(SchemaNode(
-                colander.String(),
-                name='captcha',
-                title='Капча',
-                widget=RecaptchaWidget(lang='ru', theme='clean'),
-                order=1000
-            ))
+        self.add(SchemaNode(
+            colander.String(),
+            name='captcha',
+            title='Капча',
+            widget=deferred_one_click_buy_captcha_widget,
+            order=1000
+        ))
         # self.validator = validate_user_edit_form

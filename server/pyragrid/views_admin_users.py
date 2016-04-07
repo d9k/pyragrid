@@ -140,11 +140,11 @@ class ViewsAdminUsers(ViewsAdmin):
         user_edit_schema = forms.UserEditSchema()
         user_edit_schema.linked_user = user
 
-        user_edit_form = widgets.FormEx(
+        user_edit_form = widgets.FormMod(
             user_edit_schema.bind(),
-            buttons=[widgets.ButtonEx(name='user_edit_form_submit', title='Изменить'),
-                     widgets.ButtonEx(name='user_delete', title='X', css_class='btn-danger',
-                                      description="Удалить пользователя")],
+            buttons=[widgets.ButtonMod(name='user_edit_form_submit', title='Изменить'),
+                     widgets.ButtonMod(name='user_delete', title='X', css_class='btn-danger',
+                                       description="Удалить пользователя")],
         )
 
         if 'user_edit_form_submit' in self.request.params:

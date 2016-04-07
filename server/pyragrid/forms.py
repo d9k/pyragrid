@@ -209,17 +209,18 @@ class OneClickBuySchema(Schema):
     #     ),
     # ))
 
-    def __init__(self, typ=colander.Mapping()):
+    def __init__(self, typ=colander.Mapping(), user_logined=False):
         super().__init__(typ=typ)
         self.add(SchemaNode(
             colander.String(),
             name='email',
             title='Адрес электронной почты',
             widget=TextInputPlaceholderWidget(
+                readonly=user_logined
                 # placeholder='email, id вконтакте или ник'
             ),
         ))
-        if not check_dev_mode():
+        if not user_logined and not check_dev_mode():
             self.add(SchemaNode(
                 colander.String(),
                 name='captcha',

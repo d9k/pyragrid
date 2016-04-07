@@ -106,10 +106,10 @@ class ViewsAdminArticles(ViewsAdmin):
         article_edit_schema = forms.ArticleEditSchema()
         article_edit_schema.linked_article = article
 
-        article_edit_form = widgets.FormEx(
+        article_edit_form = widgets.FormMod(
             article_edit_schema.bind(),
             formid='articleEdit',
-            buttons=[widgets.ButtonEx(
+            buttons=[widgets.ButtonMod(
                     name='form_article_edit_submit',
                     title='Создать' if article_is_new else 'Изменить'
             )],

@@ -44,6 +44,8 @@ from .views_base import (
     ViewsBase, conn_err_msg
 )
 
+from .widgets import FormMod
+
 
 @view_defaults(route_name='index')
 class ViewsGoods(ViewsBase):
@@ -54,14 +56,16 @@ class ViewsGoods(ViewsBase):
         good = Good.by_id(good_id)
         if good is None:
             return HTTPNotFound('Товар не найден')
-        email = None
-        if self.user is not None:
+        appstruct = dict()
+        user_logined = self.user is not None
+        if user_logined:
             email = self.user.email
+            appstruct['email'] = email
 
-        one_click_buy_schema = OneClickBuySchema()
+        one_click_buy_schema = OneClickBuySchema(user_logined=user_logined)
         submit_button_name = 'form_good_one_click_buy_submit'
 
-        one_click_buy_form = Form(
+        one_click_buy_form = FormMod(
             one_click_buy_schema.bind(),
             buttons=[Button(name=submit_button_name, title='Приобрести')],
             # css_class='no-red-stars'
@@ -72,7 +76,7 @@ class ViewsGoods(ViewsBase):
             try:
                 one_click_buy_form.validate(controls)
             except deform.ValidationFailure as e:
-                return dict(email=email, good=good, rendered_login_form=e.render())
+                return dict(good=good, rendered_login_form=e.render())
             # captch check!
 
             # self.request.params()
@@ -89,7 +93,7 @@ class ViewsGoods(ViewsBase):
                 if error is not None:
                     return self.db_error_response(error)
 
-            helpers.send_html_mail(user.email, 'registered',
+                helpers.send_html_mail(user.email, 'registered',
                                        {'user_name': user.name, 'password': password})
 
             new_order = Order()
@@ -111,7 +115,7 @@ class ViewsGoods(ViewsBase):
             # refirect to payment
 
         # TODO backlink
-        return dict(email=email, good=good, rendered_one_click_buy_form=one_click_buy_form.render())
+        return dict(good=good, rendered_one_click_buy_form=one_click_buy_form.render(appstruct))
         # TODO one click buy form: email / login / logined => username.
 
 

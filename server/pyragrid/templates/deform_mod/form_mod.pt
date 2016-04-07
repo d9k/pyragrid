@@ -40,21 +40,25 @@
       ${description}
     </p>
 
-    <div tal:repeat="child field"
-         tal:replace="structure child.render_template(item_template)"/>
+    <div tal:repeat="child field">
+         <div tal:replace="structure child.render_template(item_template)"></div>
+    </div>
 
     <div class="form-group">
       <tal:loop tal:repeat="button buttons">
         <button
-              tal:define="btn_disposition repeat.button.start and 'btn-primary' or 'btn-default';
-              btn_icon button.icon|None"
+              tal:define="
+                  btn_disposition repeat.button.start and 'btn-primary' or 'btn-default';
+                  btn_icon button.icon|None;
+                  btn_description button.description|''
+              "
               tal:attributes="disabled button.disabled if button.disabled else None"
               id="${formid+button.name}"
               name="${button.name}"
               type="${button.type}"
               class="btn ${btn_disposition} ${button.css_class}"
               value="${button.value}"
-              title="${button.description}">
+              title="${btn_description}">
           <i tal:condition="btn_icon" class="${btn_icon}"> </i>
           ${button.title}
         </button>

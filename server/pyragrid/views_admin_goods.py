@@ -124,9 +124,9 @@ class ViewsAdminGoods(ViewsAdmin):
 
         submit_button_title = 'Создать' if is_new else 'Изменить'
 
-        good_edit_form = widgets.FormEx(
+        good_edit_form = widgets.FormMod(
             good_edit_schema.bind(),
-            buttons=[widgets.ButtonEx(name='good_edit_form_submit', title=submit_button_title),
+            buttons=[widgets.ButtonMod(name='good_edit_form_submit', title=submit_button_title),
                      # widgets.ButtonEx(name='good_delete', title='X', css_class='btn-danger',
                      #                  description="Удалить пользователя")
                      ],

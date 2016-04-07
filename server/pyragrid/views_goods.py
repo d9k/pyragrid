@@ -77,10 +77,11 @@ class ViewsGoods(ViewsBase):
 
         if submit_button_name in self.request.params:
             controls = self.request.POST.items()
+            # TODO add email to controls if email is not None
             try:
                 one_click_buy_form.validate(controls)
             except deform.ValidationFailure as e:
-                return dict(good=good, rendered_login_form=e.render(),)
+                return dict(good=good, rendered_one_click_buy_form=e.render(),)
             # captch check!
 
             # self.request.params()

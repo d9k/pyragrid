@@ -210,9 +210,10 @@ def deferred_order_email_widget(node, kw):
 @colander.deferred
 def deferred_one_click_buy_captcha_widget(node, kw):
     user_logined = kw.get('user_logined', False)
-    if user_logined or not check_dev_mode():
-        return widgets.HiddenWidget()
-    return RecaptchaWidget(lang='ru', theme='clean')
+    # if not user_logined and not check_dev_mode():
+    if not user_logined:
+        return RecaptchaWidget(lang='ru', theme='clean')
+    return widgets.HiddenWidget()
 
 
 class OneClickBuySchema(Schema):
@@ -222,6 +223,7 @@ class OneClickBuySchema(Schema):
             colander.String(),
             name='email',
             title='Адрес электронной почты',
+            validator=colander.Email(),
             widget=deferred_order_email_widget
         ))
         self.add(SchemaNode(
@@ -229,6 +231,8 @@ class OneClickBuySchema(Schema):
             name='captcha',
             title='Капча',
             widget=deferred_one_click_buy_captcha_widget,
-            order=1000
+            order=1000,
+            default='test',
+            missing=colander.drop
         ))
         # self.validator = validate_user_edit_form

@@ -64,6 +64,8 @@ class ViewsGoods(ViewsBase):
             email = self.user.email
             appstruct['email'] = email
 
+        # TODO + поле name
+
         one_click_buy_schema = OneClickBuySchema()
         submit_button_name = 'form_good_one_click_buy_submit'
 
@@ -94,12 +96,19 @@ class ViewsGoods(ViewsBase):
 
             # self.request.params()
             user = self.user
+            if email is None:
+                email = self.request.params.get('email')
+
+            if email is None or email == '':
+                return HTTPBadRequest('No email specified')
+
             if user is None:
-                user = User.by_email(self.request.params.get('email'))
+                user = User.by_email(email)
 
             if user is None:
                 # register
                 user = User()
+                user.email = email
                 password = User.generate_password()
                 user.set_password(password)
                 error = db_save_model(user)

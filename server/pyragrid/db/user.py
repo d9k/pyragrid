@@ -192,6 +192,11 @@ class User(Base):
         if not self.name:
             self.name = self.login
 
+    @staticmethod
+    def register(self, email, password=None, name=None):
+        raise NotImplementedError()
+        # return User
+
 # TODO коррекция полей перед сохраненинем
 # http://docs.sqlalchemy.org/en/latest/orm/events.html ?
 # http://docs.sqlalchemy.org/en/latest/orm/session_events.html

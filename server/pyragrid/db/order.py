@@ -3,7 +3,10 @@ import sqlalchemy
 from sqlalchemy import (
     Column, ForeignKey
 )
-from .base import (Base)
+from .base import (Base, DBSession)
+from sqlalchemy.orm import (
+    Query, relationship
+)
 
 
 class Order(Base):
@@ -53,3 +56,22 @@ class Order(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    # relations
+    order_goods = relationship('OrderGood', back_populates='order')
+
+    @staticmethod
+    def by_id(id_: int):
+        """
+        :return Article
+        """
+        return DBSession.query(Order).filter(Order.id == id_).first()
+
+    def recount_sum(self):
+        raise NotImplementedError()
+
+    def add_good(self, good_id, count=1.0):
+        raise NotImplementedError()
+        # self.recount_sum()
+
+    def remove_good(self, order_good_id):
+        raise NotImplementedError()

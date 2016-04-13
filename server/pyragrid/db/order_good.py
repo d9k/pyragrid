@@ -97,3 +97,6 @@ class OrderGood(Base):
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
+
+    # relations
+    order = relationship('Order', back_populates='order_goods')

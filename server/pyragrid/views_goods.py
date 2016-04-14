@@ -118,35 +118,18 @@ class ViewsGoods(ViewsBase):
                 helpers.send_html_mail(user.email, 'registered',
                                        {'user_name': user.name, 'password': password})
 
-            new_order = Order()
-            new_order.user_id = user.id
+            # TODO read http://docs.sqlalchemy.org/en/latest/orm/cascades.html#merge
 
-            t1 = new_order.order_goods
-
-            error = db_save_model(new_order)
-            if error is not None:
+            try:
+                with transaction.manager:
+                    new_order = Order(user_id=user.id)
+                    DBSession.add(new_order)
+                    order_good = OrderGood(user_id=user.id, good_id=good.id)
+                    new_order.order_goods.append(order_good)
+            except DBAPIError as error:
                 return self.db_error_response(error)
 
-            # TODO relationships http://docs.sqlalchemy.org/en/latest/orm/cascades.html#merge
-
-            order_good = OrderGood()
-            order_good.user_id = user.id
-            order_good.good_id = good.id
-            # order_good.order_id = new_order.id
-
-            new_order.order_goods.append(order_good)
-
-            error = db_save_model(new_order)
-            if error is not None:
-                return self.db_error_response(error)
-
-            # t3 = new_order.order_goods
-
-            order2 = Order.by_id(new_order.id)
-
-            t4 = order2.order_goods
-
-            # refirect to payment
+            # redirect to payment
 
         # TODO backlink
         return dict(good=good, rendered_one_click_buy_form=one_click_buy_form.render(appstruct))

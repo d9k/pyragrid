@@ -210,8 +210,8 @@ def deferred_order_email_widget(node, kw):
 @colander.deferred
 def deferred_one_click_buy_captcha_widget(node, kw):
     user_logined = kw.get('user_logined', False)
-    # if not user_logined and not check_dev_mode():
-    if not user_logined:
+    if not user_logined and not check_dev_mode():
+    # if not user_logined:
         return RecaptchaWidget(lang='ru', theme='clean')
     return widgets.HiddenWidget()
 

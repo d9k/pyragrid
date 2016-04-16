@@ -7,6 +7,8 @@ from .base import (Base, DBSession)
 from sqlalchemy.orm import (
     Query, relationship
 )
+from .order_good import OrderGood
+from .good import Good
 
 
 class Order(Base):
@@ -58,20 +60,34 @@ class Order(Base):
 
     # relations
     order_goods = relationship('OrderGood', back_populates='order')
+    """
+    :type OrderGood[]
+    """
+    # TODO how to doc type?
 
     @staticmethod
     def by_id(id_: int):
         """
-        :return Article
+        :return Order
         """
         return DBSession.query(Order).filter(Order.id == id_).first()
 
-    def recount_sum(self):
-        raise NotImplementedError()
+    def recount_total(self):
+        """
+        :var order_good: OrderGood
+        """
+        total = 0
+        # what if price changed?
+        for order_good in self.order_goods:
+            total += order_good.total
+        self.total = total
 
     def add_good(self, good_id, count=1.0):
-        raise NotImplementedError()
-        # self.recount_sum()
+        good = Good.by_id(good_id)
+        order_good = OrderGood(good_id=good.id, user_id=self.user_id, count=count, price=good.price)
+        order_good.count_total()
+        self.order_goods.append(order_good)
+        self.recount_total()
 
     def remove_good(self, order_good_id):
         raise NotImplementedError()

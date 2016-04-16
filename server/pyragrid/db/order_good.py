@@ -61,12 +61,19 @@ class OrderGood(Base):
            'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    price = Column(
+        sqlalchemy.Numeric(12, 2),
+        info={'colanderalchemy': {
+            'title': 'Стоимость заказанного товара',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     total = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Сумма заказанного товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
-        }} )
+        }})
 
     paid_amount = Column(
         sqlalchemy.Numeric(12, 2),
@@ -98,5 +105,9 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    # relations
+    good = relationship('Good', cascade='')
     order = relationship('Order', back_populates='order_goods')
+
+    def count_total(self):
+        self.total = float(self.price) * float(self.count)
+

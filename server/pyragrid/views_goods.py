@@ -124,8 +124,7 @@ class ViewsGoods(ViewsBase):
                 with transaction.manager:
                     new_order = Order(user_id=user.id)
                     DBSession.add(new_order)
-                    order_good = OrderGood(user_id=user.id, good_id=good.id)
-                    new_order.order_goods.append(order_good)
+                    new_order.add_good(good.id)
             except DBAPIError as error:
                 return self.db_error_response(error)
 

@@ -105,7 +105,15 @@ If identifier already exists in database management system, use underscore at th
 --------------
 
 (deprecated, need review) существующий заказ: добавлять товары нельзя, убирать тоже, можно делать частичный или полный возврат, подтверждать доставку (для электронных товаров подтверждается при скачивании). админ может подтверждать оплату.
-кошке джук
+
+Docstrings
+----------
+
+http://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
+различные виды: http://stackoverflow.com/a/24385103/1760643
+документирование типов для PyCharm: https://www.jetbrains.com/help/pycharm/5.0/type-hinting-in-pycharm.html
+
+about what?? - https://docs.python.org/devguide/documenting.html
 
 TODO
 ----

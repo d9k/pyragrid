@@ -105,9 +105,20 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    good = relationship('Good', cascade='')
+    good = relationship('Good')
     order = relationship('Order', back_populates='order_goods')
+    user = relationship('User')
 
-    def count_total(self):
+    def reload_price(self):
+        self.price = self.good.price
+
+    def count_total(self, reload_price=False):
+        if reload_price:
+            self.reload_price()
         self.total = float(self.price) * float(self.count)
+
+    def add_count(self, count):
+        self.count += count
+        # TODO ! create order_good_status model
+        self.count_total(True)
 

@@ -57,7 +57,7 @@ class ViewsAdminGoods(ViewsAdmin):
         columns = [
             ColumnDT('id'),
             ColumnDT('name'),
-            ColumnDT('isEgood'),
+            ColumnDT('is_egood'),
             ColumnDT('price'),
             ColumnDT('active'),
         ]

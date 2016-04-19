@@ -55,6 +55,7 @@ class ViewsGoods(ViewsBase):
     def view_one_click_buy(self):
         good_id = self.request.matchdict.get('id')
         good = Good.by_id(good_id)
+        # TODO test good exists !
         if good is None:
             return HTTPNotFound('Товар не найден')
         appstruct = dict()

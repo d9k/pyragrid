@@ -5,6 +5,7 @@ import sqlalchemy
 import deform.widget
 import colander
 from .base import (Base, DBSession, NullableInt)
+from .order_good_status import OrderGoodStatus
 from sqlalchemy.orm import (
     Query, relationship
 )
@@ -108,6 +109,7 @@ class OrderGood(Base):
     good = relationship('Good')
     order = relationship('Order', back_populates='order_goods')
     user = relationship('User')
+    statuses = relationship('OrderGoodStatus', back_populates='orderGood')
 
     def reload_price(self):
         self.price = self.good.price
@@ -117,8 +119,13 @@ class OrderGood(Base):
             self.reload_price()
         self.total = float(self.price) * float(self.count)
 
+    def create_status(self, status=EnumOrderGoodStatus.created):
+        DBSession.flush()
+        self.statuses.append(OrderGoodStatus(status=status, count=self.count))
+
     def add_count(self, count):
         self.count += count
         # TODO ! create order_good_status model
+        self.create_status()
         self.count_total(True)
 

@@ -54,6 +54,14 @@ class OrderGoodStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    count = Column(
+        sqlalchemy.Numeric(12, 4),
+        default=0,
+        info={'colanderalchemy': {
+            'title': 'Количество заказанного товара',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     paid = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
@@ -83,4 +91,6 @@ class OrderGoodStatus(Base):
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
+
+    orderGood = relationship('OrderGood', back_populates='statuses')
 

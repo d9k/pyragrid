@@ -26,7 +26,8 @@ from colanderalchemy import SQLAlchemySchemaNode
 from pyramid.httpexceptions import (
     HTTPBadRequest,
     HTTPNotFound,
-    HTTPFound
+    HTTPFound,
+    HTTPForbidden
 )
 
 import deform
@@ -58,6 +59,8 @@ class ViewsGoods(ViewsBase):
         # TODO test good exists !
         if good is None:
             return HTTPNotFound('Товар не найден')
+        if not good.active:
+            return HTTPForbidden('Товар снят с продажи')
         appstruct = dict()
         user_logined = self.user is not None
         email = None

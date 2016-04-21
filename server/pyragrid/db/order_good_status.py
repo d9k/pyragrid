@@ -92,5 +92,13 @@ class OrderGoodStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    money_transaction_status_id = Column(
+        sqlalchemy.Integer,
+        ForeignKey('money_transaction_status.id'),
+        info={'colanderalchemy': {
+            'title': 'Связанный статус транзакции',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     orderGood = relationship('OrderGood', back_populates='statuses')
 

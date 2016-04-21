@@ -44,7 +44,7 @@ id, status, total, paid_amount, refund_amount, user_id
 id, order_id, good_id, price, count, refund_count, total, paid_amount,refund_amount, status
 
 ### order_good_status
-id, order_good_id, date_time, (succeed), is_last, status, shop_money_delta, money_transaction_id
+id, order_good_id, date_time, (succeed), is_last, status, shop_money_delta, money_transaction_status_id
 
 TODO иногда total -> sum переименовать
 
@@ -58,7 +58,7 @@ id, refund__Id, order_good_id, count, total, status, userId
 id, (domain?), egood_id, download_code, for_user_id, datetime, expires, active, downloads_count
 
 ### money_transaction
-id, order_id, type (buy/reject), shop_money_delta, (ended?), (succeed?), status
+id, order_id, type (buy/reject), shop_money_delta, (ended?), (succeed?), status, payment_system
 
 ### money_transaction_status
 id, money_transaction_id, provider, status, datetime, request_data, answer_data, error
@@ -95,7 +95,8 @@ fields: `joined_lower`, singular
 
 If identifier already exists in database management system, use underscore at the end of identifier: `joined_lower_`. Why at the end? Because for autocompletion by first letter.
  
-`datetime` considered as prohibited identifier (to not be confused with python's library `datetime` in code and mysql's `DATETIME` column type)
+`datetime` considered as prohibited identifier (to
+ not be confused with python's library `datetime` in code and mysql's `DATETIME` column type)
 
 `group` may be confused with sql's `GROUP`.
 

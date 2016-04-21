@@ -60,7 +60,7 @@ class ViewsGoods(ViewsBase):
         if good is None:
             return HTTPNotFound('Товар не найден')
         if not good.active:
-            return HTTPForbidden('Товар снят с продажи')
+            return HTTPForbidden('Товар сня')
         appstruct = dict()
         user_logined = self.user is not None
         email = None
@@ -124,6 +124,10 @@ class ViewsGoods(ViewsBase):
 
             # TODO read http://docs.sqlalchemy.org/en/latest/orm/cascades.html#merge
 
+            from .payment_systems_clients import get_payment_clients_names
+
+            t = get_payment_clients_names()
+
             try:
                 with transaction.manager:
                     new_order = Order(user_id=user.id)
@@ -133,6 +137,13 @@ class ViewsGoods(ViewsBase):
                 return self.db_error_response(error)
 
             # redirect to payment
+            # TODO payment system choose
+
+            # try:
+            #     with transaction.manager:
+            #         new_order.payment_start()
+            # except DBAPIError as error:
+            #     return self.db_error_response(error)
 
         # TODO backlink
         return dict(good=good, rendered_one_click_buy_form=one_click_buy_form.render(appstruct))

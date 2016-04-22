@@ -29,6 +29,8 @@ from jac import CompressorExtension
 
 import os.path
 
+from .payment_systems_clients import load_payment_systems
+
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
@@ -74,6 +76,11 @@ def main(global_config, **settings):
         translator=translator
     )
     deform.Form.set_default_renderer(zpt_renderer)
+
+    payment_systems = settings.get('payment_systems')
+    if payment_systems is not None:
+        payment_systems = payment_systems.split()
+        load_payment_systems(payment_systems)
 
     static_cache_max_age = 3600
     # TODO hacky. maybe better copy resources with gulp task?

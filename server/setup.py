@@ -31,6 +31,7 @@ requires = [
     'jac', # jinja-assets-compressor
     'psycopg2',
     'alembic',
+    'inflection'
 ]
 
 setup(name='pyragrid',

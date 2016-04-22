@@ -32,6 +32,9 @@ pyramid.includes =
 
 ;    pyramid_mailer
 
+payment_systems =
+    test
+
 generate_password_length = 8
 mail_default_subject = Письмо от проекта Pyragrid
 

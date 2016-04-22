@@ -47,6 +47,7 @@ from .views_base import (
 
 from .widgets import FormMod
 from webob.multidict import MultiDict
+from .payment_systems_clients import get_payment_clients_captions
 
 
 @view_defaults(route_name='index')
@@ -73,11 +74,23 @@ class ViewsGoods(ViewsBase):
         one_click_buy_schema = OneClickBuySchema()
         submit_button_name = 'form_good_one_click_buy_submit'
 
+        payment_system_default = helpers.get_setting('payment_system_default')
+        payment_systems_captions = get_payment_clients_captions()
+        if payment_system_default is None:
+            raise Exception('payment_system_default in config was not set!')
+        else:
+            payment_system_default_caption = payment_systems_captions.get(payment_system_default)
+            if payment_system_default_caption is None:
+                raise Exception('default_payment_system is not loaded!')
+
+        appstruct['payment_system'] = payment_system_default
+
         one_click_buy_form = FormMod(
             one_click_buy_schema.bind(
                 user_logined=user_logined,
                 # TODO logout return url param
-                logout_url=self.request.route_url('logout')
+                logout_url=self.request.route_url('logout'),
+                payment_systems=payment_systems_captions
             ),
             buttons=[Button(name=submit_button_name, title='Приобрести')],
             # css_class='no-red-stars'

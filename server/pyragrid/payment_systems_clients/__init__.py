@@ -1,20 +1,23 @@
-from .payment_client_test import PaymentClientTest
+# from .payment_client_test import PaymentClientTest
 
-import sys, inspect
+import sys
+import inspect
+import importlib
+import inflection
 
 
 PAYMENT_CLIENT_CLASS_NAME_PREFIX = 'PaymentClient'
 PREFIX_LEN = len(PAYMENT_CLIENT_CLASS_NAME_PREFIX)
 _paymentClientClasses = {}
 
-for name, _class in inspect.getmembers(sys.modules[__name__]):
-    """:var name str"""
-    if inspect.isclass(_class):
-        if (name.startswith(PAYMENT_CLIENT_CLASS_NAME_PREFIX)):
-            # TODO check for_dev_only
-            key = name[PREFIX_LEN:]
-            key = key[:1].lower() + key[1:]
-            _paymentClientClasses[key] = _class
+# for name, _class in inspect.getmembers(sys.modules[__name__]):
+#     """:var name str"""
+#     if inspect.isclass(_class):
+#         if (name.startswith(PAYMENT_CLIENT_CLASS_NAME_PREFIX)):
+#             # TODO check for_dev_only
+#             key = name[PREFIX_LEN:]
+#             key = key[:1].lower() + key[1:]
+#             _paymentClientClasses[key] = _class
 
 
 def get_payment_client_by_name(name):
@@ -32,5 +35,13 @@ def get_payment_clients_captions():
         # key = PAYMENT_CLIENT_CLASS_NAME_PREFIX + key
         captions[name] = _paymentClientClasses[name].caption
     return captions
+
+
+def load_payment_systems(payment_systems_names):
+    for name in payment_systems_names:
+        class_name = PAYMENT_CLIENT_CLASS_NAME_PREFIX + name[:1].upper() + name[1:]
+        package_name = inflection.underscore(class_name)
+        imported_module = importlib.import_module('.'+package_name, __package__)
+        _paymentClientClasses[name] = getattr(imported_module, class_name)
 
 

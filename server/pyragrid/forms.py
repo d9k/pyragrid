@@ -23,7 +23,6 @@ from .db import (
     Article,
     Good
 )
-from .payment_systems_clients import get_payment_clients_captions
 
 
 class LoginSchema(Schema):
@@ -217,7 +216,19 @@ def deferred_one_click_buy_captcha_widget(node, kw):
     return widgets.HiddenWidget()
 
 
+@colander.deferred
+def defferred_payment_system_select(node, kw):
+    payment_systems = kw.get('payment_systems', [])
+    count = len(payment_systems)
+    if count > 1:
+        return widgets.SelectWidget(values=payment_systems.items())
+    elif count == 1:
+        return widgets.SelectWidget(values=payment_systems.items(), readonly=True)
+
+    raise Exception('No payment systems available')
+
 # t = get_payment_clients_captions()
+
 
 class OneClickBuySchema(Schema):
     def __init__(self, typ=colander.Mapping()):
@@ -237,5 +248,12 @@ class OneClickBuySchema(Schema):
             order=1000,
             default='test',
             missing=colander.drop
+        ))
+        self.add(SchemaNode(
+            colander.String(),
+            name='payment_system',
+            title='Платёжный сервис',
+            # validator=colander.Email(),
+            widget=defferred_payment_system_select
         ))
         # self.validator = validate_user_edit_form

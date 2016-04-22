@@ -124,10 +124,6 @@ class ViewsGoods(ViewsBase):
 
             # TODO read http://docs.sqlalchemy.org/en/latest/orm/cascades.html#merge
 
-            from .payment_systems_clients import get_payment_clients_names
-
-            t = get_payment_clients_names()
-
             try:
                 with transaction.manager:
                     new_order = Order(user_id=user.id)

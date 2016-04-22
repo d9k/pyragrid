@@ -23,6 +23,7 @@ from .db import (
     Article,
     Good
 )
+from .payment_systems_clients import get_payment_clients_captions
 
 
 class LoginSchema(Schema):
@@ -215,6 +216,8 @@ def deferred_one_click_buy_captcha_widget(node, kw):
         return RecaptchaWidget(lang='ru', theme='clean')
     return widgets.HiddenWidget()
 
+
+# t = get_payment_clients_captions()
 
 class OneClickBuySchema(Schema):
     def __init__(self, typ=colander.Mapping()):

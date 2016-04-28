@@ -32,10 +32,12 @@ requires = [
     'psycopg2',
     'alembic',
     'inflection',
+    'pygraphviz',
+    'eralchemy',
 ]
 
 setup(name='pyragrid',
-      version='0.0.1',
+      version='0.0.3',
       description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

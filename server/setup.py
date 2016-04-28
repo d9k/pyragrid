@@ -20,6 +20,7 @@ requires = [
     'pyramid_jinja2',
     'pyramid_beaker',
     'deform==2.0a2',
+    'jac==0.15.1',  # jinja-assets-compressor
     'colander',
     'ColanderAlchemy',
     'dictalchemy',
@@ -28,14 +29,13 @@ requires = [
     'configparser',
     'sqlalchemy-datatables==0.1.7',
     # 'https://github.com/Pegase745/sqlalchemy-datatables/archive/v0.1.7.zip"'
-    'jac', # jinja-assets-compressor
     'psycopg2',
     'alembic',
-    'inflection'
+    'inflection',
 ]
 
 setup(name='pyragrid',
-      version='0.0',
+      version='0.0.1',
       description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
@@ -58,5 +58,6 @@ setup(name='pyragrid',
       main = pyragrid:main
       [console_scripts]
       initialize_pyragrid_db = pyragrid.scripts.initializedb:main
+      gen_db_erd_schema = pyragrid.scripts.gen_db_erd_schema:main
       """,
       )

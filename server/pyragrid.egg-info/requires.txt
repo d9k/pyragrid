@@ -9,6 +9,7 @@ waitress
 pyramid_jinja2
 pyramid_beaker
 deform==2.0a2
+jac==0.15.1
 colander
 ColanderAlchemy
 dictalchemy
@@ -16,6 +17,6 @@ repoze.sendmail==4.1
 pyramid_mailer
 configparser
 sqlalchemy-datatables==0.1.7
-jac
 psycopg2
 alembic
+inflection

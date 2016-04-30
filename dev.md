@@ -25,42 +25,64 @@ TODO check this:
 DB
 ===
 
+zdorovie-legkie.ru db
+
 ### user_
+
 id, login, name, email, group, email_check_code, email_checked
 
 ### article
+
 id, name, systemPath
 
 ### article_revision
+
 id, article_id, code, datetime, user_id
 
 ### good
+
 id, name, price, is_egood, file_path
 
 ### order
-id, status, total, paid_amount, refund_amount, user_id
+
+id, status, wanted_total, paid_amount, refund_amount, user_id
+
+wanted_total - сумма желаемого у клиента товара: если paid_amount - refund_amount = wanted_total => заказ оплачен (paid) либо отменен полностью (refunded) если wanted_total = 0
 
 ### order_good
-id, order_id, good_id, price, count, refund_count, total, paid_amount,refund_amount, status
+
+id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount,refund_amount, client_has_count, status
+
+status in `cart, payment_began, paid, partially_paid, refunded, partially_refunded]`
 
 ### order_good_status
-id, order_good_id, date_time, (succeed), is_last, status, shop_money_delta, money_transaction_status_id
+
+id, order_good_id, date_time, (succeed), is_last, status, (count?!), shop_money_delta, money_transaction_status_id
+
+status in `[wanted_add, wanted_remove, payment_began, payment_failed, paid, refund_began, refund_failed, refunded, good_sent, good_received, good_sent_back ]`
 
 TODO иногда total -> sum переименовать
 
 ### refund
+
 id, order_id, reason, datetime, status, total, refunded, userId, (datetime?)
 
+status in [created, canceled, refunded, timeout, error]
+
 ### refund_order_good
-id, refund__Id, order_good_id, count, total, status, userId
+
+id, refund_id, order_good_id, count, total, status, userId
 
 ### egood_download_link
+
 id, (domain?), egood_id, download_code, for_user_id, datetime, expires, active, downloads_count
 
 ### money_transaction
+
 id, order_id, type (buy/reject), shop_money_delta, (ended?), (succeed?), status, payment_system
 
 ### money_transaction_status
+
 id, money_transaction_id, provider, status, datetime, request_data, answer_data, error
 
 Naming conventions

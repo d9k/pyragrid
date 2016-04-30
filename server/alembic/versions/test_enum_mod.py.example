@@ -16,11 +16,11 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import sql
 
-def upgrade():
-	# thx to @inklesspen for help with connection info get
-    connection = op.get_bind()
-    engine_name = connection.engine.name
+# thx to @inklesspen for help with connection info get
+connection = op.get_bind()
+engine_name = connection.engine.name
 
+def upgrade():
 	# @zzzeek, sqlalchemy developer, doesn't want to fix non-native enums
 	# (https://bitbucket.org/zzzeek/alembic/issues/363)
 	# so here is the hack:
@@ -39,11 +39,15 @@ def upgrade():
 
 
 def downgrade():
+    if engine_name == 'postgresql':
+        op.drop_constraint('enum_order_status', 'order_good_status')
+        op.drop_constraint('enum_order_status', 'order_good')
+
     op.alter_column('order_good_status', 'status',
-               existing_type=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
-               type_=sa.VARCHAR(length=14),
+               existing_type=sa.VARCHAR(length=18),
+               type_=sa.Enum('excluded', 'payment_began', 'refunded', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
                existing_nullable=True)
     op.alter_column('order_good', 'status',
-               existing_type=sa.Enum('excluded', 'payment_began', 'refunded', 'i_am_here_for_test', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
-               type_=sa.VARCHAR(length=14),
+               existing_type=sa.VARCHAR(length=18),
+               type_=sa.Enum('excluded', 'payment_began', 'refunded', 'refund_began', 'created', 'payment_failed', 'refund_failed', 'paid', name='enum_order_status', native_enum=False),
                existing_nullable=True)

@@ -1,15 +1,73 @@
-#!/bin/bash
+#!env python3
 
-if [ -z "$1" ]; then
-	echo Usage: db-autogen-migration migration_name
-	exit
-fi
+import argparse
+import pprint
+import pyperclip
+import subprocess
+import io
 
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SERVER_DIR=$(readlink -f ${THIS_DIR}/..)
-cd ${SERVER_DIR}
-. ${SERVER_DIR}/venv/bin/activate
-source ${THIS_DIR}/db-params.inc.sh
-#TODO config from env PYRAGRID_CONFIG_NAME
-#alembic -x pyramid_config=${PYRAGRID_CONFIG_NAME} revision --autogenerate -m $1
-alembic revision --autogenerate -m $1
+
+ide = 'pycharm'
+
+
+# def in_venv():
+#     # TODO
+#     pass
+
+
+def main():
+    # if not in_venv():
+    #     print('Sorry thin script must be run in python virtual environment')
+    #     return
+
+    parser = argparse.ArgumentParser(description='this script is wrapper around `alembic revision --autogenerate`')
+    parser.add_argument(
+        '--copy', '-c',
+        help='copy new revision file name to clipboard automatically',
+        action='store_true'
+    )
+    parser.add_argument(
+        '--open', '-o',
+        help='open in IDE (pycharm)',
+        action='store_true'
+    )
+    parser.add_argument(
+        'migration_name'
+    )
+    args = parser.parse_args()
+    pprint.pprint(args)
+    migration_name = args.migration_name
+    proc = subprocess.Popen(['alembic', 'revision', '--autogenerate', '-m', migration_name], stdout=subprocess.PIPE)
+
+    migration_filepath = None
+    generation_done = False
+    FINDING_GENERATING = 'Generating'
+    FINDING_DONE = 'done'
+    finding = FINDING_GENERATING
+    for output_line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
+        print(output_line.rstrip())
+        string = output_line.strip()
+        if finding == FINDING_GENERATING:
+            if string.startswith(FINDING_GENERATING):
+                temp_string = string[len(FINDING_GENERATING):]
+                string_parts = temp_string.split()
+                migration_filepath = string_parts[0]
+                finding = FINDING_DONE
+        if finding == FINDING_DONE:
+            if string.endswith('done'):
+                generation_done = True
+                finding = None
+        if finding is None:
+            break
+
+    if migration_filepath is None or not generation_done:
+        return
+
+    if args.copy:
+        pyperclip.copy(migration_filepath)
+    elif args.open:
+        print('Opening file in IDE...')
+        subprocess.Popen(['charm', migration_filepath], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
+if __name__ == "__main__":
+    main()

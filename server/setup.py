@@ -34,6 +34,7 @@ requires = [
     'inflection',
     'pygraphviz',
     'eralchemy',
+    'pyperclip'
 ]
 
 setup(name='pyragrid',

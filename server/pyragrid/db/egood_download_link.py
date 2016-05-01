@@ -45,7 +45,7 @@ class EgoodDownloadLink(Base):
         info={'colanderalchemy': {
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)
-        }})\
+        }})
 
     created_at = Column(
         sqlalchemy.DateTime,

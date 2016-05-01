@@ -46,6 +46,7 @@ class Good(Base):
             'title': 'Это электронный товар',
         }})
 
+    # TODO rename to file_path
     filepath = Column(
         Text,
         info={'colanderalchemy': {

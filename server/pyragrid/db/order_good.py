@@ -13,6 +13,8 @@ from .enum_order_good_status import EnumOrderGoodStatus
 
 
 class OrderGood(Base):
+    """`OrderGood` is specified by `order_id`, `good_id` and `price` (`price` be may changed after purchase of good so `price` must pe stored at `OrderGood` to calculate refund sum properly).
+    """
 
     __tablename__ = 'order_good'
 
@@ -69,7 +71,7 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    total = Column(
+    wanted_total = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Сумма заказанного товара',
@@ -114,10 +116,10 @@ class OrderGood(Base):
     def reload_price(self):
         self.price = self.good.price
 
-    def count_total(self, reload_price=False):
+    def count_wanted_total(self, reload_price=False):
         if reload_price:
             self.reload_price()
-        self.total = float(self.price) * float(self.count)
+        self.wanted_total = float(self.price) * float(self.count)
 
     def create_status(self, status=EnumOrderGoodStatus.created):
         DBSession.flush()
@@ -127,5 +129,5 @@ class OrderGood(Base):
         self.count += count
         # TODO ! create order_good_status model
         self.create_status()
-        self.count_total(True)
+        self.count_wanted_total(True)
 

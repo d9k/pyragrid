@@ -29,7 +29,7 @@ class Order(Base):
     #             }}
     #                )
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
-    total = Column(
+    wanted_total = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Общая сумма заказа',
@@ -76,13 +76,13 @@ class Order(Base):
         """
         :var order_good: OrderGood
         """
-        total = 0
+        wanted_total = 0
         # what if price changed?
         for order_good in self.order_goods:
-            total += order_good.total
-        self.total = total
+            wanted_total += order_good.wanted_total
+        self.wanted_total = wanted_total
 
-    def find_order_good(self, good_id):
+    def find_order_good(self, good_id, price):
         for order_good in self.order_goods:
             if order_good.good_id == good_id:
                 return order_good
@@ -93,7 +93,7 @@ class Order(Base):
         return new_order_good
 
     def add_good(self, good_id, count=1.0):
-        order_good = self.find_order_good(good_id)
+        order_good = self.find_order_good(good_id, price)
         order_good.add_count(count)
         self.recount_total()
 

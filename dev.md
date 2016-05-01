@@ -29,19 +29,19 @@ zdorovie-legkie.ru db
 
 ### user_
 
-id, login, name, email, group, email_check_code, email_checked
+id, login, name, email, group_, email_check_code, email_checked, password_hash
 
 ### article
 
-id, name, systemPath
+id, name, system_name, path, active_revision_id, active, is_template
 
 ### article_revision
 
-id, article_id, code, datetime, user_id
+id, article_id, parent_revision_id, code, author_id, created_at, author_id
 
 ### good
 
-id, name, price, is_egood, file_path
+id, name, price, is_egood, file_path, active
 
 ### order
 
@@ -55,7 +55,7 @@ id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amo
 
 (order_id, good_id, price) - like pk, never change after creation
 
-status in `[cart, payment_began, paid, partially_paid, refunded, partially_refunded]`
+status in `[cart, payment_began, paid, partially_paid, refunded, partially_refunded]` (same for `order.status`)
 
 ### order_good_status
 

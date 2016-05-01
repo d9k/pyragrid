@@ -51,13 +51,15 @@ wanted_total - сумма желаемого у клиента товара: е�
 
 ### order_good
 
-id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount,refund_amount, client_has_count, status
+id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount, refund_amount, client_has_count, status
 
-status in `cart, payment_began, paid, partially_paid, refunded, partially_refunded]`
+(order_id, good_id, price) - like pk, never change after creation
+
+status in `[cart, payment_began, paid, partially_paid, refunded, partially_refunded]`
 
 ### order_good_status
 
-id, order_good_id, date_time, (succeed), is_last, status, (count?!), shop_money_delta, money_transaction_status_id
+id, previous_id, order_good_id, date_time, (succeed), is_last, status, count, shop_money_delta, money_transaction_id, money_transaction_status_id
 
 status in `[wanted_add, wanted_remove, payment_began, payment_failed, paid, refund_began, refund_failed, refunded, good_sent, good_received, good_sent_back ]`
 
@@ -71,7 +73,7 @@ status in [created, canceled, refunded, timeout, error]
 
 ### refund_order_good
 
-id, refund_id, order_good_id, count, total, status, userId
+id, refund_id, order_good_id, count, total, refund_amount, status, userId
 
 ### egood_download_link
 
@@ -79,11 +81,17 @@ id, (domain?), egood_id, download_code, for_user_id, datetime, expires, active, 
 
 ### money_transaction
 
-id, order_id, type (buy/reject), shop_money_delta, (ended?), (succeed?), status, payment_system
+id, order_id, type (buy/reject), shop_money_delta, status, payment_system
+
+status in `[timeout, error, succeed]`
 
 ### money_transaction_status
 
-id, money_transaction_id, provider, status, datetime, request_data, answer_data, error
+id, money_transaction_id, provider, status, datetime, request_data, info_data, error, status, outcome, comment 
+
+type in `[payment, payment_refund]`
+
+status in `[payment_form_sent, payment_notification_received, payment_failed, refund_request_sent, refund_notificarion_received]
 
 Naming conventions
 ==================

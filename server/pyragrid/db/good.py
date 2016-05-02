@@ -47,7 +47,7 @@ class Good(Base):
         }})
 
     # TODO rename to file_path
-    filepath = Column(
+    file_path = Column(
         Text,
         info={'colanderalchemy': {
             'title': 'Путь к файлу',

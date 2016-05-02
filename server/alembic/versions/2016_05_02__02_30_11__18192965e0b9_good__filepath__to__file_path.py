@@ -15,6 +15,8 @@ depends_on = None
 from alembic import op
 import sqlalchemy as sa
 
+# TODO add existing_type for mysql!
+
 
 def upgrade():
     op.alter_column('good', 'filepath', new_column_name='file_path')

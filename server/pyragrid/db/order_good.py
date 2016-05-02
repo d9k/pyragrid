@@ -49,7 +49,7 @@ class OrderGood(Base):
             name='enum_order_status',
             native_enum=False
         ),
-        default=EnumOrderGoodStatus.created,
+        default=EnumOrderGoodStatus.wanted_add,
         info={'colanderalchemy': {
             'title': 'Состояние заказанного товара',
             # TODO readonly select widget
@@ -121,7 +121,7 @@ class OrderGood(Base):
             self.reload_price()
         self.wanted_total = float(self.price) * float(self.count)
 
-    def create_status(self, status=EnumOrderGoodStatus.created):
+    def create_status(self, status=EnumOrderGoodStatus.wanted_add):
         DBSession.flush()
         self.statuses.append(OrderGoodStatus(status=status, count=self.count))
 

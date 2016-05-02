@@ -69,7 +69,7 @@ TODO иногда total -> sum переименовать
 
 id, order_id, reason, datetime, status, total, refunded, userId, (datetime?)
 
-status in [created, canceled, refunded, timeout, error]
+status in `[created, canceled, refunded, timeout, error]`
 
 ### refund_order_good
 
@@ -91,7 +91,7 @@ id, money_transaction_id, provider, status, datetime, request_data, info_data, e
 
 type in `[payment, payment_refund]`
 
-status in `[payment_form_sent, payment_notification_received, payment_failed, refund_request_sent, refund_notificarion_received]
+status in `[payment_form_sent, payment_notification_received, payment_failed, refund_request_sent, refund_notificarion_received]`
 
 Naming conventions
 ==================

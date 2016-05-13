@@ -113,21 +113,17 @@ class OrderGood(Base):
     user = relationship('User')
     statuses = relationship('OrderGoodStatus', back_populates='orderGood')
 
-    def reload_price(self):
+    def set_price(self):
         self.price = self.good.price
 
-    def count_wanted_total(self, reload_price=False):
-        if reload_price:
-            self.reload_price()
+    def count_wanted_total(self):
         self.wanted_total = float(self.price) * float(self.count)
 
-    def create_status(self, status=EnumOrderGoodStatus.wanted_add):
-        DBSession.flush()
-        self.statuses.append(OrderGoodStatus(status=status, count=self.count))
-
-    def add_count(self, count):
-        self.count += count
+    def alter_count(self, delta_count):
+        self.count += delta_count
         # TODO ! create order_good_status model
-        self.create_status()
-        self.count_wanted_total(True)
+        DBSession.flush()
+        self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_add, count=delta_count))
+
+        self.count_wanted_total()
 

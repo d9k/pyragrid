@@ -103,6 +103,8 @@ class ViewsGoods(ViewsBase):
                 helpers.multidict_rm_values(post, 'email')
                 if email is not None:
                     post.add('email', email)
+            if post.get('payment_system') is None:
+                post.add('payment_system', payment_system_default)
             controls = post.items()
             # TODO add email to controls if email is not None
             try:

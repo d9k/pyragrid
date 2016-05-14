@@ -1,24 +1,50 @@
 @startuml
 
-(*) --> [user choosed goods; order created] "cart"
+skinparam defaultTextAlignment left
+
+(*) --> [user choosed goods;\norder created] "cart"
 "cart" --> [clicks "buy" button] "payment_began"
-"payment_began" --> [unsuccessfull payment] "cart"
-"payment_began" --> [not enough sum] "partially_paid"
-"payment_began" --> "paid"
-"partially_paid" --> "paid"
-"partially_paid" --> "partially_refunded"
-"partially_paid" --> "refunded"
-"paid" --> "partially_refunded"
-"paid" --> "refunded"
-"paid" --> [delivery required] "goods_sent"
-"goods_sent" --> "goods_received"
-"goods_received" --> [User wants to refund] "goods_sent_back"
-"goods_sent_back" --> "goods_received_back"
-"goods_received_back" --> "refunded"
-"goods_received" --> (*)
-"partially_refunded" --> "refunded"
-"partially_refunded" --> "paid"
-"refunded" --> (*)
-"paid" --> [most usual end] (*)
+"cart" --> [user\nexits] "(user doesn't have good\nbut has his money and happy with it)"
+"(user has good\nbut doesn't have his money\nand happy with it)" --> (*)
+"refunded" --> "(user doesn't have good\nbut has his money and happy with it)"
+"(user doesn't have good\nbut has his money and happy with it)" -> (*)
+
+"payment_began" --> [unsuccessfull payment\n(only if paid_amount = 0)] "cart"
+"payment_began" --> if "<payment succeeded>\nenough paid_amount?\n          (paid_amount - refund_amount = wanted_total)" then
+    --> [enough\npaid_amount] "paid"
+    if "User wants\nto refund?" then
+		--> [wants refund] "(refund made)"
+	else
+	    [doesn't want\nto refund] if "Delivery required?" then
+	    	partition GoodTransportation {
+		        --> [required] "goods_sent"
+		        "goods_sent" --> "goods_received"
+				"goods_sent_back" --> "goods_received_back"
+				"goods_received" --> if "User wants\nto refund?" then
+					--> [wants refund] "goods_sent_back"
+				else
+					--> [doesn't want\nto refund] "(user has good\nbut doesn't have his money\nand happy with it)"
+				endif
+		    }
+		else
+		    --> [delivery\nnot\nrequired] "(user has good\nbut doesn't have his money\nand happy with it)"
+		endif
+	endif
+else
+    --> [not\nenough] "partially_paid"
+    if "User wants\nto pay more\nor refund?" then
+        --> [pay more] "payment_began"
+    else
+        --> [wants refund,\nwanted_total := 0] "(refund made)"
+        if "Refund is enough?\n(paid_amount - refund_amount = \nwanted_total = 0)" then
+            --> [refund\nis enough] "refunded"
+        else
+            --> [not\nenough] "partially_refunded"
+        endif
+    endif
+endif
+
+"goods_received_back" --> "(refund made)"
+"partially_refunded" --> "(refund made)"
 
 @enduml

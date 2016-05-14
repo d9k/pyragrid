@@ -6,8 +6,7 @@ Installation
 
 http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirements.html
 
-python venv
-~~~~~~~~~~~
+###python venv
 
     # for psycopg2
     sudo apt-get install libpq-dev python-dev
@@ -39,8 +38,7 @@ check after `source venv/bin/activate`:
 	python --version
 	which easy_install
 
-main part
-~~~~~~~~~
+###main part
 
 	cd server
 
@@ -52,8 +50,7 @@ main part
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 
-For Jinja asset compiler working
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###For Jinja asset compiler working
 
 install nodejs (for Ubuntu):
 
@@ -66,8 +63,7 @@ then
 
     sudo npm install -g coffee-script js2coffee
 
-For assets fix
-~~~~~~~~~~~~~~
+###For assets fix
 
     # ensure ruby installed, then
     sudo su -c "gem install sass"
@@ -97,6 +93,18 @@ sudo apt-get install graphviz libgraphviz-dev pkg-config
 
 https://github.com/pygraphviz/pygraphviz/issues/71
 pip install pygraphviz --install-option="--include-path=/usr/include/graphviz" --install-option="--library-path=/usr/lib/graphviz/"
+
+diagrams generator (optional)
+-----------------------------
+
+(see https://gist.github.com/NLKNguyen/c39596c205ba1f1866c8)
+
+1. install graphviz package
+
+	sudo apt-get install graphviz
+
+2. Download PlantUML (http://plantuml.sourceforge.net/download.html)
+3. Unpack and run PlantUML (`java -jar /path/to/plantuml.jar`)
 
 PRODUCTION DEPLOYMENT
 =====================

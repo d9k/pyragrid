@@ -1,0 +1,24 @@
+@startuml
+
+(*) --> [user choosed goods; order created] "cart"
+"cart" --> [clicks "buy" button] "payment_began"
+"payment_began" --> [unsuccessfull payment] "cart"
+"payment_began" --> [not enough sum] "partially_paid"
+"payment_began" --> "paid"
+"partially_paid" --> "paid"
+"partially_paid" --> "partially_refunded"
+"partially_paid" --> "refunded"
+"paid" --> "partially_refunded"
+"paid" --> "refunded"
+"paid" --> [delivery required] "goods_sent"
+"goods_sent" --> "goods_received"
+"goods_received" --> [User wants to refund] "goods_sent_back"
+"goods_sent_back" --> "goods_received_back"
+"goods_received_back" --> "refunded"
+"goods_received" --> (*)
+"partially_refunded" --> "refunded"
+"partially_refunded" --> "paid"
+"refunded" --> (*)
+"paid" --> [most usual end] (*)
+
+@enduml

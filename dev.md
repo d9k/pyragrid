@@ -49,13 +49,15 @@ id, status, wanted_total, paid_amount, refund_amount, user_id
 
 wanted_total - сумма желаемого у клиента товара: если paid_amount - refund_amount = wanted_total => заказ оплачен (paid) либо отменен полностью (refunded) если wanted_total = 0
 
+status = `[cart, payment_began, paid, partially_paid, refunded, partially_refunded, goods_sent, goods_received, goods_sent_back, goods_received_back,]`
+
 ### order_good
 
 id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount, refund_amount, client_has_count, status
 
 (order_id, good_id, price) - like pk, never change after creation
 
-status in `[cart, payment_began, paid, partially_paid, refunded, partially_refunded]` (same for `order.status`)
+status same for `order.status`)
 
 ### order_good_status
 

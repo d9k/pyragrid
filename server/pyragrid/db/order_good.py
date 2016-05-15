@@ -58,7 +58,7 @@ class OrderGood(Base):
 
     count = Column(
         sqlalchemy.Numeric(12, 4),
-        default=1,
+        default=0,
         info={'colanderalchemy': {
            'title': 'Количество заказанного товара',
            'widget': deform.widget.TextInputWidget(readonly=True)

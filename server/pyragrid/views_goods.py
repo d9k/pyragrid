@@ -125,7 +125,7 @@ class ViewsGoods(ViewsBase):
                 user = User.by_email(email)
 
             if user is None:
-                # register
+                # TODO register to separate function
                 user = User()
                 user.email = email
                 password = User.generate_password()
@@ -143,7 +143,7 @@ class ViewsGoods(ViewsBase):
                 with transaction.manager:
                     new_order = Order(user_id=user.id)
                     DBSession.add(new_order)
-                    new_order.add_good(good.id)
+                    new_order.alter_wanted_good_count(good.id)
             except DBAPIError as error:
                 return self.db_error_response(error)
 

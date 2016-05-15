@@ -82,20 +82,22 @@ class Order(Base):
             wanted_total += order_good.wanted_total
         self.wanted_total = wanted_total
 
-    def find_order_good(self, good_id, price=None):
+    def get_order_good(self, good_id, price=None):
         for order_good in self.order_goods:
             if order_good.good_id == good_id:
-                if price is None or price == order_good.price:
+                if price == order_good.price:
                     return order_good
+        # not found, creating new
         good = Good.by_id(good_id)
         new_order_good = OrderGood(good_id=good.id, count=0, user_id=self.user_id)
         self.order_goods.append(new_order_good)
         DBSession.flush()
+        new_order_good.set_price()
         return new_order_good
 
-    def add_good(self, good_id, count=1.0, price=None):
-        order_good = self.find_order_good(good_id, price)
-        order_good.add_count(count)
+    def alter_wanted_good_count(self, good_id, delta_count=1.0, price=None):
+        order_good = self.get_order_good(good_id, price)
+        order_good.alter_count(delta_count)
         self.recount_total()
 
     def remove_good(self, order_good_id):

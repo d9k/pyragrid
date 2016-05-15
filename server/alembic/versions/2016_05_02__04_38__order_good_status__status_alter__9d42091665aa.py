@@ -14,14 +14,12 @@ depends_on = None
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.engine.reflection import Inspector
-# for raw sql:
-# from sqlalchemy import text
+# from sqlalchemy.engine.reflection import Inspector
 
 connection = op.get_bind()
 engine_name = connection.engine.name
 # WTF!?!? inspector can't inspect check constaints!!111
-inspector = Inspector.from_engine(connection.engine)
+# inspector = Inspector.from_engine(connection.engine)
 
 enum_order_good_status_new = sa.Enum('wanted_add', 'wanted_remove', 'payment_began', 'payment_failed', 'paid', 'refund_began', 'refund_began', 'refund_failed', 'refunded', 'good_sent', 'good_received', 'good_sent_back', name='enum_order_status', native_enum=False)
 

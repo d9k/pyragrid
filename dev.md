@@ -139,6 +139,8 @@ If identifier already exists in database management system, use underscore at th
 
 (deprecated, need review) существующий заказ: добавлять товары нельзя, убирать тоже, можно делать частичный или полный возврат, подтверждать доставку (для электронных товаров подтверждается при скачивании). админ может подтверждать оплату.
 
+![One click buy](dia/one-click-buy.png "One click buy")
+
 Docstrings
 ----------
 

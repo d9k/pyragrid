@@ -1,11 +1,12 @@
 import os
+import os.path as path
 import sys
 import transaction
 import pyragrid.helpers as helpers
 import subprocess
 
 from sqlalchemy import engine_from_config
-from eralchemy import render_er
+import eralchemy
 
 from pyramid.paster import (
     get_appsettings,
@@ -21,15 +22,18 @@ from pyragrid.db import (
 
 from os.path import dirname, realpath
 
+
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri> [var=value]\n'
           '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
-
+#           server <- pyragrid <- scripts
 server_path = dirname(dirname(dirname(realpath(__file__))))
+
 bash_cwd = server_path
+erd_file_name = 'erd-from-sqlalchemy.png'
 
 
 def bash(*command_parts):
@@ -58,9 +62,9 @@ def main(argv=sys.argv):
         passwords_settings = helpers.load_config(passwords_config_path)
         settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
 
-    sql_engine = engine_from_config(settings, 'sqlalchemy.')
+    # sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # # DBSession.configure(bind=engine)
     # Base.metadata.bind = sql_engine
-    erd_file_name = 'erd_from_sqlalchemy.png'
-    render_er(Base, erd_file_name)
-    print('file generated. see "server/' + erd_file_name + '"')
+    erd_file_path = path.realpath(path.join(server_path, '..', 'dia', erd_file_name))
+    eralchemy.render_er(Base, erd_file_path)
+    print('file generated. see "' + erd_file_path + '"')

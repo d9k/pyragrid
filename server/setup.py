@@ -38,7 +38,7 @@ requires = [
 ]
 
 setup(name='pyragrid',
-      version='0.0.3',
+      version='0.0.4',
       description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

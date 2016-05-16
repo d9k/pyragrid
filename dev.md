@@ -53,11 +53,9 @@ status = `[cart, payment_began, paid, partially_paid, refunded, partially_refund
 
 ### order_good
 
-id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount, refund_amount, client_has_count, status
+id, order_id, good_id, price, wanted_count, wanted_total, refund_count, paid_amount, refund_amount, client_has_count
 
 (order_id, good_id, price) - like pk, never change after creation
-
-status same for `order.status`)
 
 ### order_good_status
 
@@ -94,6 +92,10 @@ id, money_transaction_id, provider, status, datetime, request_data, info_data, e
 type in `[payment, payment_refund]`
 
 status in `[payment_form_sent, payment_notification_received, payment_failed, refund_request_sent, refund_notificarion_received]`
+
+Current db state:
+
+![Current db state erd diagram](dia/erd-from-sqlalchemy.png)
 
 Naming conventions
 ==================

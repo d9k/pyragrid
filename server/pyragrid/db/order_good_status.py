@@ -48,6 +48,7 @@ class OrderGoodStatus(Base):
             name='enum_order_status',
             native_enum=False
         ),
+        nullable=False,
         # TODO readonly select
         info={'colanderalchemy': {
             'title': 'Состояние',

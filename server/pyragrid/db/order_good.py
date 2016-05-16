@@ -43,18 +43,18 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    status = Column(
-        sqlalchemy.Enum(
-            *EnumOrderGoodStatus.get_values(),
-            name='enum_order_status',
-            native_enum=False
-        ),
-        default=EnumOrderGoodStatus.wanted_add,
-        info={'colanderalchemy': {
-            'title': 'Состояние заказанного товара',
-            # TODO readonly select widget
-            'widget': deform.widget.TextInputWidget(readonly=True)
-        }})
+    # status = Column(
+    #     sqlalchemy.Enum(
+    #         *EnumOrderGoodStatus.get_values(),
+    #         name='enum_order_status',
+    #         native_enum=False
+    #     ),
+    #     default=EnumOrderGoodStatus.wanted_alter,
+    #     info={'colanderalchemy': {
+    #         'title': 'Состояние заказанного товара',
+    #         # TODO readonly select widget
+    #         'widget': deform.widget.TextInputWidget(readonly=True)
+    #     }})
 
     count = Column(
         sqlalchemy.Numeric(12, 4),
@@ -123,7 +123,6 @@ class OrderGood(Base):
         self.count += delta_count
         # TODO ! create order_good_status model
         DBSession.flush()
-        self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_add, count=delta_count))
-
+        self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_alter, count=delta_count))
         self.count_wanted_total()
 

@@ -2,8 +2,7 @@ from .enum import (SimpleEnum)
 
 
 class EnumOrderGoodStatus(SimpleEnum):
-    wanted_add = '', 'Добавление в желаемое'
-    wanted_remove = '', 'Удаление из желаемого'
+    wanted_alter = '', 'Изменение списка желаемых товаров'
     payment_began = '', 'Оплпата начата'
     payment_failed = '', 'Неуспешная оплата'
     paid = '', 'Оплачен'

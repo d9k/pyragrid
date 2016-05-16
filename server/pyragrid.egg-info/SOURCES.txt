@@ -42,6 +42,7 @@ pyragrid/db/enum.py
 pyragrid/db/enum_money_transaction_status.py
 pyragrid/db/enum_money_transaction_type.py
 pyragrid/db/enum_order_good_status.py
+pyragrid/db/enum_order_status.py
 pyragrid/db/enum_refund_status.py
 pyragrid/db/good.py
 pyragrid/db/money_transaction.py

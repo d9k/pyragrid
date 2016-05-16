@@ -1,10 +1,10 @@
 #!/home/d9k/cr/zdorovie-legkie/server/venv/bin/python
 # EASY-INSTALL-ENTRY-SCRIPT: 'pyragrid==0.0','console_scripts','initialize_pyragrid_db'
-__requires__ = 'pyragrid==0.0'
+__requires__ = 'pyragrid'
 import sys
 from pkg_resources import load_entry_point
 
 if __name__ == '__main__':
     sys.exit(
-        load_entry_point('pyragrid==0.0', 'console_scripts', 'gen_db_erd_schema')()
+        load_entry_point('pyragrid', 'console_scripts', 'gen_db_erd_schema')()
     )

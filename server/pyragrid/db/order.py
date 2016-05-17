@@ -9,6 +9,7 @@ from sqlalchemy.orm import (
 )
 from .order_good import OrderGood
 from .good import Good
+from .enum_order_status import EnumOrderStatus
 
 
 class Order(Base):
@@ -50,7 +51,19 @@ class Order(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-
+    status = Column(
+        sqlalchemy.Enum(
+            *EnumOrderStatus.get_values(),
+            name='enum_order_status',
+            native_enum=False
+        ),
+        nullable=False,
+        default=EnumOrderStatus.cart,
+        # TODO readonly select
+        info={'colanderalchemy': {
+            'title': 'Состояние',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
 
     user_id = Column(
         sqlalchemy.Integer,

@@ -31,6 +31,8 @@ import os.path
 
 from .payment_systems_clients import load_payment_systems
 
+from . import test_payment_gateway
+
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):

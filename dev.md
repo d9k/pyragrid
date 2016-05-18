@@ -91,7 +91,7 @@ id, money_transaction_id, provider, status, datetime, request_data, info_data, e
 
 type in `[payment, payment_refund]`
 
-status in `[payment_form_sent, payment_notification_received, payment_failed, refund_request_sent, refund_notificarion_received]`
+status in `[payment_initialisation, payment_form_sent, payment_notification_received, payment_notification_answered, refund_request_sent, refund_notification_received, refund_failed]`
 
 Current db state:
 

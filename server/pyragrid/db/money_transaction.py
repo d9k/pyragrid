@@ -40,7 +40,7 @@ class MoneyTransaction(Base):
             name='enum_money_transaction_status',
             native_enum=False
         ),
-        default=EnumMoneyTransactionStatus.created,
+        default=EnumMoneyTransactionStatus.init_request_sent,
         info={'colanderalchemy': {
             'title': 'Состояние транзации',
             # TODO readonly select widget

@@ -147,6 +147,12 @@ class ViewsGoods(ViewsBase):
             except DBAPIError as error:
                 return self.db_error_response(error)
 
+            try:
+                with transaction.manager:
+                    DBSession.add(new_order)
+            except DBAPIError as error:
+                return self.db_error_response(error)
+
             # redirect to payment
             # TODO payment system choose
 

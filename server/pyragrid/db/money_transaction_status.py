@@ -50,6 +50,7 @@ class MoneyTransactionStatus(Base):
             name='enum_order_status',
             native_enum=False
         ),
+        default=EnumMoneyTransactionStatus.init_request_sent,
         # TODO readonly select
         info={'colanderalchemy': {
             'title': 'Состояние',

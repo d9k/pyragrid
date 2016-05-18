@@ -54,13 +54,16 @@ from .test_payment_result_form import (
 )
 
 
-@view_defaults(route_name='index')
+# @view_defaults(route_name='index')
 class ViewsTestPaymentGateway(ViewsBase):
 
     def __init__(self, request):
         super().__init__(request)
 
-    @view_config(route_name='test_payment_gateway_proceed', renderer='templates/test_payment_gateway_proceed.jinja2')
+    @view_config(
+        route_name='test_payment_gateway_proceed',
+        renderer='test_payment_gateway/test_payment_gateway_proceed.jinja2'
+    )
     def view_proceed(self):
         if not check_dev_mode():
             return HTTPNotFound()
@@ -68,6 +71,13 @@ class ViewsTestPaymentGateway(ViewsBase):
         test_payment_result_schema = TestPaymentResultSchema()
 
         submit_button_name = 'test_payment_result_submit'
+        form_submitted = submit_button_name in self.request.params
+
+        money_transaction_id = None
+        if not form_submitted:
+            money_transaction_id = self.request.POST.get('money_transaction_id')
+            if money_transaction_id is None:
+                return HTTPBadRequest('No money_transaction_id specified')
 
         test_payment_result_form = FormMod(
             test_payment_result_schema.bind(
@@ -77,3 +87,7 @@ class ViewsTestPaymentGateway(ViewsBase):
             # css_class='no-red-stars'
         )
 
+        appstruct = dict()
+        appstruct['money_transcation_id'] = money_transaction_id
+
+        return dict(rendered_test_payment_result_form=test_payment_result_form.render(appstruct))

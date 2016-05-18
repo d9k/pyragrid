@@ -14,6 +14,7 @@ class TestPaymentResultSchema(colander.Schema):
     result = colander.SchemaNode(
         colander.String(),
         title='Payment result',
+        default=RESULT_SUCCESS,
         validator=colander.OneOf(x[0] for x in test_payment_result_choises),
         widget=deform.widget.RadioChoiceWidget(
             values=test_payment_result_choises

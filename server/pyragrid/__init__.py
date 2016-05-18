@@ -165,7 +165,8 @@ def main(global_config, **settings):
 
     config.add_route('good_one_click_buy', '/goods/{id}/one_click_buy')
 
-    config.add_route('test_payment_gateway_proceed', '/test_payment_gateway/proceed')
+    # config.add_route('test_payment_gateway_proceed', '/test_payment_gateway/proceed')
+    config.add_route('test_payment_gateway_proceed', '/t6')
 
     config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)
 

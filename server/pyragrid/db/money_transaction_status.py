@@ -86,3 +86,4 @@ class MoneyTransactionStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    moneyTransaction = relationship('MoneyTransaction', back_populates='statuses')

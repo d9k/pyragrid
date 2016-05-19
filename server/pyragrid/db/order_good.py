@@ -77,6 +77,7 @@ class OrderGood(Base):
 
     wanted_total = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0.0,
         info={'colanderalchemy': {
             'title': 'Сумма заказанного товара',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -84,6 +85,7 @@ class OrderGood(Base):
 
     paid_amount = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0.0,
         info={'colanderalchemy': {
             'title': 'Оплаченная сумма',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -99,6 +101,7 @@ class OrderGood(Base):
 
     refund_amount = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0,
         info={'colanderalchemy': {
             'title': 'Возвращённая сумма',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -117,8 +120,6 @@ class OrderGood(Base):
     user = relationship('User')
     statuses = relationship('OrderGoodStatus', back_populates='orderGood')
 
-
-
     def set_price(self):
         self.price = self.good.price
 
@@ -132,3 +133,15 @@ class OrderGood(Base):
         self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_alter, count=delta_count))
         self.count_wanted_total()
 
+    def recount_count(self):
+        self.count = sum([
+            _status.count for _status in self.statuses
+            if _status.status == EnumOrderGoodStatus.wanted_alter
+        ])
+        self.count_wanted_total()
+
+    def get_amount_to_pay(self):
+        return self.wanted_total - self.paid_amount + self.refund_amount
+
+    def get_amount_to_refund(self):
+        return self.paid_amount - self.refund_amount

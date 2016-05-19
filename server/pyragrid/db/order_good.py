@@ -9,6 +9,7 @@ from .order_good_status import OrderGoodStatus
 from sqlalchemy.orm import (
     Query, relationship
 )
+from sqlalchemy import UniqueConstraint
 from .enum_order_good_status import EnumOrderGoodStatus
 
 
@@ -17,6 +18,9 @@ class OrderGood(Base):
     """
 
     __tablename__ = 'order_good'
+    __table_args__ = (
+        UniqueConstraint('order_id', 'good_id', 'price', name='order_good_unique'),
+    )
 
     id = Column(
         sqlalchemy.Integer,
@@ -43,6 +47,14 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    count = Column(
+        sqlalchemy.Numeric(12, 4),
+        default=0,
+        info={'colanderalchemy': {
+           'title': 'Количество заказанного товара',
+           'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     # status = Column(
     #     sqlalchemy.Enum(
     #         *EnumOrderGoodStatus.get_values(),
@@ -55,14 +67,6 @@ class OrderGood(Base):
     #         # TODO readonly select widget
     #         'widget': deform.widget.TextInputWidget(readonly=True)
     #     }})
-
-    count = Column(
-        sqlalchemy.Numeric(12, 4),
-        default=0,
-        info={'colanderalchemy': {
-           'title': 'Количество заказанного товара',
-           'widget': deform.widget.TextInputWidget(readonly=True)
-        }})
 
     price = Column(
         sqlalchemy.Numeric(12, 2),
@@ -112,6 +116,8 @@ class OrderGood(Base):
     order = relationship('Order', back_populates='order_goods')
     user = relationship('User')
     statuses = relationship('OrderGoodStatus', back_populates='orderGood')
+
+
 
     def set_price(self):
         self.price = self.good.price

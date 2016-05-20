@@ -16,6 +16,7 @@ from .db import (
     Good,
     Order,
     OrderGood,
+    MoneyTransaction,
     db_save_model
 )
 
@@ -150,6 +151,10 @@ class ViewsGoods(ViewsBase):
             try:
                 with transaction.manager:
                     DBSession.add(new_order)
+                    # TODO generalize and move transaction make code somewhere
+                    money_transaction = MoneyTransaction(order_id=new_order.id, user_id=user.id)
+                    
+
             except DBAPIError as error:
                 return self.db_error_response(error)
 
@@ -162,7 +167,8 @@ class ViewsGoods(ViewsBase):
             # except DBAPIError as error:
             #     return self.db_error_response(error)
 
-        # TODO backlink
+        # TODO backlink param
+        # or write backlink to the order class?
         return dict(good=good, rendered_one_click_buy_form=one_click_buy_form.render(appstruct))
         # TODO one click buy form: email / login / logined => username.
 

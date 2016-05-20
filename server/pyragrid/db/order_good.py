@@ -133,12 +133,29 @@ class OrderGood(Base):
         self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_alter, count=delta_count))
         self.count_wanted_total()
 
-    def recount_count(self):
+    def recount_wanted_total(self):
         self.count = sum([
             _status.count for _status in self.statuses
             if _status.status == EnumOrderGoodStatus.wanted_alter
         ])
         self.count_wanted_total()
+
+    def recount_refund_amount(self):
+        self.refund_amount = sum([
+            _status.count for _status in self.statuses
+            if _status.status == EnumOrderGoodStatus.refunded
+        ])
+
+    def recount_paid_amount(self):
+        self.paid_amount = sum([
+            _status.count for _status in self.statuses
+            if _status.status == EnumOrderGoodStatus.paid
+        ])
+
+    def recount_totals(self):
+        self.recount_wanted_total()
+        self.recount_refund_amount()
+        self.recount_paid_amount()
 
     def get_amount_to_pay(self):
         return self.wanted_total - self.paid_amount + self.refund_amount

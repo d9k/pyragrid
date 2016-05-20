@@ -60,6 +60,15 @@ class MoneyTransaction(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    shop_money_delta = Column(
+        sqlalchemy.Numeric(12, 2),
+        default=0.0,
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Изменение средств магазина (в случае успеха)',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     user_id = Column(
         sqlalchemy.Integer,
         ForeignKey('user_.id'),

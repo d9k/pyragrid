@@ -38,12 +38,6 @@ class MoneyTransactionStatus(Base):
             # 'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    provider = Column(
-        sqlalchemy.Text,
-        info={'colanderalchemy': {
-            'title': 'Платёжный сервис',
-        }})
-
     status = Column(
         sqlalchemy.Enum(
             *EnumMoneyTransactionStatus.get_values(),

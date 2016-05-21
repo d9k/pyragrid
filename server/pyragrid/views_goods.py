@@ -152,8 +152,10 @@ class ViewsGoods(ViewsBase):
                 with transaction.manager:
                     DBSession.add(new_order)
                     # TODO generalize and move transaction make code somewhere
-                    money_transaction = MoneyTransaction(order_id=new_order.id, user_id=user.id)
-                    
+                    money_transaction = MoneyTransaction(
+                        order_id=new_order.id, user_id=user.id, payment_system=post.get('payment_system')
+                    )
+
 
             except DBAPIError as error:
                 return self.db_error_response(error)

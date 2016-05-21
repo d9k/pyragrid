@@ -1,6 +1,7 @@
 from sqlalchemy import (
     Column, ForeignKey
 )
+from .money_transaction_status import MoneyTransactionStatus
 import sqlalchemy
 import deform.widget
 import colander
@@ -60,6 +61,14 @@ class MoneyTransaction(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    payment_system = Column(
+        sqlalchemy.String(20),
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'Платёжная система',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     shop_money_delta = Column(
         sqlalchemy.Numeric(12, 2),
         default=0.0,
@@ -78,3 +87,7 @@ class MoneyTransaction(Base):
         }})
 
     statuses = relationship('MoneyTransactionStatus', back_populates='moneyTransaction')
+
+    def init(self):
+        new_status = MoneyTransactionStatus(money_transaction_id=self.id)
+        self.statuses.append(new_status)

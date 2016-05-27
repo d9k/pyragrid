@@ -37,11 +37,16 @@ def get_payment_clients_captions():
     return captions
 
 
-def load_payment_systems(payment_systems_names):
-    for name in payment_systems_names:
+def load_by_settings(settings):
+    payment_systems_enabled = settings.get('payment_systems_enabled')
+    if payment_systems_enabled is None:
+        return
+
+    payment_systems_enabled = payment_systems_enabled.split()
+
+    for name in payment_systems_enabled:
         class_name = PAYMENT_CLIENT_CLASS_NAME_PREFIX + name[:1].upper() + name[1:]
         package_name = inflection.underscore(class_name)
         imported_module = importlib.import_module('.'+package_name, __package__)
         _paymentClientClasses[name] = getattr(imported_module, class_name)
-
 

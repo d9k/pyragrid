@@ -29,7 +29,7 @@ from jac import CompressorExtension
 
 import os.path
 
-from .payment_systems_clients import load_payment_systems
+from . import payment_systems
 
 from . import test_payment_gateway
 
@@ -53,9 +53,10 @@ def main(global_config, **settings):
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
     # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
     # TODO http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
+    # TODO move secret to development_passwords.ini
     authn_policy = AuthTktAuthenticationPolicy(secret='43ser0sroova', hashalg='sha512', callback=User.get_groups)
     authz_policy = ACLAuthorizationPolicy()
-    # DBSession.configure(bind=engine)
+    # DBSession.configure(bind=engine)p
     Base.metadata.bind = sql_engine
     session_factory = session_factory_from_settings(settings)
     config = Configurator(settings=settings, root_factory='pyragrid.db.RootFactory')
@@ -79,10 +80,7 @@ def main(global_config, **settings):
     )
     deform.Form.set_default_renderer(zpt_renderer)
 
-    payment_systems = settings.get('payment_systems')
-    if payment_systems is not None:
-        payment_systems = payment_systems.split()
-        load_payment_systems(payment_systems)
+    payment_systems.load_by_settings(settings)
 
     static_cache_max_age = 3600
     # TODO hacky. maybe better copy resources with gulp task?

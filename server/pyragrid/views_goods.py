@@ -48,7 +48,7 @@ from .views_base import (
 
 from .widgets import FormMod
 from webob.multidict import MultiDict
-from .payment_systems_clients import get_payment_clients_captions
+from .payment_systems import get_payment_clients_captions
 
 
 @view_defaults(route_name='index')

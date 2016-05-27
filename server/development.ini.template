@@ -37,6 +37,9 @@ payment_systems_enabled =
 
 payment_system_default = test
 
+# payment client class configuration example:
+# PaymentClientTest.test_field = 1234
+
 generate_password_length = 8
 mail_default_subject = Письмо от проекта Pyragrid
 

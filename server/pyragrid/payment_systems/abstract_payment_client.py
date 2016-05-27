@@ -12,3 +12,6 @@ class AbstractPaymentClient:
 
     def process_payment_error(self):
         pass
+
+    def on_class_load(self):
+        pass

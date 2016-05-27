@@ -106,6 +106,8 @@ class ViewsGoods(ViewsBase):
                     post.add('email', email)
             if post.get('payment_system') is None:
                 post.add('payment_system', payment_system_default)
+
+            payment_system = post.get('payment_system')
             controls = post.items()
             # TODO add email to controls if email is not None
             try:
@@ -148,12 +150,14 @@ class ViewsGoods(ViewsBase):
             except DBAPIError as error:
                 return self.db_error_response(error)
 
+            amount_to_pay = new_order.get_amount_to_pay()
+
             try:
                 with transaction.manager:
                     DBSession.add(new_order)
                     # TODO generalize and move transaction make code somewhere
                     money_transaction = MoneyTransaction(
-                        order_id=new_order.id, user_id=user.id, payment_system=post.get('payment_system')
+                        order_id=new_order.id, user_id=user.id, payment_system=payment_system, shop_money_delta=amount_to_pay
                     )
 
 

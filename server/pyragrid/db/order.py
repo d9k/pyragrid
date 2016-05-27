@@ -44,7 +44,7 @@ class Order(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    rejected_amount = Column(
+    refund_amount = Column(
         sqlalchemy.Numeric(12, 2),
         info={'colanderalchemy': {
             'title': 'Сумма возврата',
@@ -87,15 +87,22 @@ class Order(Base):
         """
         return DBSession.query(Order).filter(Order.id == id_).first()
 
-    def recount_total(self):
+    def recount_wanted_total(self):
         """
         :var order_good: OrderGood
         """
-        wanted_total = 0
-        # what if price changed?
-        for order_good in self.order_goods:
-            wanted_total += order_good.wanted_total
-        self.wanted_total = wanted_total
+        self.wanted_total = sum([order_good.wanted_total for order_good in self.order_goods])
+
+    def recount_refund_amount(self):
+        self.refund_amount = sum([order_good.refund_amount for order_good in self.order_goods])
+
+    def recount_paid_amount(self):
+        self.paid_amount = sum([order_good.paid_amount for order_good in self.order_goods])
+
+    def recount_totals(self):
+        self.recount_wanted_total()
+        self.recount_refund_amount()
+        self.recount_paid_amount()
 
     def get_order_good(self, good_id, price=None):
         for order_good in self.order_goods:
@@ -113,7 +120,10 @@ class Order(Base):
     def alter_wanted_good_count(self, good_id, delta_count=1.0, price=None):
         order_good = self.get_order_good(good_id, price)
         order_good.alter_count(delta_count)
-        self.recount_total()
+        self.recount_wanted_total()
 
     def remove_good(self, order_good_id):
         raise NotImplementedError()
+
+    def get_amount_to_pay(self):
+        return self.wanted_total + self.refund_amount - self.paid_amount

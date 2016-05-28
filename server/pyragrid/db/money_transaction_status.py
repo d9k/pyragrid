@@ -58,6 +58,13 @@ class MoneyTransactionStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    url = Column(
+        sqlalchemy.Text(),
+        info={'colanderalchemy': {
+            'title': 'URL запроса',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     additional_data = Column(
         postgres.JSON,
         info={'colanderalchemy': {

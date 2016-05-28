@@ -87,7 +87,7 @@ status in `[timeout, error, succeed]`
 
 ### money_transaction_status
 
-id, money_transaction_id, provider, status, datetime, request_data, info_data, error, status, outcome, comment 
+id, money_transaction_id, provider, status, datetime, request_data, url, info_data, error, status, outcome, comment
 
 type in `[payment, payment_refund]`
 

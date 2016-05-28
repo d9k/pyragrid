@@ -55,7 +55,14 @@ class MoneyTransactionStatus(Base):
         postgres.JSON,
         info={'colanderalchemy': {
             'title': 'Данные запроса',
-            'widget': deform.widget.DateTimeInputWidget(readonly=True)
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    additional_data = Column(
+        postgres.JSON,
+        info={'colanderalchemy': {
+            'title': 'Дополнительные данные',
+            'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
     answer_data = Column(

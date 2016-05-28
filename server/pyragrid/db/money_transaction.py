@@ -91,3 +91,5 @@ class MoneyTransaction(Base):
     def init(self):
         new_status = MoneyTransactionStatus(money_transaction_id=self.id)
         self.statuses.append(new_status)
+        new_status.build_form()
+        return new_status

@@ -159,7 +159,7 @@ class ViewsGoods(ViewsBase):
                     money_transaction = MoneyTransaction(
                         order_id=new_order.id, user_id=user.id, payment_system=payment_system, shop_money_delta=amount_to_pay
                     )
-
+                    money_transaction.init()
 
             except DBAPIError as error:
                 return self.db_error_response(error)

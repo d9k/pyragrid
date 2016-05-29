@@ -1,0 +1,1 @@
+PAYMENT_CLIENT_CLASS_NAME_PREFIX = 'PaymentClient'

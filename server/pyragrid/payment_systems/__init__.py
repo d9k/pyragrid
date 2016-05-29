@@ -4,10 +4,11 @@ import sys
 import inspect
 import importlib
 import inflection
+from .abstract_payment_client import AbstractPaymentClient
+from .const import (PAYMENT_CLIENT_CLASS_NAME_PREFIX)
 
-
-PAYMENT_CLIENT_CLASS_NAME_PREFIX = 'PaymentClient'
 PREFIX_LEN = len(PAYMENT_CLIENT_CLASS_NAME_PREFIX)
+
 _payment_client_classes = {}
 _payment_clients_settings = dict()
 

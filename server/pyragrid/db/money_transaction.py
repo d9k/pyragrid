@@ -88,8 +88,8 @@ class MoneyTransaction(Base):
 
     statuses = relationship('MoneyTransactionStatus', back_populates='moneyTransaction')
 
-    def init(self):
-        new_status = MoneyTransactionStatus(money_transaction_id=self.id)
-        self.statuses.append(new_status)
-        new_status.build_form()
-        return new_status
+    # def init(self):
+    #     new_status = MoneyTransactionStatus(money_transaction_id=self.id)
+    #     self.statuses.append(new_status)
+    #     new_status.build_form()
+    #     return new_status

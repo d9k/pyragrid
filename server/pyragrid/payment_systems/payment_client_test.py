@@ -6,6 +6,7 @@ class PaymentClientTest (AbstractPaymentClient):
     caption = 'Test payment system'
     test_field = 0000
 
-    def on_class_load(self):
+    @classmethod
+    def on_class_load(cls):
         pass
 

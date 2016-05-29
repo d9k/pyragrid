@@ -158,6 +158,11 @@ http://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html
 
 about what?? - https://docs.python.org/devguide/documenting.html
 
+working example:
+
+	payment_client = payment_systems.get_payment_client_by_name(payment_system)
+	""":type payment_client AbstractPaymentClient"""
+
 TODO
 ----
 

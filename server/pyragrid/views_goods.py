@@ -8,6 +8,8 @@ from pyramid.view import (
 from pyramid.security import has_permission
 # from pyramid.url import route_url
 from sqlalchemy.exc import DBAPIError
+from . import payment_systems
+from .payment_systems import AbstractPaymentClient
 
 from .db import (
     Base,
@@ -156,10 +158,17 @@ class ViewsGoods(ViewsBase):
                 with transaction.manager:
                     DBSession.add(new_order)
                     # TODO generalize and move transaction make code somewhere
-                    money_transaction = MoneyTransaction(
-                        order_id=new_order.id, user_id=user.id, payment_system=payment_system, shop_money_delta=amount_to_pay
+                    new_money_transaction = MoneyTransaction(
+                        order_id=new_order.id,
+                        user_id=user.id,
+                        # payment_system=payment_system,
+                        shop_money_delta=amount_to_pay
                     )
-                    money_transaction.init()
+                    # money_transaction.init()
+                    payment_client = payment_systems.get_payment_client_by_name(payment_system)
+                    # working type definition!
+                    """:type payment_client AbstractPaymentClient"""
+                    payment_client.run_transaction(new_money_transaction)
 
             except DBAPIError as error:
                 return self.db_error_response(error)

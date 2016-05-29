@@ -4,6 +4,8 @@ from ..db import (
     MoneyTransaction
 )
 
+from .const import (PAYMENT_CLIENT_CLASS_NAME_PREFIX)
+
 
 class AbstractPaymentClient:
     for_dev_only = False
@@ -19,7 +21,8 @@ class AbstractPaymentClient:
     def process_payment_error(self):
         pass
 
-    def on_class_load(self):
+    @classmethod
+    def on_class_load(cls):
         pass
 
     def create_form(self):
@@ -34,7 +37,18 @@ class AbstractPaymentClient:
     def do_refund(self, transaction):
         return
 
+    def get_short_name(self):
+        # TODO check
+        class_name = self.__class.__name__
+        """:type class_name str"""
+        if class_name == "AbstractPaymentClient":
+            raise Exception('call from abstract class')
+        if not class_name.startswith(PAYMENT_CLIENT_CLASS_NAME_PREFIX):
+            raise Exception('wrong class name '+class_name)
+        return class_name[len(PAYMENT_CLIENT_CLASS_NAME_PREFIX):]
+
     def run_transaction(self, transaction: MoneyTransaction):
+        transaction.payment_system = self.get_short_name()
         if transaction.type == EnumMoneyTransactionType.buy:
             if self.init_required:
                 init_result = self.init_payment(transaction)

@@ -22,8 +22,16 @@ _payment_clients_settings = dict()
 #             _paymentClientClasses[key] = _class
 
 
+def get_payment_client_class_by_name(name):
+    return _payment_client_classes.get(name)
+
+
+# TODO send additional arguments to constructor/ set fields from arguments?
 def get_payment_client_by_name(name):
-    _payment_client_classes.get(name)
+    payment_client_class = get_payment_client_class_by_name(name)
+    if payment_client_class is None:
+        return None
+    return payment_client_class()
 
 
 def get_payment_clients_names():
@@ -39,7 +47,8 @@ def get_payment_clients_captions():
     return captions
 
 
-def load_by_settings(settings):
+def load_by_config(config):
+    settings = config.registry.settings
     payment_systems_enabled = settings.get('payment_systems_enabled')
     if payment_systems_enabled is None:
         return
@@ -68,4 +77,4 @@ def load_by_settings(settings):
         for setting_name in payment_client_settings:
             setattr(payment_client_class, setting_name, payment_client_settings[setting_name])
 
-        payment_client_class.on_class_load()
+        payment_client_class.on_class_load(config)

@@ -1,3 +1,5 @@
+import pyramid.config
+
 from ..db import (
     EnumMoneyTransactionStatus,
     EnumMoneyTransactionType,
@@ -11,6 +13,8 @@ class AbstractPaymentClient:
     for_dev_only = False
     caption = '<abstract>'
     init_required = False
+    name = None
+    short_name = None
 
     def get_payment_auth_url(self):
         pass
@@ -22,8 +26,9 @@ class AbstractPaymentClient:
         pass
 
     @classmethod
-    def on_class_load(cls):
-        pass
+    def on_class_load(cls, config: pyramid.config.Configurator):
+        cls.short_name = cls.get_short_name()
+        cls.name = cls.get_full_name()
 
     def create_form(self):
         pass
@@ -37,26 +42,37 @@ class AbstractPaymentClient:
     def do_refund(self, transaction):
         return
 
-    def get_short_name(self):
+    @classmethod
+    def get_short_name(cls):
         # TODO check
-        class_name = self.__class.__name__
+        class_name = cls.__name__
         """:type class_name str"""
         if class_name == "AbstractPaymentClient":
             raise Exception('call from abstract class')
         if not class_name.startswith(PAYMENT_CLIENT_CLASS_NAME_PREFIX):
             raise Exception('wrong class name '+class_name)
-        return class_name[len(PAYMENT_CLIENT_CLASS_NAME_PREFIX):]
+        short_name = class_name[len(PAYMENT_CLIENT_CLASS_NAME_PREFIX):]
+        short_name = short_name[:1].lower() + short_name[1:]
+        return short_name
+
+    @classmethod
+    def get_full_name(cls):
+        return cls.__name__
 
     def run_transaction(self, transaction: MoneyTransaction):
-        transaction.payment_system = self.get_short_name()
+        transaction.payment_system = self.short_name
         if transaction.type == EnumMoneyTransactionType.buy:
+            if transaction.shop_money_delta < 0:
+                raise Exception('transaction.shop_money_delta has wrong sign')
             if self.init_required:
                 init_result = self.init_payment(transaction)
                 if not init_result:
                     return False
             return self.create_payment_form(transaction)
         elif transaction.type == EnumMoneyTransactionType.reject:
-            return  self.do_refund(transaction)
+            if transaction.shop_money_delta > 0:
+                raise Exception('transaction.shop_money_delta has wrong sign')
+            return self.do_refund(transaction)
 
 
 

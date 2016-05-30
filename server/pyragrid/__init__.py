@@ -80,7 +80,7 @@ def main(global_config, **settings):
     )
     deform.Form.set_default_renderer(zpt_renderer)
 
-    payment_systems.load_by_settings(settings)
+    payment_systems.load_by_config(config)
 
     static_cache_max_age = 3600
     # TODO hacky. maybe better copy resources with gulp task?

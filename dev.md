@@ -167,5 +167,6 @@ TODO
 ----
 
 datatables font size--
-register user by buying (email)
+register user by buying (email password)
 merge user accounts (different email)
+errors system

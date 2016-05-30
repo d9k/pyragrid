@@ -32,6 +32,7 @@ class Order(Base):
     # TODO state as enum http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
     wanted_total = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0.0,
         info={'colanderalchemy': {
             'title': 'Общая сумма заказа',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -39,6 +40,7 @@ class Order(Base):
 
     paid_amount = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0.0,
         info={'colanderalchemy': {
             'title': 'Оплачено',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -46,6 +48,7 @@ class Order(Base):
 
     refund_amount = Column(
         sqlalchemy.Numeric(12, 2),
+        default=0.0,
         info={'colanderalchemy': {
             'title': 'Сумма возврата',
             'widget': deform.widget.TextInputWidget(readonly=True)

@@ -30,7 +30,8 @@ from pyramid.httpexceptions import (
     HTTPBadRequest,
     HTTPNotFound,
     HTTPFound,
-    HTTPForbidden
+    HTTPForbidden,
+    HTTPInternalServerError
 )
 
 import deform
@@ -166,6 +167,8 @@ class ViewsGoods(ViewsBase):
                     )
                     # money_transaction.init()
                     payment_client = payment_systems.get_payment_client_by_name(payment_system)
+                    if payment_client is None:
+                        return HTTPInternalServerError('Error on payment init')
                     # working type definition!
                     """:type payment_client AbstractPaymentClient"""
                     payment_client.run_transaction(new_money_transaction)

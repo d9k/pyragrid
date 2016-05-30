@@ -32,7 +32,7 @@ class MoneyTransactionStatus(Base):
 
     money_transaction_id = Column(
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey('order_good.id'),
+        sqlalchemy.ForeignKey('money_transaction.id'),
         info={'colanderalchemy': {
             'title': 'Заказанный товар',
             # 'widget': deform.widget.TextInputWidget(readonly=True)

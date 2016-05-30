@@ -1,15 +1,20 @@
 from .abstract_payment_client import AbstractPaymentClient
 import pyramid.config
+from .views_payment_test import (ViewsPaymentTest, ViewsPaymentTestClient)
 
 
 class PaymentClientTest (AbstractPaymentClient):
     for_dev_only = True
     caption = 'Test payment system'
     test_field = 0000
-    payment_form_url = 'test_payment_system/payment_form'
+    route_payment_form = 'testPaymentSystem/paymentForm'
+    route_payment_notify = 'paymentApi/testPaymentNotify'
 
     @classmethod
     def on_class_load(cls, config: pyramid.config.Configurator):
         super(cls, cls).on_class_load(config)
-
+        config.add_route('test_payment_form', cls.route_payment_form)
+        config.add_route('test_payment_notify', cls.route_payment_notify)
+        config.add_view(ViewsPaymentTest, attr='view_payment_form', route_name='test_payment_form')
+        config.add_view(ViewsPaymentTestClient, attr='view_payment_client_notify', route_name='test_payment_notify')
 

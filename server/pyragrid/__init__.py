@@ -31,8 +31,6 @@ import os.path
 
 from . import payment_systems
 
-from . import test_payment_gateway
-
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
@@ -164,9 +162,6 @@ def main(global_config, **settings):
     config.add_route('uploads_handle_jquery_file_upload', '/uploads/handleJqueryFileUpload')
 
     config.add_route('good_one_click_buy', '/goods/{id}/one_click_buy')
-
-    # config.add_route('test_payment_gateway_proceed', '/test_payment_gateway/proceed')
-    config.add_route('test_payment_gateway_proceed', '/t6')
 
     config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)
 

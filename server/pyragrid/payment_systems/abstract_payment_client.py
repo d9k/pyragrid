@@ -56,7 +56,7 @@ class AbstractPaymentClient:
     def get_full_name(cls):
         return cls.__name__
 
-    def run_transaction(self, transaction: MoneyTransaction):
+    def run_transaction(self, transaction: MoneyTransaction) -> EnumMoneyTransactionStatus:
         transaction.payment_system = self.short_name
         if transaction.type == EnumMoneyTransactionType.buy:
             if transaction.shop_money_delta < 0:

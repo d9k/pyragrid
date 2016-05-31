@@ -14,6 +14,8 @@ import datetime
 from .enum_money_transaction_status import EnumMoneyTransactionStatus
 from .enum_request_method import EnumRequestMethod
 import sqlalchemy.dialects.postgres as postgres
+import dominate
+import dominate.tags as tag
 
 
 # TODO research json data type
@@ -107,5 +109,13 @@ class MoneyTransactionStatus(Base):
             'title': 'Пользователь',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
+
+    def render_post_form(self, auto_redirect=False):
+        form = tag.form(id='payment_redirect_form', action=self.url, method=self.request_method)
+        with form:
+            for name, value in self.request_data.items():
+                tag.input(type='hidden', name=name, value=value)
+            tag.input(type='submit', name='submit', value='Продолжить оплату')
+        return form.render()
 
     moneyTransaction = relationship('MoneyTransaction', back_populates='statuses')

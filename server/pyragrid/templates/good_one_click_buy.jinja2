@@ -1,8 +1,13 @@
 {% extends "base.jinja2" %}
 {% set header = 'Покупка'%}
+
 {% block content %}
+    {% if rendered_redirect_form!=None %}
+        {{ rendered_redirect_form|safe }}
+    {% else %}
     <p>Товар: {{ good.name }}</p>
     <p>Цена: {{ good.price }}</p>
     {{ rendered_one_click_buy_form|safe }}
 {#    <p><a href="{{ request.route_url('register') }}">Зарегистрироваться в приложении</a></p>#}
+    {% endif %}
 {% endblock %}

@@ -19,7 +19,10 @@ from .db import (
     Order,
     OrderGood,
     MoneyTransaction,
-    db_save_model
+    MoneyTransactionStatus,
+    db_save_model,
+    EnumMoneyTransactionStatus,
+    EnumMoneyTransactionType
 )
 
 from .forms import OneClickBuySchema
@@ -100,6 +103,8 @@ class ViewsGoods(ViewsBase):
             # css_class='no-red-stars'
         )
 
+        rendered_redirect_form = None
+
         if submit_button_name in self.request.params:
             post = MultiDict()
             post._items = list(self.request.POST.items())
@@ -162,16 +167,27 @@ class ViewsGoods(ViewsBase):
                     new_money_transaction = MoneyTransaction(
                         order_id=new_order.id,
                         user_id=user.id,
-                        # payment_system=payment_system,
-                        shop_money_delta=amount_to_pay
+                        payment_system=payment_system,
+                        shop_money_delta=amount_to_pay,
+                        type=EnumMoneyTransactionType.buy
                     )
+                    DBSession.add(new_money_transaction)
+                    DBSession.flush()
                     # money_transaction.init()
                     payment_client = payment_systems.get_payment_client_by_name(payment_system)
                     if payment_client is None:
                         return HTTPInternalServerError('Error on payment init')
                     # working type definition!
                     """:type payment_client AbstractPaymentClient"""
-                    payment_client.run_transaction(new_money_transaction)
+                    status_redirect_form = payment_client.run_transaction(new_money_transaction)
+                    """:type status_redirect_form MoneyTransactionStatus"""
+                    if status_redirect_form is None:
+                        raise Exception('payment form not generated')
+                    if type(status_redirect_form) is not MoneyTransactionStatus:
+                        raise Exception('status_redirect_form is not MoneyTransactionStatus class')
+                    if status_redirect_form.status != EnumMoneyTransactionStatus.redirect_to_payment_form:
+                        raise Exception('status_redirect_form.status is not payment form')
+                    rendered_redirect_form = status_redirect_form.render_post_form()
 
             except DBAPIError as error:
                 return self.db_error_response(error)
@@ -187,7 +203,11 @@ class ViewsGoods(ViewsBase):
 
         # TODO backlink param
         # or write backlink to the order class?
-        return dict(good=good, rendered_one_click_buy_form=one_click_buy_form.render(appstruct))
+        return dict(
+            good=good,
+            rendered_one_click_buy_form=one_click_buy_form.render(appstruct),
+            rendered_redirect_form=rendered_redirect_form
+        )
         # TODO one click buy form: email / login / logined => username.
 
 

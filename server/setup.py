@@ -34,11 +34,12 @@ requires = [
     'inflection',
     'pygraphviz',
     'eralchemy',
-    'pyperclip'
+    'pyperclip',
+    'dominate'  # html creation
 ]
 
 setup(name='pyragrid',
-      version='0.0.4',
+      version='0.0.5',
       description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

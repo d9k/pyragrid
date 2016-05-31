@@ -23,7 +23,6 @@ pyragrid/views_base.py
 pyragrid/views_goods.py
 pyragrid/views_site.py
 pyragrid/views_test.py
-pyragrid/views_test_payment_gateway.py
 pyragrid/views_uploads.py
 pyragrid/vk.py
 pyragrid.egg-info/PKG-INFO
@@ -44,6 +43,7 @@ pyragrid/db/enum_money_transaction_type.py
 pyragrid/db/enum_order_good_status.py
 pyragrid/db/enum_order_status.py
 pyragrid/db/enum_refund_status.py
+pyragrid/db/enum_request_method.py
 pyragrid/db/good.py
 pyragrid/db/money_transaction.py
 pyragrid/db/money_transaction_status.py
@@ -53,9 +53,11 @@ pyragrid/db/order_good_status.py
 pyragrid/db/refund.py
 pyragrid/db/refund_order_good.py
 pyragrid/db/user.py
-pyragrid/payment_systems_clients/__init__.py
-pyragrid/payment_systems_clients/abstract_payment_client.py
-pyragrid/payment_systems_clients/payment_client_test.py
+pyragrid/payment_systems/__init__.py
+pyragrid/payment_systems/abstract_payment_client.py
+pyragrid/payment_systems/const.py
+pyragrid/payment_systems/payment_client_test.py
+pyragrid/payment_systems/views_payment_test.py
 pyragrid/scripts/__init__.py
 pyragrid/scripts/gen_db_erd_schema.py
 pyragrid/scripts/initializedb.py

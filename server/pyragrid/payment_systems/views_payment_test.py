@@ -38,9 +38,9 @@ class TestPaymentResultSchema(colander.Schema):
         widget=deform.widget.RadioChoiceWidget(
             values=test_payment_result_choises
         )
-    ),
+    )
     money_transaction_id = colander.SchemaNode(
-        colander.Boolean(),
+        colander.Integer(),
         widget=deform.widget.HiddenWidget()
     )
 

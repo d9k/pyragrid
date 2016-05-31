@@ -1,9 +1,10 @@
 from .base import (Base, DBSession, NullableInt, db_save_model)
 
-from .enum import (EnumMeta, EnumSymbol, DeclEnumType, DeclEnum, SimpleEnum)
+from .enum import (SimpleEnum, SimpleEnumMeta)
 from .enum_order_good_status import EnumOrderGoodStatus
 from .enum_money_transaction_status import EnumMoneyTransactionStatus
 from .enum_money_transaction_type import EnumMoneyTransactionType
+from .enum_request_method import EnumRequestMethod
 
 from .user import (ADMIN_GROUP, GROUPS, User, RootFactory)
 from .article import (Article, ArticleCustomRoutePredicate)

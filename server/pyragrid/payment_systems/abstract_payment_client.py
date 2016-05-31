@@ -30,9 +30,6 @@ class AbstractPaymentClient:
         cls.short_name = cls.get_short_name()
         cls.name = cls.get_full_name()
 
-    def create_form(self):
-        pass
-
     def init_payment(self, transaction):
         return True
 

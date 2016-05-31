@@ -221,3 +221,14 @@ def multidict_rm_values(multidict, key):
             p = multidict.pop(key)
         except KeyError as e:
             p = None
+
+
+def tuple_get(_tuple, index, default=None):
+    if _tuple is None:
+        return default
+    if type(_tuple) is not tuple:
+        return default
+    try:
+        return _tuple[index]
+    except IndexError:
+        return default

@@ -88,6 +88,10 @@ class MoneyTransaction(Base):
 
     statuses = relationship('MoneyTransactionStatus', back_populates='moneyTransaction')
 
+    def status_append(self, new_status: MoneyTransactionStatus):
+        self.statuses.append(new_status)
+        self.status = new_status.status
+
     # def init(self):
     #     new_status = MoneyTransactionStatus(money_transaction_id=self.id)
     #     self.statuses.append(new_status)

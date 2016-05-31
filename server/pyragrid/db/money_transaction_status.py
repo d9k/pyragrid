@@ -12,6 +12,7 @@ from .base import (Base, DBSession, NullableInt)
 import datetime
 
 from .enum_money_transaction_status import EnumMoneyTransactionStatus
+from .enum_request_method import EnumRequestMethod
 import sqlalchemy.dialects.postgres as postgres
 
 
@@ -62,6 +63,19 @@ class MoneyTransactionStatus(Base):
         sqlalchemy.Text(),
         info={'colanderalchemy': {
             'title': 'URL запроса',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
+    request_method = Column(
+        sqlalchemy.Enum(
+            *EnumRequestMethod.get_values(),
+            name='enum_request_method',
+            native_enum=False
+        ),
+        default=EnumRequestMethod.GET,
+        nullable=False,
+        info={'colanderalchemy': {
+            'title': 'метод запроса',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 

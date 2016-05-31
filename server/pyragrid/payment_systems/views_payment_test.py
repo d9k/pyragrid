@@ -26,6 +26,7 @@ from pyramid.httpexceptions import (
     HTTPNotFound,
     HTTPFound
 )
+from pyramid.request import Request
 
 
 class TestPaymentResultSchema(colander.Schema):
@@ -48,6 +49,7 @@ class ViewsPaymentTest:
 
     def __init__(self, request):
         self.request = request
+        """:type self.request Request """
 
     def view_payment_form(self):
         if not check_dev_mode():

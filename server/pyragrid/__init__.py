@@ -161,6 +161,8 @@ def main(global_config, **settings):
     config.add_route('uploads_handle_droparea', '/uploads/handleDropArea')
     config.add_route('uploads_handle_jquery_file_upload', '/uploads/handleJqueryFileUpload')
 
+    config.add_route('order_status', '/order/{id}/status')
+
     config.add_route('good_one_click_buy', '/goods/{id}/one_click_buy')
 
     config.add_notfound_view(views_articles.view_custom_not_found, append_slash=True)

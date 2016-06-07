@@ -47,7 +47,7 @@ class OrderGood(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    count = Column(
+    wanted_count = Column(
         sqlalchemy.Numeric(12, 4),
         default=0,
         info={'colanderalchemy': {
@@ -124,17 +124,17 @@ class OrderGood(Base):
         self.price = self.good.price
 
     def count_wanted_total(self):
-        self.wanted_total = float(self.price) * float(self.count)
+        self.wanted_total = float(self.price) * float(self.wanted_count)
 
     def alter_count(self, delta_count):
-        self.count += delta_count
+        self.wanted_count += delta_count
         # TODO ! create order_good_status model
         DBSession.flush()
         self.statuses.append(OrderGoodStatus(status=EnumOrderGoodStatus.wanted_alter, count=delta_count))
         self.count_wanted_total()
 
     def recount_wanted_total(self):
-        self.count = sum([
+        self.wanted_count = sum([
             _status.count for _status in self.statuses
             if _status.status == EnumOrderGoodStatus.wanted_alter
         ])
@@ -162,3 +162,12 @@ class OrderGood(Base):
 
     def get_amount_to_refund(self):
         return self.paid_amount - self.refund_amount
+
+    def append_status(self, status: str, transaction_id: int=None):
+        if status == EnumOrderGoodStatus.payment_began:
+            self.recount_wanted_total()
+            self.statuses.append(OrderGoodStatus(
+                status=status,
+                count=self.wanted_count,
+                transaction_id=transaction_id
+            ))

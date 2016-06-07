@@ -2,8 +2,6 @@ from pyramid.response import Response
 from pyramid.view import (
     view_config,
     view_defaults,
-    forbidden_view_config,
-    notfound_view_config
 )
 from pyramid.security import has_permission
 # from pyramid.url import route_url
@@ -57,7 +55,7 @@ from webob.multidict import MultiDict
 from .payment_systems import get_payment_clients_captions
 
 
-@view_defaults(route_name='index')
+# @view_defaults(route_name='index')
 class ViewsGoods(ViewsBase):
 
     @view_config(route_name='good_one_click_buy', renderer='templates/good_one_click_buy.jinja2')

@@ -130,3 +130,8 @@ class Order(Base):
 
     def get_amount_to_pay(self):
         return self.wanted_total + self.refund_amount - self.paid_amount
+
+    def append_goods_status(self, status: str, transaction_id: int=None):
+        for order_good in self.order_goods:
+            """:type order_good OrderGood"""
+            order_good.append_status(status, transaction_id)

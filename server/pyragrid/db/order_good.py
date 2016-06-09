@@ -119,6 +119,7 @@ class OrderGood(Base):
     order = relationship('Order', back_populates='order_goods')
     user = relationship('User')
     statuses = relationship('OrderGoodStatus', back_populates='orderGood')
+    """:type statuses list of OrderGoodStatus"""
 
     def set_price(self):
         self.price = self.good.price
@@ -163,9 +164,26 @@ class OrderGood(Base):
     def get_amount_to_refund(self):
         return self.paid_amount - self.refund_amount
 
-    def append_status(self, status: str, transaction_id: int=None):
+    def get_statuses(self, status: str, transaction_id: int=None):
+        return [
+            _status for _status in self.statuses
+            if _status.status == status and (transaction_id is None or _status.mo)
+        ]
+
+    def append_status(self, status: str, transaction_id: int):
         if status == EnumOrderGoodStatus.payment_began:
             self.recount_wanted_total()
+            self.statuses.append(OrderGoodStatus(
+                status=status,
+                count=self.wanted_count,
+                transaction_id=transaction_id
+            ))
+        elif status in [EnumOrderGoodStatus.paid, EnumOrderGoodStatus.payment_failed]:
+            payment_began_statuses = self.get_statuses(EnumOrderGoodStatus.payment_began, transaction_id)
+            if len(payment_began_statuses) != 1:
+                raise Exception('unexpected statuses count error')
+            payment_began_status = payment_began_statuses[0]
+            payment_began_count = payment_began_status.count
             self.statuses.append(OrderGoodStatus(
                 status=status,
                 count=self.wanted_count,

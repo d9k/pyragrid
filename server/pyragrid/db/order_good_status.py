@@ -9,6 +9,7 @@ from sqlalchemy.orm import (
 import deform.widget
 import colander
 from .base import (Base, DBSession, NullableInt)
+from . import order_good
 import datetime
 
 from .enum_order_good_status import EnumOrderGoodStatus
@@ -93,7 +94,7 @@ class OrderGoodStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
-    money_transaction_status_id = Column(
+    transaction_status_id = Column(
         sqlalchemy.Integer,
         ForeignKey('money_transaction_status.id'),
         info={'colanderalchemy': {
@@ -101,5 +102,14 @@ class OrderGoodStatus(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    transaction_id = Column(
+        sqlalchemy.Integer,
+        ForeignKey('money_transaction.id'),
+        info={'colanderalchemy': {
+            'title': 'Связанная транзакция',
+            'widget': deform.widget.TextInputWidget(readonly=True)
+        }})
+
     orderGood = relationship('OrderGood', back_populates='statuses')
+    """:type orderGood order_good.OrderGood"""
 

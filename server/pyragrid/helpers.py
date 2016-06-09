@@ -164,10 +164,15 @@ def build_url(host_page_url: str, get_params: dict = None):
     return host_page_url + '?' + urllib.parse.urlencode(get_params)
 
 
-def get_from_url(url: str, get_params: dict = None):
+def get_from_url(url: str, get_params: dict = None, post_params: dict = None):
+    if get_params is None:
+        get_params = {}
     full_url = build_url(url, get_params)
-    responce = urllib.request.urlopen(full_url)
-    data = responce.read()
+    encoded_post_params = None
+    if post_params is not None:
+        encoded_post_params = urllib.parse.urlencode(post_params).encode()
+    response = urllib.request.urlopen(full_url, encoded_post_params)
+    data = response.read()
     """ :type : bytes """
     result = None
     try:

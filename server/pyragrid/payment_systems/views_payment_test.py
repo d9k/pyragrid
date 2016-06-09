@@ -60,12 +60,6 @@ class ViewsPaymentTest:
         submit_button_name = 'test_payment_result_submit'
         form_submitted = submit_button_name in self.request.params
 
-        money_transaction_id = None
-        if not form_submitted:
-            money_transaction_id = self.request.POST.get('money_transaction_id')
-            if money_transaction_id is None:
-                return HTTPBadRequest('No money_transaction_id specified')
-
         test_payment_result_form = FormMod(
             test_payment_result_schema.bind(
                 # TODO bind params
@@ -74,8 +68,29 @@ class ViewsPaymentTest:
             # css_class='no-red-stars'
         )
 
+        # money_transaction_id = None
+        money_transaction_id = self.request.POST.get('money_transaction_id')
+        if money_transaction_id is None:
+            return HTTPBadRequest('No money_transaction_id specified')
+
+        if form_submitted:
+            controls = self.request.POST.items()
+            try:
+                data = test_payment_result_form.validate(controls)
+            except deform.ValidationFailure as e:
+                return dict(rendered_form=e.render())
+
+            payment_result = data.get('result')
+
+            # TODO send post to payment result notification url
+            # (see helpers.get_from_url)
+
+            # TODO redirect to order status
+
         appstruct = dict()
         appstruct['money_transaction_id'] = money_transaction_id
+        # TODO move to cookies (?)
+
 
         return dict(rendered_form=test_payment_result_form.render(appstruct))
 

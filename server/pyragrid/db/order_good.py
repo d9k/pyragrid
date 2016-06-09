@@ -186,6 +186,6 @@ class OrderGood(Base):
             payment_began_count = payment_began_status.count
             self.statuses.append(OrderGoodStatus(
                 status=status,
-                count=self.wanted_count,
+                count=payment_began_count,
                 transaction_id=transaction_id
             ))

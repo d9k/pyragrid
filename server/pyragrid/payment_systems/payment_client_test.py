@@ -1,13 +1,13 @@
 from .abstract_payment_client import AbstractPaymentClient
 import pyramid.config
-from .views_payment_test import (ViewsPaymentTest)
+from .views_payment_test import (ViewsPaymentTestServer)
 from pyramid.view import (
     view_config,
 )
 import pyramid.threadlocal
 from pyramid.request import Request
 from ..db import (MoneyTransaction, MoneyTransactionStatus, EnumMoneyTransactionStatus, EnumRequestMethod)
-
+from .. import helpers
 
 class ViewsPaymentTestClient:
     def __init__(self, request):
@@ -51,8 +51,10 @@ class PaymentClientTest (AbstractPaymentClient):
         super(cls, cls).on_class_load(config)
         config.add_route('test_payment_form', cls.route_payment_form)
         config.add_route('test_payment_notify', cls.route_payment_notify)
+        settings = config.registry.settings
+        ViewsPaymentTestServer.notify_url = settings.get(ViewsPaymentTestServer.__name__+'.notify_url')
         config.add_view(
-            ViewsPaymentTest,
+            ViewsPaymentTestServer,
             attr='view_payment_form',
             route_name='test_payment_form',
             renderer='payment_systems/test_payment_form.jinja2'

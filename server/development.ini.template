@@ -39,6 +39,8 @@ payment_system_default = test
 
 # payment client class configuration example:
 # PaymentClientTest.test_field = 1234
+PaymentClientTest.route_payment_notify = paymentApi/testPaymentNotify
+ViewsPaymentTestServer.notify_url = http://127.0.0.1:6543/paymentApi/testPaymentNotify
 
 generate_password_length = 8
 mail_default_subject = Письмо от проекта Pyragrid

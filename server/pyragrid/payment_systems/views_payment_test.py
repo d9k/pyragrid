@@ -45,13 +45,20 @@ class TestPaymentResultSchema(colander.Schema):
     )
 
 
-class ViewsPaymentTest:
+class ViewsPaymentTestServer:
+
+    notify_url = None
 
     def __init__(self, request):
         self.request = request
         """:type self.request Request """
 
     def view_payment_form(self):
+
+        if self.notify_url is None:
+            class_name = self.__class__.__name__
+            raise Exception('please set '+class_name+'.notify_url at config (to match payment test client notify listening url)')
+
         if not check_dev_mode():
             return HTTPNotFound()
 

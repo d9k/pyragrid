@@ -98,7 +98,6 @@ class ViewsPaymentTestServer:
         appstruct['money_transaction_id'] = money_transaction_id
         # TODO move to cookies (?)
 
-
         return dict(rendered_form=test_payment_result_form.render(appstruct))
 
 

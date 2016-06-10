@@ -13,6 +13,8 @@ from . import order_good
 import datetime
 
 from .enum_order_good_status import EnumOrderGoodStatus
+from .money_transaction_status import MoneyTransactionStatus
+from .money_transaction import MoneyTransaction
 
 
 class OrderGoodStatus(Base):
@@ -113,3 +115,8 @@ class OrderGoodStatus(Base):
     orderGood = relationship('OrderGood', back_populates='statuses')
     """:type orderGood order_good.OrderGood"""
 
+    transaction = relationship('MoneyTransaction')  # back_populates='order_good_statuses')
+    """:type transaction MoneyTransaction"""
+
+    transaction_status = relationship('MoneyTransactionStatus')  # back_populates='order_good_statuses')
+    """:type transaction_status MoneyTransactionStatus"""

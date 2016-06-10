@@ -11,6 +11,9 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy import UniqueConstraint
 from .enum_order_good_status import EnumOrderGoodStatus
+from typing import (Union, Optional)
+from .money_transaction_status import MoneyTransactionStatus
+from .money_transaction import MoneyTransaction
 
 
 class OrderGood(Base):
@@ -164,28 +167,34 @@ class OrderGood(Base):
     def get_amount_to_refund(self):
         return self.paid_amount - self.refund_amount
 
-    def get_statuses(self, status: str, transaction_id: int=None):
+    def get_statuses(self, status: str, transaction: Union[int, MoneyTransaction, None]=None):
+        transaction = MoneyTransaction.ensure_object(transaction)
         return [
-            _status for _status in self.statuses
-            if _status.status == status and (transaction_id is None or _status.mo)
+            order_good_status for order_good_status in self.statuses
+            if order_good_status.status == status and
+            (transaction is None or order_good_status.transaction == transaction)
         ]
 
-    def append_status(self, status: str, transaction_id: int):
+    def append_status(self, status: str, transaction: Union[int, MoneyTransaction],
+                      transaction_status: Union[int, MoneyTransactionStatus]):
+
+        transaction = MoneyTransaction.ensure_object(transaction)
+        transaction_status = MoneyTransaction.ensure_object(transaction_status)
+        count = None
+
         if status == EnumOrderGoodStatus.payment_began:
             self.recount_wanted_total()
-            self.statuses.append(OrderGoodStatus(
-                status=status,
-                count=self.wanted_count,
-                transaction_id=transaction_id
-            ))
+            count = self.wanted_count
         elif status in [EnumOrderGoodStatus.paid, EnumOrderGoodStatus.payment_failed]:
-            payment_began_statuses = self.get_statuses(EnumOrderGoodStatus.payment_began, transaction_id)
+            payment_began_statuses = self.get_statuses(EnumOrderGoodStatus.payment_began, transaction)  # TODO what if int?
             if len(payment_began_statuses) != 1:
                 raise Exception('unexpected statuses count error')
             payment_began_status = payment_began_statuses[0]
-            payment_began_count = payment_began_status.count
-            self.statuses.append(OrderGoodStatus(
-                status=status,
-                count=payment_began_count,
-                transaction_id=transaction_id
-            ))
+            count = payment_began_status.count
+
+        self.statuses.append(OrderGoodStatus(
+            status=status,
+            count=count,
+            transaction=transaction,
+            transaction_status=transaction_status
+        ))

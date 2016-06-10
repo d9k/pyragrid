@@ -12,6 +12,9 @@ from sqlalchemy.orm import (
 # from .enum_order_good_status import EnumOrderGoodStatus
 from .enum_money_transaction_status import EnumMoneyTransactionStatus
 from .enum_money_transaction_type import EnumMoneyTransactionType
+from . import order_good_status
+from . import order as order_
+from typing import (Union, Optional)
 
 
 class MoneyTransaction(Base):
@@ -86,14 +89,35 @@ class MoneyTransaction(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    @classmethod
+    def by_id(cls, id_: int):
+        """:return MoneyTransaction"""
+        return DBSession.query(cls).filter(cls.id == id_).first()
+
+    @classmethod
+    def ensure_object(cls, something):
+        """
+        :arg something Union[int, MoneyTransaction]
+        :return Optional[MoneyTransaction]
+        """
+        if type(something) is int:
+            id_ = something
+            something = cls.by_id(id_)
+        return something
+
     statuses = relationship('MoneyTransactionStatus', back_populates='moneyTransaction')
 
     def status_append(self, new_status: MoneyTransactionStatus):
         self.statuses.append(new_status)
         self.status = new_status.status
 
+    order = relationship('Order')  # , back_populates='money_transactions')
+    user = relationship('User')
+    # """:type order order_.Order"""
+
     # def init(self):
     #     new_status = MoneyTransactionStatus(money_transaction_id=self.id)
     #     self.statuses.append(new_status)
     #     new_status.build_form()
     #     return new_status
+

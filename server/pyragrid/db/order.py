@@ -10,6 +10,9 @@ from sqlalchemy.orm import (
 from .order_good import OrderGood
 from .good import Good
 from .enum_order_status import EnumOrderStatus
+from .money_transaction import MoneyTransaction
+from .money_transaction_status import MoneyTransactionStatus
+from typing import Union
 
 
 class Order(Base):
@@ -114,7 +117,7 @@ class Order(Base):
                     return order_good
         # not found, creating new
         good = Good.by_id(good_id)
-        new_order_good = OrderGood(good_id=good.id, count=0, user_id=self.user_id)
+        new_order_good = OrderGood(good_id=good.id, user_id=self.user_id)
         self.order_goods.append(new_order_good)
         DBSession.flush()
         new_order_good.set_price()
@@ -131,7 +134,8 @@ class Order(Base):
     def get_amount_to_pay(self):
         return self.wanted_total + self.refund_amount - self.paid_amount
 
-    def append_goods_status(self, status: str, transaction_id: int=None):
+    def append_goods_status(self, status: str, transaction: Union[int, MoneyTransaction]=None,
+                            transaction_status: Union[int, MoneyTransactionStatus]=None):
         for order_good in self.order_goods:
             """:type order_good OrderGood"""
-            order_good.append_status(status, transaction_id)
+            order_good.append_status(status, transaction, transaction_status)

@@ -3,7 +3,9 @@ import pyramid.config
 from ..db import (
     EnumMoneyTransactionStatus,
     EnumMoneyTransactionType,
-    MoneyTransaction
+    EnumOrderGoodStatus,
+    MoneyTransaction,
+    Order
 )
 
 from .const import (PAYMENT_CLIENT_CLASS_NAME_PREFIX)
@@ -57,6 +59,8 @@ class AbstractPaymentClient:
         return cls.__name__
 
     def run_transaction(self, transaction: MoneyTransaction) -> EnumMoneyTransactionStatus:
+        order = transaction.order
+        """:type order Order"""
         transaction.payment_system = self.short_name
         if transaction.type == EnumMoneyTransactionType.buy:
             if transaction.shop_money_delta < 0:
@@ -65,7 +69,9 @@ class AbstractPaymentClient:
                 init_result = self.init_payment(transaction)
                 if not init_result:
                     return False
-            return self.create_payment_form(transaction)
+            create_payment_transaction_status = self.create_payment_form(transaction)
+            order.append_goods_status(EnumOrderGoodStatus.payment_began, transaction)
+            return create_payment_transaction_status
         elif transaction.type == EnumMoneyTransactionType.reject:
             if transaction.shop_money_delta > 0:
                 raise Exception('transaction.shop_money_delta has wrong sign')

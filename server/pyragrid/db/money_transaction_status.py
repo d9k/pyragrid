@@ -56,6 +56,7 @@ class MoneyTransactionStatus(Base):
 
     request_data = Column(
         postgres.JSON,
+        default={},
         info={'colanderalchemy': {
             'title': 'Данные запроса',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -83,6 +84,7 @@ class MoneyTransactionStatus(Base):
 
     additional_data = Column(
         postgres.JSON,
+        default={},
         info={'colanderalchemy': {
             'title': 'Дополнительные данные',
             'widget': deform.widget.TextInputWidget(readonly=True)
@@ -90,6 +92,7 @@ class MoneyTransactionStatus(Base):
 
     answer_data = Column(
         postgres.JSON,
+        default={},
         info={'colanderalchemy': {
             'title': 'Данные ответа',
             'widget': deform.widget.DateTimeInputWidget(readonly=True)
@@ -97,6 +100,7 @@ class MoneyTransactionStatus(Base):
 
     error = Column(
         postgres.JSON,
+        default={},
         info={'colanderalchemy': {
             'title': 'Данные ответа',
             'widget': deform.widget.DateTimeInputWidget(readonly=True)
@@ -119,3 +123,5 @@ class MoneyTransactionStatus(Base):
         return form.render()
 
     moneyTransaction = relationship('MoneyTransaction', back_populates='statuses')
+    user = relationship('User')
+

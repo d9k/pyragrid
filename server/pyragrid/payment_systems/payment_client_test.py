@@ -41,7 +41,8 @@ class PaymentClientTest (AbstractPaymentClient):
             status=EnumMoneyTransactionStatus.redirect_to_payment_form,
             url=redirect_url,
             request_method=EnumRequestMethod.POST,
-            request_data=request_data
+            request_data=request_data,
+            user=transaction.user
         )
         transaction.status_append(new_transaction_status)
         return new_transaction_status

@@ -163,6 +163,12 @@ working example:
 	payment_client = payment_systems.get_payment_client_by_name(payment_system)
 	""":type payment_client AbstractPaymentClient"""
 
+
+Typing
+------
+
+https://docs.python.org/3/library/typing.html
+
 TODO
 ----
 

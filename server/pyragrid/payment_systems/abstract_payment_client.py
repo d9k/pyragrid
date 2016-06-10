@@ -21,10 +21,10 @@ class AbstractPaymentClient:
     def get_payment_auth_url(self):
         pass
 
-    def process_payment_request(self):
+    def process_paid(self, transaction: MoneyTransaction, request=None):
         pass
 
-    def process_payment_error(self):
+    def process_payment_error(self, transaction: MoneyTransaction, request=None):
         pass
 
     @classmethod
@@ -32,11 +32,11 @@ class AbstractPaymentClient:
         cls.short_name = cls.get_short_name()
         cls.name = cls.get_full_name()
 
-    def init_payment(self, transaction):
-        return True
+    def init_payment(self, transaction: MoneyTransaction):
+        return
 
     def create_payment_form(self, transaction):
-        return True
+        return
 
     def do_refund(self, transaction):
         return

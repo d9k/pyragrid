@@ -9,6 +9,16 @@ from pyramid.request import Request
 from ..db import (MoneyTransaction, MoneyTransactionStatus, EnumMoneyTransactionStatus, EnumRequestMethod)
 from .. import helpers
 
+from pyramid.httpexceptions import (
+    HTTPBadRequest,
+    HTTPNotFound,
+    HTTPFound
+)
+
+RESULT_SUCCESS = 'success'
+RESULT_ERROR = 'error'
+
+
 class ViewsPaymentTestClient:
     def __init__(self, request):
         # TODO """:type self.request """
@@ -17,7 +27,23 @@ class ViewsPaymentTestClient:
     @view_config()
     def view_payment_client_notify(self):
         # self.request.
-        return ''
+        post = self.request.POST
+        payment_result = post.get('payment_result')
+        money_transaction_id = post.get('money_transaction_id')
+        if payment_result is None:
+            raise HTTPBadRequest('payment_result must be specified')
+        if money_transaction_id is None:
+            raise HTTPBadRequest('money_transaction_id must be specified')
+        money_transaction = MoneyTransaction.by_id(money_transaction_id)
+        if money_transaction is None:
+            raise HTTPBadRequest('money_transaction with id={id}'.format(id=money_transaction_id))
+        payment_client_test = PaymentClientTest()
+        if payment_result == RESULT_SUCCESS:
+            pass
+        elif payment_result == RESULT_ERROR:
+            pass
+        else:
+            raise HTTPBadRequest('unknown payment_result={result}'.format(result=payment_result))
 
 
 class PaymentClientTest (AbstractPaymentClient):

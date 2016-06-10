@@ -1,7 +1,7 @@
 import colander
 import deform.widget
 
-RESULT_SUCCESS = 'succes'
+RESULT_SUCCESS = 'success'
 RESULT_ERROR = 'error'
 
 test_payment_result_choises = (
@@ -17,7 +17,7 @@ from pyramid.view import (
     forbidden_view_config,
     notfound_view_config
 )
-from ..helpers import check_dev_mode
+from .. import helpers
 # TODO is FormMod required?
 from ..widgets import FormMod
 
@@ -34,7 +34,7 @@ class TestPaymentResultSchema(colander.Schema):
         colander.String(),
         title='Payment result',
         default=RESULT_SUCCESS,
-        validator=colander.OneOf(x[0] for x in test_payment_result_choises),
+        validator=colander.OneOf([x[0] for x in test_payment_result_choises]),
         widget=deform.widget.RadioChoiceWidget(
             values=test_payment_result_choises
         )
@@ -59,7 +59,7 @@ class ViewsPaymentTestServer:
             class_name = self.__class__.__name__
             raise Exception('please set '+class_name+'.notify_url at config (to match payment test client notify listening url)')
 
-        if not check_dev_mode():
+        if not helpers.check_dev_mode():
             return HTTPNotFound()
 
         test_payment_result_schema = TestPaymentResultSchema()
@@ -88,6 +88,11 @@ class ViewsPaymentTestServer:
                 return dict(rendered_form=e.render())
 
             payment_result = data.get('result')
+
+            helpers.get_from_url(self.notify_url, {}, {
+                'money_transaction_id': money_transaction_id,
+                'payment_result': payment_result
+            })
 
             # TODO send post to payment result notification url
             # (see helpers.get_from_url)

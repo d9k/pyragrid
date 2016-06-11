@@ -10,5 +10,6 @@ class EnumMoneyTransactionStatus(SimpleEnum):
     confirmation_answer_deny = '', 'Отправлен ответ, отвергающий правильность'
     notification_received = '', 'Уведомление об успешном выполнении получено'
     notification_answered = '', 'Уведомление об успешном выполнении получено'
+    notification_error_received = '', 'Уведомление о неуспехе платежа получено'
     failed = '', 'Ошибка при выполнении'
     request_sent = '', 'Запрос отправлен'

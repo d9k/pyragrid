@@ -21,6 +21,7 @@ pyragrid/views_articles.py
 pyragrid/views_auth.py
 pyragrid/views_base.py
 pyragrid/views_goods.py
+pyragrid/views_orders.py
 pyragrid/views_site.py
 pyragrid/views_test.py
 pyragrid/views_uploads.py

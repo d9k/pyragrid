@@ -35,7 +35,8 @@ requires = [
     'pygraphviz',
     'eralchemy',
     'pyperclip',
-    'dominate'  # html creation
+    'dominate',  # html creation
+    'formencode'  # MultiDict to dict
 ]
 
 setup(name='pyragrid',

@@ -89,6 +89,10 @@ class MoneyTransaction(Base):
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
 
+    order = relationship('Order')  # , back_populates='money_transactions')
+    user = relationship('User')
+    statuses = relationship('MoneyTransactionStatus', back_populates='money_transaction')
+
     @classmethod
     def by_id(cls, id_: int):
         """:return MoneyTransaction"""
@@ -105,14 +109,10 @@ class MoneyTransaction(Base):
             something = cls.by_id(id_)
         return something
 
-    statuses = relationship('MoneyTransactionStatus', back_populates='moneyTransaction')
-
     def status_append(self, new_status: MoneyTransactionStatus):
         self.statuses.append(new_status)
         self.status = new_status.status
 
-    order = relationship('Order')  # , back_populates='money_transactions')
-    user = relationship('User')
     # """:type order order_.Order"""
 
     # def init(self):

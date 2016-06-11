@@ -10,6 +10,7 @@ from sqlalchemy.orm import (
 from .order_good import OrderGood
 from .good import Good
 from .enum_order_status import EnumOrderStatus
+from .enum_order_good_status import EnumOrderGoodStatus
 from .money_transaction import MoneyTransaction
 from .money_transaction_status import MoneyTransactionStatus
 from typing import Union
@@ -134,8 +135,21 @@ class Order(Base):
     def get_amount_to_pay(self):
         return self.wanted_total + self.refund_amount - self.paid_amount
 
+    @staticmethod
+    def to_order_status(order_good_status: str):
+        status_match = {
+            EnumOrderGoodStatus.payment_began: EnumOrderStatus.payment_began,
+            EnumOrderGoodStatus.paid: EnumOrderStatus.paid,
+            EnumOrderGoodStatus.payment_failed: EnumOrderStatus.payment_failed,
+        }
+        return status_match.get(order_good_status)
+
     def append_goods_status(self, status: str, transaction: Union[int, MoneyTransaction]=None,
                             transaction_status: Union[int, MoneyTransactionStatus]=None):
         for order_good in self.order_goods:
             """:type order_good OrderGood"""
             order_good.append_status(status, transaction, transaction_status)
+        self_new_status = self.to_order_status(status)
+        if self_new_status is not None:
+            self.status = self_new_status
+

@@ -24,7 +24,7 @@ class ViewsPaymentTestClient:
         # TODO """:type self.request """
         self.request = request
 
-    @view_config()
+    @view_config(renderer='json')
     def view_payment_client_notify(self):
         # self.request.
         post = self.request.POST
@@ -35,13 +35,24 @@ class ViewsPaymentTestClient:
         if money_transaction_id is None:
             raise HTTPBadRequest('money_transaction_id must be specified')
         money_transaction = MoneyTransaction.by_id(money_transaction_id)
+        """:type money_transaction MoneyTransaction"""
         if money_transaction is None:
             raise HTTPBadRequest('money_transaction with id={id}'.format(id=money_transaction_id))
         payment_client_test = PaymentClientTest()
+        if money_transaction.status in [
+            EnumMoneyTransactionStatus.failed,
+            EnumMoneyTransactionStatus.notification_received,
+            EnumMoneyTransactionStatus.notification_answered
+        ]:
+            raise HTTPBadRequest('money_transaction with id={id} already processed status notify'.format(
+                id=money_transaction_id
+            ))
         if payment_result == RESULT_SUCCESS:
-            pass
+            payment_client_test.process_paid(money_transaction, self.request)
+            return {'message': 'success processed'}
         elif payment_result == RESULT_ERROR:
-            pass
+            payment_client_test.process_payment_error(money_transaction, self.request)
+            return {'message': 'error processed'}
         else:
             raise HTTPBadRequest('unknown payment_result={result}'.format(result=payment_result))
 
@@ -62,15 +73,13 @@ class PaymentClientTest (AbstractPaymentClient):
         request_data = dict(
             money_transaction_id=transaction.id
         )
-        new_transaction_status = MoneyTransactionStatus(
-            money_transaction_id=transaction.id,
-            status=EnumMoneyTransactionStatus.redirect_to_payment_form,
-            url=redirect_url,
-            request_method=EnumRequestMethod.POST,
-            request_data=request_data,
-            user=transaction.user
+        new_transaction_status = self.create_transaction_status(
+            EnumMoneyTransactionStatus.redirect_to_payment_form,
+            transaction
         )
-        transaction.status_append(new_transaction_status)
+        new_transaction_status.url = redirect_url
+        new_transaction_status.request_method = EnumRequestMethod.POST
+        new_transaction_status.request_data = request_data
         return new_transaction_status
 
     @classmethod

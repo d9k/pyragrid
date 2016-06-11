@@ -122,6 +122,6 @@ class MoneyTransactionStatus(Base):
             tag.input(type='submit', name='submit', value='Продолжить оплату')
         return form.render()
 
-    moneyTransaction = relationship('MoneyTransaction', back_populates='statuses')
+    money_transaction = relationship('MoneyTransaction', back_populates='statuses')
     user = relationship('User')
 

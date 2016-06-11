@@ -5,10 +5,14 @@ from ..db import (
     EnumMoneyTransactionType,
     EnumOrderGoodStatus,
     MoneyTransaction,
+    MoneyTransactionStatus,
     Order
 )
 
 from .const import (PAYMENT_CLIENT_CLASS_NAME_PREFIX)
+
+from pyramid.request import Request
+import formencode.variabledecode
 
 
 class AbstractPaymentClient:
@@ -21,11 +25,43 @@ class AbstractPaymentClient:
     def get_payment_auth_url(self):
         pass
 
+    @staticmethod
+    def create_transaction_status(status: str, transaction: MoneyTransaction, request=None):
+        new_transaction_status = MoneyTransactionStatus(
+            money_transaction=transaction,
+            status=status,
+            user=transaction.user
+        )
+        if request is not None:
+            """:type request Request"""
+            new_transaction_status.url = request.path_url
+            new_transaction_status.request_method = request.method
+            new_transaction_status.request_data = formencode.variabledecode.variable_decode(request.params)
+
+        transaction.status_append(new_transaction_status)
+        return new_transaction_status
+
     def process_paid(self, transaction: MoneyTransaction, request=None):
-        pass
+        new_transaction_status = self.create_transaction_status(
+            EnumMoneyTransactionStatus.notification_received,
+            transaction,
+            request
+        )
+        order = transaction.order
+        """:type order Order"""
+        order.append_goods_status(EnumOrderGoodStatus.paid)
+        return new_transaction_status
 
     def process_payment_error(self, transaction: MoneyTransaction, request=None):
-        pass
+        new_transaction_status = self.create_transaction_status(
+            EnumMoneyTransactionStatus.failed,
+            transaction,
+            request
+        )
+        order = transaction.order
+        """:type order Order"""
+        order.append_goods_status(EnumOrderGoodStatus.payment_failed)
+        return new_transaction_status
 
     @classmethod
     def on_class_load(cls, config: pyramid.config.Configurator):

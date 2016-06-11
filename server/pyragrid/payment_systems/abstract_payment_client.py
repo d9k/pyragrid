@@ -49,7 +49,7 @@ class AbstractPaymentClient:
         )
         order = transaction.order
         """:type order Order"""
-        order.append_goods_status(EnumOrderGoodStatus.paid)
+        order.append_goods_status(EnumOrderGoodStatus.paid, transaction)
         return new_transaction_status
 
     def process_payment_error(self, transaction: MoneyTransaction, request=None):
@@ -60,7 +60,7 @@ class AbstractPaymentClient:
         )
         order = transaction.order
         """:type order Order"""
-        order.append_goods_status(EnumOrderGoodStatus.payment_failed)
+        order.append_goods_status(EnumOrderGoodStatus.payment_failed, transaction)
         return new_transaction_status
 
     @classmethod

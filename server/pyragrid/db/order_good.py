@@ -176,10 +176,13 @@ class OrderGood(Base):
         ]
 
     def append_status(self, status: str, transaction: Union[int, MoneyTransaction],
-                      transaction_status: Union[int, MoneyTransactionStatus]):
+                      # transaction_status: Union[int, MoneyTransactionStatus]
+                      ):
 
         transaction = MoneyTransaction.ensure_object(transaction)
-        transaction_status = MoneyTransaction.ensure_object(transaction_status)
+        """:type transaction MoneyTransaction"""
+        # transaction_status = MoneyTransaction.ensure_object(transaction_status)
+        transaction_status = transaction.get_status()
         count = None
 
         if status == EnumOrderGoodStatus.payment_began:

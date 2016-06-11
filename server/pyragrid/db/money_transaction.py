@@ -14,6 +14,7 @@ from .enum_money_transaction_status import EnumMoneyTransactionStatus
 from .enum_money_transaction_type import EnumMoneyTransactionType
 from . import order_good_status
 from . import order as order_
+from . import money_transaction_status
 from typing import (Union, Optional)
 
 
@@ -112,6 +113,17 @@ class MoneyTransaction(Base):
     def status_append(self, new_status: MoneyTransactionStatus):
         self.statuses.append(new_status)
         self.status = new_status.status
+
+    def get_status(self, status: Optional[str]=None) -> Optional[money_transaction_status.MoneyTransactionStatus]:
+
+        if status is None:
+            status = self.status
+
+        for transaction_status in self.statuses:
+            """:type transaction_status money_transaction_status.MoneyTransactionStatus"""
+            if transaction_status.status == status:
+                return transaction_status
+        return None
 
     # """:type order order_.Order"""
 

@@ -145,10 +145,11 @@ class Order(Base):
         return status_match.get(order_good_status)
 
     def append_goods_status(self, status: str, transaction: Union[int, MoneyTransaction]=None,
-                            transaction_status: Union[int, MoneyTransactionStatus]=None):
+                            # transaction_status: Union[int, MoneyTransactionStatus]=None
+                            ):
         for order_good in self.order_goods:
             """:type order_good OrderGood"""
-            order_good.append_status(status, transaction, transaction_status)
+            order_good.append_status(status, transaction)
         self_new_status = self.to_order_status(status)
         if self_new_status is not None:
             self.status = self_new_status

@@ -73,7 +73,7 @@ def load_by_config(config):
         payment_client_class = getattr(imported_module, class_name)
         _payment_client_classes[name] = payment_client_class
         # TODO set fields from config
-        payment_client_settings = _payment_clients_settings[class_name]
+        payment_client_settings = _payment_clients_settings.get(class_name, {})
         for setting_name in payment_client_settings:
             setattr(payment_client_class, setting_name, payment_client_settings[setting_name])
 

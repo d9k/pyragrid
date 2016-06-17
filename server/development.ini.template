@@ -34,6 +34,7 @@ pyramid.includes =
 
 payment_systems_enabled =
     test
+; yandexMoney
 
 payment_system_default = test
 
@@ -41,6 +42,11 @@ payment_system_default = test
 # PaymentClientTest.test_field = 1234
 PaymentClientTest.route_payment_notify = paymentApi/testPaymentNotify
 ViewsPaymentTestServer.notify_url = http://127.0.0.1:6543/paymentApi/testPaymentNotify
+
+#PaymentClientYandexMoney.app_id =
+#PaymentClientYandexMoney.oauth2_client_secret =
+PaymentClientYandexMoney.route_result_redirect = paymentApi/yandexMoneyResultRedirect
+
 
 generate_password_length = 8
 mail_default_subject = Письмо от проекта Pyragrid

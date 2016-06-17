@@ -177,7 +177,7 @@ def main(global_config, **settings):
     if pyramid.threadlocal.get_current_registry().settings is None:
         pyramid.threadlocal.get_current_registry().settings = settings
 
-    config.scan()
+    config.scan(ignore=['pyragrid.payment_systems'])
     # TODO убрать настройку jinja2 env в конфиг
 
     app = config.make_wsgi_app()

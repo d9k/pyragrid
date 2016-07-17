@@ -17,13 +17,15 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
     sudo apt-get install python3-pip
     sudo pip install virtualenv
 
-	# for ubutu 16.04:
-	sudo apt-get install python3.5-venv python3-pip
-	pyvenv-3.5 venv
-
     cd server
     virtualenv-3.4 venv
+
     # or `virtualenv -p $(which python3.4) venv`
+
+    # for ubutu 16.04:
+    sudo apt-get install python3.5-venv python3-pip
+    pyvenv-3.5 venv
+    
     source venv/bin/activate
 
 optional hint:

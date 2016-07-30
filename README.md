@@ -6,7 +6,7 @@ Installation
 
 http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirements.html
 
-###python venv
+### python venv
 
     # for psycopg2
     sudo apt-get install libpq-dev python-dev
@@ -40,7 +40,7 @@ check after `source venv/bin/activate`:
 	python --version
 	which easy_install
 
-###main part
+### main part
 
 	cd server
 
@@ -48,11 +48,11 @@ check after `source venv/bin/activate`:
 	# run setup.py with develop param on production too
 	# if you experience some dependency missing error, try run command again
 
-        createdb <your_db_name>
+  createdb <your_db_name>
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 
-###For Jinja asset compiler working
+### For Jinja asset compiler working
 
 install nodejs (for Ubuntu):
 
@@ -65,7 +65,7 @@ then
 
     sudo npm install -g coffee-script js2coffee
 
-###For assets fix
+### For assets fix
 
     # ensure ruby installed, then
     sudo su -c "gem install sass"

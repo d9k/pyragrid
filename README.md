@@ -48,11 +48,11 @@ check after `source venv/bin/activate`:
 	# run setup.py with develop param on production too
 	# if you experience some dependency missing error, try run command again
 
-    createdb <your_db_name>
     cp development.ini.template development.ini
     cp development_passwords.ini.template development_passwords.ini
     # then edit *.ini files
-    
+
+    createdb <your_db_name>
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 

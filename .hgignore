@@ -17,3 +17,4 @@ regexp:^\.idea/dataSources\.local\.xml
 regexp:^\.idea/dataSources\.xml
 regexp:^\.idea/workspace\.xml
 regexp:server/erd_from_sqlalchemy\.png
+regexp:^\.\#

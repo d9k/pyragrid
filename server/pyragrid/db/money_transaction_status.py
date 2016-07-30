@@ -13,7 +13,7 @@ import datetime
 
 from .enum_money_transaction_status import EnumMoneyTransactionStatus
 from .enum_request_method import EnumRequestMethod
-import sqlalchemy.dialects.postgres as postgres
+import sqlalchemy.dialects.postgresql as postgres
 import dominate
 import dominate.tags as tag
 

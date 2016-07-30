@@ -2,6 +2,8 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 alembic.ini
+development.ini
+development_passwords.ini
 readme-gulp.txt
 setup.py
 pyragrid/__init__.py

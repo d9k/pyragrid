@@ -16,5 +16,6 @@ regexp:^server/pyragrid/static/dist/.+
 regexp:^\.idea/dataSources\.local\.xml
 regexp:^\.idea/dataSources\.xml
 regexp:^\.idea/workspace\.xml
+regexp:^\.idea
 regexp:server/erd_from_sqlalchemy\.png
 regexp:^\.\#

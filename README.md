@@ -133,3 +133,9 @@ then
 
     % sudo service supervisor restart
 
+Emacs debug
+===========
+
+`Alt+X venv-activate`
+
+http://stackoverflow.com/questions/3734880/getting-pdb-in-emacs-to-use-python-process-from-current-virtualenv

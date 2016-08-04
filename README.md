@@ -1,6 +1,10 @@
 pyragrid README
 ===============
 
+Pyragrid is a CMS for e-shops and vkontakte applications.
+It's on development state.
+
+
 Installation
 ------------
 

@@ -6,6 +6,7 @@ regexp:^server/bower_components/.+
 regexp:^server/node_modules/.+
 regexp:^server/dist/.+
 regexp:^server/uploads/.+
+regexp:^server/local/.+
 regexp:^server/build/.+
 regexp:^server/[A-z0-9\-_]+_passwords\.ini$
 regexp:^server/mail/.+

@@ -1,6 +1,10 @@
 pyragrid README
 ===============
 
+Pyragrid is a CMS for e-shops and vkontakte applications.
+It's on development state.
+
+
 Installation
 ------------
 
@@ -133,3 +137,9 @@ then
 
     % sudo service supervisor restart
 
+Emacs debug
+===========
+
+`Alt+X venv-activate`
+
+http://stackoverflow.com/questions/3734880/getting-pdb-in-emacs-to-use-python-process-from-current-virtualenv

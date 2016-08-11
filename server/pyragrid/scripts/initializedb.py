@@ -78,6 +78,17 @@ def main(argv=sys.argv):
     DBSession.add(admin)
     transaction.commit()
 
+    connection = op.get_bind()
+    engine_name = connection.engine.name
+    # pgcrypto required for uuid generation
+    # TODO check code
+    if engine_name == 'postgresql':
+        try:
+            connection.engine.execute("DROP EXTENSION pgcrypto;")
+        except sqlalchemy.exc.ProgrammingError:
+            pass
+        connection.engine.execute("CREATE EXTENSION pgcrypto;")
+
     # alembic_head_revision = bash('./venv/bin/activate; alembic heads')
     alembic_heads_result = bash('alembic heads')
     alembic_head_revision = alembic_heads_result.split(' ')[0]

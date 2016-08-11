@@ -1,6 +1,8 @@
+import sqlalchemy
 from sqlalchemy import (
-     Column, Integer, Text, Boolean, DateTime, ForeignKey
+     Column, Integer, Text, Boolean, DateTime, ForeignKey, text
 )
+import sqlalchemy.dialects.postgresql as postgresql
 import deform.widget
 import colander
 from .base import (Base, DBSession, NullableInt)
@@ -18,6 +20,13 @@ class Article(Base):
             'title': 'id статьи',
             'widget': deform.widget.TextInputWidget(readonly=True)
         }})
+
+    global_id = Column(
+        postgresql.UUID,
+        index=True,
+        nullable=False,
+        server_default=text('gen_random_uuid()')
+    )
 
     name = Column(
         Text,

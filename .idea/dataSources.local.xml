@@ -2,10 +2,15 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="PostgreSQL - BestTests@localhost" uuid="2354de96-d40c-4d18-b1cd-d4836aabb378">
+      <database-info product="PostgreSQL" version="9.3.9" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.4 JDBC4 (build 1201)">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>d9k</user-name>
-      <schema-pattern>BestTests.pg_catalog BestTests.public</schema-pattern>
-      <default-schemas>BestTests.public</default-schemas>
+      <introspection-schemas>BestTests:pg_catalog,public</introspection-schemas>
+      <resolve-scope>BestTests:public</resolve-scope>
+      <unqualified-resolve-schemas>BestTests:public</unqualified-resolve-schemas>
     </data-source>
   </component>
 </project>

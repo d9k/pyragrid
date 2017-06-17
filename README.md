@@ -4,6 +4,21 @@ pyragrid README
 Pyragrid is a CMS for e-shops and vkontakte applications.
 It's on development state.
 
+Built on top of python framework Pyramid. PostgreSQL, WebComponents are used.
+
+Directory tree info
+------------------
+
+    dia/ - diagrams
+    server/ - contain sources. files at directory root are config templates and serve scripts
+        alembic/versions - DB migrations
+        data/ - db initialization files
+        local/ - local site files
+        public/ - resources that are available to download for end user (?)
+        pyragrid/ - pyragrid framework package
+        scripts/ - server state and database management scripts
+        static/ - resources that are available to download for end user
+        upload/ - here go end user uploads
 
 Installation
 ------------

@@ -4,7 +4,8 @@ pyragrid README
 Pyragrid is a CMS for e-shops and vkontakte applications.
 It's on development state.
 
-Built on top of python framework Pyramid. PostgreSQL, WebComponents are used.
+Built on top of python framework Pyramid. PostgreSQL, React, Coffescript & JQuery are used.
+Also see Pyramid documentation (https://github.com/Pylons/pyramid).
 
 Directory tree info
 ------------------
@@ -27,26 +28,28 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
 
 ### python venv
 
-    # for psycopg2
+    # for psycopg2 (PostgreSql adapter module)
     sudo apt-get install libpq-dev python-dev
 
-    # ?
+    # for ubutu 16.04:
+    sudo apt-get install python3.5-venv python3-pip
+    # for ubuntu 14.04
     sudo apt-get install python3.4-venv
 
     sudo apt-get install python3-pip
     sudo pip install virtualenv
-
-    cd server
-    virtualenv-3.4 venv
-
-    # or `virtualenv -p $(which python3.4) venv`
-
-    # for ubutu 16.04:
-    sudo apt-get install python3.5-venv python3-pip
-    pyvenv-3.5 venv
-    
     source venv/bin/activate
-
+    
+    # creating venv in server dir
+    cd server
+    
+    # for ubutu 16.04:
+    virtualenv-3.5 venv
+    # for ubuntu 14.04
+    virtualenv-3.4 venv
+    
+    # or `virtualenv -p $(which python3.4) venv`
+    
 optional hint:
 
 run after every new package installation (for venv moving ability)

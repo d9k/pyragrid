@@ -2,8 +2,6 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 alembic.ini
-development.ini
-development_passwords.ini
 readme-gulp.txt
 setup.py
 pyragrid/__init__.py
@@ -130,6 +128,7 @@ pyragrid/static/js/test.js
 pyragrid/static/js/ui.js
 pyragrid/static/js/vkAuth.js
 pyragrid/static/tinymce/changelog.txt
+pyragrid/static/tinymce/jquery.tinymce.js
 pyragrid/static/tinymce/jquery.tinymce.min.js
 pyragrid/static/tinymce/license.txt
 pyragrid/static/tinymce/tinymce.jquery.js

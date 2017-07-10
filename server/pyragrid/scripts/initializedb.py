@@ -4,6 +4,7 @@ import transaction
 import pyragrid.helpers as helpers
 import subprocess
 
+import sqlalchemy
 from sqlalchemy import engine_from_config
 
 from pyramid.paster import (
@@ -61,6 +62,21 @@ def main(argv=sys.argv):
         settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
 
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
+
+    connection = sql_engine.connect()
+    engine_name = connection.engine.name
+    # pgcrypto required for uuid generation
+    # TODO check code
+    if engine_name == 'postgresql':
+        print('re-enable pgcrypto')
+        try:
+            connection.engine.execute("DROP EXTENSION pgcrypto;")
+        except sqlalchemy.exc.ProgrammingError:
+            pass
+        connection.engine.execute("CREATE EXTENSION pgcrypto;")
+    else:
+        print("engine_name is " + engine_name + ". engine not detected")
+
     # DBSession.configure(bind=engine)
     Base.metadata.create_all(sql_engine)
     Base.metadata.bind = sql_engine
@@ -77,17 +93,6 @@ def main(argv=sys.argv):
     #     model = MyModel(name='one', value=1)
     DBSession.add(admin)
     transaction.commit()
-
-    connection = op.get_bind()
-    engine_name = connection.engine.name
-    # pgcrypto required for uuid generation
-    # TODO check code
-    if engine_name == 'postgresql':
-        try:
-            connection.engine.execute("DROP EXTENSION pgcrypto;")
-        except sqlalchemy.exc.ProgrammingError:
-            pass
-        connection.engine.execute("CREATE EXTENSION pgcrypto;")
 
     # alembic_head_revision = bash('./venv/bin/activate; alembic heads')
     alembic_heads_result = bash('alembic heads')

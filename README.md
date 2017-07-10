@@ -38,7 +38,6 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
 
     sudo apt-get install python3-pip
     sudo pip install virtualenv
-    source venv/bin/activate
     
     # creating venv in server dir
     cd server
@@ -48,13 +47,15 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
     # for ubuntu 14.04
     virtualenv-3.4 venv
     
+        source venv/bin/activate
+    
     # or `virtualenv -p $(which python3.4) venv`
     
 optional hint:
 
 run after every new package installation (for venv moving ability)
 
-    virtualenv-3.4 --relocatable venv
+    virtualenv-3.5 --relocatable venv
 
 check after `source venv/bin/activate`:
 
@@ -70,11 +71,15 @@ check after `source venv/bin/activate`:
 	# run setup.py with develop param on production too
 	# if you experience some dependency missing error, try run command again
 
+	# create postgre sql database
+    createdb <your_db_name>
+    # pgcrypto extension must enabled
+    # (run `CREATE EXTENSION pgcrypto` on newly created db)
+
     cp development.ini.template development.ini
     cp development_passwords.ini.template development_passwords.ini
-    # then edit *.ini files
+    # then edit *.ini files (at least provide postgresql connection in development_passwords.ini)
 
-    createdb <your_db_name>
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 
@@ -161,3 +166,9 @@ Emacs debug
 `Alt+X venv-activate`
 
 http://stackoverflow.com/questions/3734880/getting-pdb-in-emacs-to-use-python-process-from-current-virtualenv
+
+Pycharm debug
+=============
+
+Go to `File->Settings->Project: xxxxx->Project interpreter`, click at the gear icon, then `Add local...` and select path to your previously generated local virtual environment.
+

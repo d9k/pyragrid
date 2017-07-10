@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/venv/lib/python3.5/site-packages/pkg_resources-0.0.0.dist-info" />
       <excludeFolder url="file://$MODULE_DIR$/venv/lib/python3.5/site-packages/pyragrid-0.0-py3.5.egg/EGG-INFO" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.5.1+ virtualenv at ~/cr/zdorovie-legkie/server/venv" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.5.1+ virtualenv at ~/sites/d9k.local/server/venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">

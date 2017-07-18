@@ -83,7 +83,7 @@ check after `source venv/bin/activate`:
 	$VENV/bin/initialize_pyragrid_db development.ini
 	$VENV/bin/pserve development.ini
 
-### For Jinja asset compiler working
+### For Jinja asset compiler working (required!)
 
 install nodejs (for Ubuntu):
 
@@ -96,7 +96,9 @@ then
 
     sudo npm install -g coffee-script js2coffee
 
-### For assets fix
+### For assets fix (required!)
+
+TODO update bower, npm packages (security issues)
 
     # ensure ruby installed, then
     sudo su -c "gem install sass"

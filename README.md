@@ -51,6 +51,7 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
 Optional hint: For ability to run after project folder move execute after every new package installation:
 
     virtualenv-3.5 --relocatable venv
+    # или virtualenv -p $(which python3.5) --relocatable venv
 
 check after `source venv/bin/activate`:
 

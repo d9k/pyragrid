@@ -19,8 +19,8 @@ requires = [
     'waitress',
     'pyramid_jinja2',
     'pyramid_beaker',
-    'deform==2.0a2',
-    'jac==0.15.1',  # jinja-assets-compressor
+    'deform==2.0.4',
+    'jac==0.16.1',  # jinja-assets-compressor
     'colander',
     'ColanderAlchemy',
     'dictalchemy',
@@ -40,7 +40,7 @@ requires = [
 ]
 
 setup(name='pyragrid',
-      version='0.0.5',
+      version='0.0.6',
       description='pyragrid',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

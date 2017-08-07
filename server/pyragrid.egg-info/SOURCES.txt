@@ -2,6 +2,8 @@ CHANGES.txt
 MANIFEST.in
 README.txt
 alembic.ini
+development.ini
+development_passwords.ini
 readme-gulp.txt
 setup.py
 pyragrid/__init__.py
@@ -93,6 +95,9 @@ pyragrid/static/pnotify.custom.min.js
 pyragrid/static/pyramid-16x16.png
 pyragrid/static/pyramid.png
 pyragrid/static/css/style.css
+pyragrid/static/dist/12c2af4eca249f3395211418deb39e64-inline0.js
+pyragrid/static/dist/3e80e11ee10faf83065e9a9f200a84ec-inline0.js
+pyragrid/static/dist/b9af5ea6f9f8be5f62a313c427c859e0-inline0.js
 pyragrid/static/jqueryfiletree/jQueryFileTree.js
 pyragrid/static/jqueryfiletree/jQueryFileTree.min.css
 pyragrid/static/jqueryfiletree/jQueryFileTree.min.js

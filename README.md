@@ -39,21 +39,16 @@ http://docs.pylonsproject.org/projects/pyramid/en/latest/quick_tutorial/requirem
     sudo apt-get install python3-pip
     sudo pip install virtualenv
     
-    # creating venv in server dir
+    # creating venv in **server** dir
+    # Don't forget!
     cd server
-    
-    # for ubutu 16.04:
-    virtualenv-3.5 venv
-    # for ubuntu 14.04
-    virtualenv-3.4 venv
-    
-        source venv/bin/activate
-    
-    # or `virtualenv -p $(which python3.4) venv`
-    
-optional hint:
 
-run after every new package installation (for venv moving ability)
+    virtualenv -p $(which python3.5) venv
+    # `which python 3.4` for ubuntu 14.04
+    
+    source venv/bin/activate
+
+Optional hint: For ability to run after project folder move execute after every new package installation:
 
     virtualenv-3.5 --relocatable venv
 
@@ -65,13 +60,16 @@ check after `source venv/bin/activate`:
 
 ### main part
 
+  # if not inside server directory then
 	cd server
 
-	$VENV/bin/python setup.py develop
-	# run setup.py with develop param on production too
-	# if you experience some dependency missing error, try run command again
+  # if not virtual environment activated yet (check with `which python`):
+  venv/bin/activate
+	python setup.py develop
+	# run setup.py with develop param on production server too
+	# /!\ if you experience some dependency missing error, try run this command again
 
-	# create postgre sql database
+	# create postgre sql  database
     createdb <your_db_name>
     # pgcrypto extension must enabled
     # (run `CREATE EXTENSION pgcrypto` on newly created db)
@@ -80,8 +78,8 @@ check after `source venv/bin/activate`:
     cp development_passwords.ini.template development_passwords.ini
     # then edit *.ini files (at least provide postgresql connection in development_passwords.ini)
 
-	$VENV/bin/initialize_pyragrid_db development.ini
-	$VENV/bin/pserve development.ini
+    $VENV/bin/initialize_pyragrid_db development.ini
+    $VENV/bin/pserve development.ini
 
 ### For Jinja asset compiler working (required!)
 

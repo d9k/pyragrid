@@ -97,14 +97,17 @@ then
 
 ### For assets fix (required!)
 
-TODO update bower, npm packages (security issues)
+Install yarn (https://yarnpkg.com/lang/en/docs/install/). Yarn is much faster then npm and can produce lock-file for strict package versioning. `yarn install --pure-lockfile`: install exact versions from `yarn.lock`.  
 
     # ensure ruby installed, then
     sudo su -c "gem install sass"
 
-    sudo npm i -g gulp bower
-    npm i
-    gulp bower
+    sudo npm i -g gulp
+    
+    # if not at `server/`
+    cd server
+    
+    yarn install --pure-lockfile
     gulp
 
 Type hinting

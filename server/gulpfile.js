@@ -9,17 +9,18 @@ var gulp    = require('gulp'),
 var config = {
     coffeePath: './pyragrid/resources/coffee',
     sassPath: './pyragrid/resources/sass',
-    bowerDir: './bower_components',
+//  bowerDir: './bower_components',
+    nodeDir: './node_modules',
     staticDir: './pyragrid/static'
 };
 
-gulp.task('bower', function() {
-     return bower()
-         .pipe(gulp.dest(config.bowerDir))
-}); 
+//gulp.task('bower', function() {
+     //return bower()
+         //.pipe(gulp.dest(config.bowerDir))
+//}); 
 
 gulp.task('icons', function() {
-    return gulp.src(config.bowerDir + '/fontawesome/fonts/**.*')
+    return gulp.src(config.nodeDir + '/font-awesome/fonts/**.*')
         .pipe(gulp.dest('./public/fonts'));
 });
 
@@ -30,8 +31,8 @@ gulp.task('css', function() {
             //style: 'compressed',
             loadPath: [
                 config.sassPath,
-                config.bowerDir + '/bootstrap-sass-official/assets/stylesheets',
-                config.bowerDir + '/fontawesome/scss'
+                config.nodeDir + '/bootstrap-sass/assets/stylesheets',
+                config.nodeDir + '/font-awesome/scss'
             ]
         }).on("error", notify.onError(function (error) {
                 return "Error: " + error.message;
@@ -55,31 +56,31 @@ gulp.task('coffee', function(){
 
 gulp.task('js-copy', function(){
     gulp.src([
-            config.bowerDir + '/jquery/dist/jquery.*',
-            config.bowerDir + '/jquery-ui/jquery-ui.*',
-            config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap.*',
-            config.bowerDir + '/datatables/media/js/jquery.dataTables.js',
-            config.bowerDir + '/jqueryfiletree/dist/',
-            config.bowerDir + '/lite-uploader/jquery.liteuploader*.js',
-            config.bowerDir + '/blueimp-file-upload/js/jquery.fileupload.js',
-            config.bowerDir + '/blueimp-file-upload/js/jquery.iframe-transport.js',
-            config.bowerDir + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-            config.bowerDir + '/blueimp-file-upload/css/jquery.fileupload.css',
-            config.bowerDir + '/jinplace/js/jinplace.js',
-            config.bowerDir + '/bootstrap-confirmation2/bootstrap-confirmation*.js'
+            config.nodeModules + '/jquery/dist/jquery.*',
+            config.nodeModules + '/jquery-ui-dist/jquery-ui.*',
+            config.nodeModules + '/bootstrap-sass/assets/javascripts/bootstrap.*',
+            config.nodeModules + '/datatables/media/js/jquery.dataTables.js',
+            config.nodeModules + '/jqueryfiletree/dist/',
+            config.nodeModules + '/lite-uploader/jquery.liteuploader*.js',
+            config.nodeModules + '/blueimp-file-upload/js/jquery.fileupload.js',
+            config.nodeModules + '/blueimp-file-upload/js/jquery.iframe-transport.js',
+            config.nodeModules + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+            config.nodeModules + '/blueimp-file-upload/css/jquery.fileupload.css',
+            config.nodeModules + '/jinplace/js/jinplace*.js',
+            config.nodeModules + '/bootstrap-confirmation2/bootstrap-confirmation*.js'
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img
 
     gulp.src([
-        config.bowerDir + '/tinymce/**/*'
+        config.nodeModules + '/tinymce/**/*'
     ]).pipe(gulp.dest(config.staticDir + '/tinymce'));
 
     //console.log('!' + config.bowerDir + '/jqueryfiletree/dist/connectors/**/*');
 
     gulp.src([
-        config.bowerDir + '/jqueryfiletree/dist/**/*',
-        '!' + config.bowerDir + '/jqueryfiletree/dist/connectors',
+        config.nodeModules + '/jqueryfiletree/dist/**/*',
+        '!' + config.nodeModules + '/jqueryfiletree/dist/connectors',
     ]).pipe(gulp.dest(config.staticDir + '/jqueryfiletree'));
 });
 

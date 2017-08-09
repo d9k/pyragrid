@@ -2,10 +2,24 @@
   "devDependencies": {
     "gulp": "*",
     "gulp-bower": "*",
+    "gulp-coffee": "*",
     "gulp-notify": "*",
     "gulp-ruby-sass": "*",
-    "gulp-coffee": "*",
-    "gulp-util": "*",
-    "gulp-sourcemaps": "*"
+    "gulp-sourcemaps": "*",
+    "gulp-util": "*"
+  },
+  "dependencies": {
+    "blueimp-file-upload": "~9.18.0",
+    "bootstrap-confirmation2": "~2.4.0",
+    "bootstrap-sass": "~3.3.7",
+    "datatables": "~1.10.13",
+    "font-awesome": "~4.4.0",
+    "jinplace": "~1.2.1",
+    "jquery": "~2.2.4",
+    "jquery-ui": "~1.12.1",
+    "jquery-ui-dist": "^1.12.1",
+    "jqueryfiletree": "~2.1.4",
+    "lite-uploader": "~3.2.2",
+    "tinymce": "~4.3.1"
   }
 }

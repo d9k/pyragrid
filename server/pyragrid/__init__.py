@@ -49,10 +49,13 @@ def main(global_config, **settings):
         settings = helpers.dicts_merge(passwords_settings.get('app:main', {}), settings)
 
     sql_engine = engine_from_config(settings, 'sqlalchemy.')
-    # TODO callback= http://pyramid.chromaticleaves.com/simpleauth/
-    # TODO http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
-    # TODO move secret to development_passwords.ini
-    authn_policy = AuthTktAuthenticationPolicy(secret='43ser0sroova', hashalg='sha512', callback=User.get_groups)
+    authentication_secret = settings.get('authentication_secret')
+
+    if authentication_secret is None:
+        raise Exception('authentication_secret must be set at [conf_type]_passwords.ini!')
+
+    # see http://docs.pylonsproject.org/projects/pyramid//en/latest/tutorials/wiki2/authorization.html
+    authn_policy = AuthTktAuthenticationPolicy(secret=authentication_secret, hashalg='sha512', callback=User.get_groups)
     authz_policy = ACLAuthorizationPolicy()
     # DBSession.configure(bind=engine)p
     Base.metadata.bind = sql_engine

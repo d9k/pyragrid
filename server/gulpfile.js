@@ -4,10 +4,12 @@ var gulp    = require('gulp'),
     bower   = require('gulp-bower'),
     coffee  = require('gulp-coffee'),
     gutil   = require('gulp-util'),
+    babel   = require('gulp-babel'),
     sourcemaps = require('gulp-sourcemaps');
 
 var config = {
     coffeePath: './pyragrid/resources/coffee',
+    es6Path: './pyragrid/resources/es6',
     sassPath: './pyragrid/resources/sass',
 //  bowerDir: './bower_components',
     nodeDir: './node_modules',
@@ -48,10 +50,23 @@ gulp.task('css', function() {
         .pipe(gulp.dest(config.staticDir + '/css'));
 });
 
-gulp.task('coffee', function(){
-    gulp.src(config.coffeePath + '/**/*.coffee')
-        .pipe(coffee(/*{bare: true}*/).on('error', gutil.log))
-        .pipe(gulp.dest(config.staticDir + '/js'));
+//gulp.task('coffee', function(){
+    //gulp.src(config.coffeePath + '/**/*.coffee')
+        //.pipe(coffee(/*{bare: true}*/).on('error', gutil.log))
+        //.pipe(gulp.dest(config.staticDir + '/js'));
+//});
+
+gulp.task('es6', () => {
+	gulp.src(
+    config.es6Path + '/**/*.es6'
+  )
+	.pipe(babel({
+		presets: ['es2015', 'stage-0'],
+		sourceRoot: 'src',
+//    sourceRoot: src.babelSourceRoot,
+		sourceMap: true
+	}))
+	.pipe(gulp.dest(config.staticDir + '/js'));  
 });
 
 gulp.task('js-copy', function(){
@@ -90,7 +105,8 @@ gulp.task('watch', function() {
     //TODO try group in one array
     gulp.watch(config.sassPath + '/**/*.scss', ['css']);
     gulp.watch(config.sassPath + '/**/*.sass', ['css']);
-    gulp.watch(config.coffeePath + '/**/*.coffee', ['coffee']);
+    //gulp.watch(config.coffeePath + '/**/*.coffee', ['coffee']);
+    gulp.watch(config.es6Path + '/**/*.es6', ['es6']);
  });
 
-gulp.task('default', ['icons', 'css', 'coffee', 'js-copy']);
+gulp.task('default', ['icons', 'css', 'es6', 'js-copy']);

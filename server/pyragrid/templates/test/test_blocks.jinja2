@@ -1,0 +1,15 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+    <script src="{{ request.static_url('pyragrid:static/js/pyragridBlocks.js') }}"></script>
+
+    {% if content_raw %}
+        {{ content_raw | safe }}
+    {% endif %}
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        pyragrid.renderBlocks();
+      });
+    </script>
+{% endblock %}

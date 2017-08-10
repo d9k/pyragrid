@@ -209,3 +209,9 @@ class Testiews(ViewsAdmin):
     def view_test_filetree(self):
         return {'header': 'JqueryFileDialog test'}
 
+    @view_config(route_name='test_blocks', renderer='templates/test/test_blocks.jinja2')
+    def view_test_blocks(self):
+        return {
+            'header': 'blocks test',
+            'content_raw': '{{ render_block("hello_world") }}'
+        }

@@ -122,6 +122,7 @@ def main(global_config, **settings):
     config.add_route('test_filedialog', '/test/filedialog')
     config.add_route('test_droparea', '/test/droparea')
     config.add_route('test_jquery_file_upload', '/test/jquery_file_upload')
+    config.add_route('test_blocks', '/test/blocks')
 
     config.add_route('email_check_code', '/checkEmail/{code}')
 

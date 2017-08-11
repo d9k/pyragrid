@@ -71,18 +71,20 @@ gulp.task('es6', () => {
 
 gulp.task('js-copy', function(){
     gulp.src([
-            config.nodeModules + '/jquery/dist/jquery.*',
-            config.nodeModules + '/jquery-ui-dist/jquery-ui.*',
-            config.nodeModules + '/bootstrap-sass/assets/javascripts/bootstrap.*',
-            config.nodeModules + '/datatables/media/js/jquery.dataTables.js',
-            config.nodeModules + '/jqueryfiletree/dist/',
-            config.nodeModules + '/lite-uploader/jquery.liteuploader*.js',
-            config.nodeModules + '/blueimp-file-upload/js/jquery.fileupload.js',
-            config.nodeModules + '/blueimp-file-upload/js/jquery.iframe-transport.js',
-            config.nodeModules + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
-            config.nodeModules + '/blueimp-file-upload/css/jquery.fileupload.css',
-            config.nodeModules + '/jinplace/js/jinplace*.js',
-            config.nodeModules + '/bootstrap-confirmation2/bootstrap-confirmation*.js'
+            config.nodeDir + '/jquery/dist/jquery.*',
+            config.nodeDir + '/jquery-ui-dist/jquery-ui.*',
+            config.nodeDir + '/bootstrap-sass/assets/javascripts/bootstrap.*',
+            config.nodeDir + '/datatables/media/js/jquery.dataTables.js',
+            config.nodeDir + '/jqueryfiletree/dist/',
+            config.nodeDir + '/lite-uploader/jquery.liteuploader*.js',
+            config.nodeDir + '/blueimp-file-upload/js/jquery.fileupload.js',
+            config.nodeDir + '/blueimp-file-upload/js/jquery.iframe-transport.js',
+            config.nodeDir + '/blueimp-file-upload/js/vendor/jquery.ui.widget.js',
+            config.nodeDir + '/blueimp-file-upload/css/jquery.fileupload.css',
+            config.nodeDir + '/jinplace/js/jinplace*.js',
+            config.nodeDir + '/bootstrap-confirmation2/bootstrap-confirmation*.js',
+            config.nodeDir + '/nunjucks/browser/nunjucks.js',
+            config.nodeDir + '/nunjucks/browser/nunjucks.min.js'
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img
@@ -94,8 +96,8 @@ gulp.task('js-copy', function(){
     //console.log('!' + config.bowerDir + '/jqueryfiletree/dist/connectors/**/*');
 
     gulp.src([
-        config.nodeModules + '/jqueryfiletree/dist/**/*',
-        '!' + config.nodeModules + '/jqueryfiletree/dist/connectors',
+        config.nodeDir + '/jqueryfiletree/dist/**/*',
+        '!' + config.nodeDir + '/jqueryfiletree/dist/connectors/**/*',
     ]).pipe(gulp.dest(config.staticDir + '/jqueryfiletree'));
 });
 

@@ -215,3 +215,9 @@ class Testiews(ViewsAdmin):
             'header': 'blocks test',
             'content_raw': '{{ render_block("hello_world") }}'
         }
+
+    @view_config(route_name='test_nunjucks', renderer='templates/test/test_nunjucks.jinja2')
+    def view_test_blocks(self):
+        return {
+            'header': 'nunjucks templates test',
+        }

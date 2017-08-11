@@ -1,0 +1,24 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+    <script src="{{ request.static_url('pyragrid:static/nunjucks.js') }}"></script>
+
+    <div id="nunjucksOutput"></div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function(){
+       var nunjucksEnv = new nunjucks.Environment();
+{#        nunjucksEnv.addFilter('render_hello_world', function(appealToWhom) {#}
+{#            return 'Hello, ' + appealToWhom + '!';#}
+{#        });#}
+
+        nunjucksEnv.addGlobal('render_hello_world', function(appealToWhom) {
+            return 'Hello, ' + appealToWhom + '!';
+        });
+
+        document.getElementById('nunjucksOutput').innerHTML = nunjucksEnv.renderString(
+          {% raw %}'{{ render_hello_world("dear user") }}'{% endraw %}
+        );
+      });
+    </script>
+{% endblock %}

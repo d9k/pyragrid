@@ -5,7 +5,7 @@
     <script src="{{ request.static_url('pyragrid:static/js/pyragridBlocks.js') }}"></script>
 
     <div id="">
-        {% raw %}{{ render_block("hello_world", "dear user") | safe }}{% endraw %}
+        {% raw %}{{ render_block("hello_world", "dear user") }}{% endraw %}
     </div>
 
     {% if content_raw %}

@@ -39,14 +39,13 @@ pyragrid.renderBlocks = function (element) {
       for (var _len = arguments.length, blockParams = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         blockParams[_key - 1] = arguments[_key];
       }
-
-      return pyragrid.blockHandlers[blockType](blockParams);
+      var renderedBlock = pyragrid.blockHandlers[blockType](blockParams)
+      return new nunjucks.runtime.SafeString(renderedBlock);
     } else {
       console.log('Warning: block type ' + blockType + ' not found!');
     }
   });
 
-  console.log(nunjucksEnv.renderString(element.innerHTML));
   element.innerHTML = nunjucksEnv.renderString(element.innerHTML);
 };
 

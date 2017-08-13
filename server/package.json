@@ -26,6 +26,8 @@
     "jquery-ui-dist": "^1.12.1",
     "jqueryfiletree": "~2.1.4",
     "lite-uploader": "~3.2.2",
+    "mobx": "^3.2.2",
+    "mobx-state-tree": "^0.9.5",
     "nunjucks": "^3.0.1",
     "tinymce": "~4.3.1"
   }

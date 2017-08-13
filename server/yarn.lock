@@ -2246,6 +2246,14 @@ minimist@^1.1.0, minimist@^1.2.0:
   dependencies:
     minimist "0.0.8"
 
+mobx-state-tree@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/mobx-state-tree/-/mobx-state-tree-0.9.5.tgz#31b26fda789e6856d588236fac20fbaa86fb0dc4"
+
+mobx@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.2.2.tgz#aa671459bededfd9880c948889a3f62bce09279c"
+
 ms@0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"

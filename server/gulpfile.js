@@ -84,7 +84,9 @@ gulp.task('js-copy', function(){
             config.nodeDir + '/jinplace/js/jinplace*.js',
             config.nodeDir + '/bootstrap-confirmation2/bootstrap-confirmation*.js',
             config.nodeDir + '/nunjucks/browser/nunjucks.js',
-            config.nodeDir + '/nunjucks/browser/nunjucks.min.js'
+            config.nodeDir + '/nunjucks/browser/nunjucks.min.js',
+            config.nodeDir + '/mobx/lib/mobx.umd*',
+            config.nodeDir + '/mobx-state-tree/dist/mobx-state-tree.umd.js',
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img

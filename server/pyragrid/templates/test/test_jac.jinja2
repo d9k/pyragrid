@@ -1,0 +1,13 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+
+    {% compress 'js' %}
+    <script type="text/es6">
+        let a = 5;
+        console.log(a);
+    </script>
+    {% endcompress %}
+    {{ content }}
+
+{% endblock %}

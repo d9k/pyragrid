@@ -221,3 +221,9 @@ class Testiews(ViewsAdmin):
         return {
             'header': 'nunjucks templates test',
         }
+
+    @view_config(route_name='test_jac', renderer='templates/test/test_jac.jinja2')
+    def view_test_blocks(self):
+        return {
+            'header': 'jinja assets compiler es6 test',
+        }

@@ -28,6 +28,7 @@ if (typeof window.pyragrid === 'undefined'){
 // };
 
 pyragrid.blockHandlers = {};
+pyragrid.afterTemplateRenderHandlers = {};
 
 pyragrid.renderBlocks = function(element) {
     let nunjucksEnv = new nunjucks.Environment();

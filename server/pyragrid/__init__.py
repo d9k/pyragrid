@@ -4,6 +4,8 @@ from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
+from pyragrid.templates.jac_compressors.es6_compressor import Es6Compressor
+
 from .db import (
     DBSession,
     Base,

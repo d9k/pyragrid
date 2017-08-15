@@ -8,7 +8,7 @@ from jac.compat import file, u, utf8_encode
 from jac.exceptions import InvalidCompressorError
 
 
-class Es6Compressor(object):
+class BabelCompressor(object):
     """Compressor for text/babel mimetype (see https://babeljs.io/docs/setup/#installation).
 
     Uses the babel command line program to generate JavaScript, then
@@ -18,13 +18,19 @@ class Es6Compressor(object):
     """
 
     binary = 'babel'
+
+    """
+    to fix error Couldn't find preset "xxxxx" relative to directory ...
+    define here any path inside the folder containing "node_modules" with babel executable
+    """
+    cwd_for_presets_search = None
+    presets = ['es2015', 'stage-0', 'react']
     extra_args = []
 
     @classmethod
     def compile(cls, what, mimetype='text/babel', cwd=None, uri_cwd=None,
                 debug=None):
-        # args = ['--compile', '--stdio']
-        args = []
+        args = ['--presets=' + ",".join(cls.presets)]
 
         if cls.extra_args:
             args.extend(cls.extra_args)
@@ -34,7 +40,8 @@ class Es6Compressor(object):
         try:
             handler = subprocess.Popen(args, stdout=subprocess.PIPE,
                                        stdin=subprocess.PIPE,
-                                       stderr=subprocess.PIPE, cwd=None)
+                                       stderr=subprocess.PIPE,
+                                       cwd=cls.cwd_for_presets_search)
         except OSError as e:
             msg = '{0} encountered an error when executing {1}: {2}'.format(
                 cls.__name__,

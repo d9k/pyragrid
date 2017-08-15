@@ -4,7 +4,7 @@ from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
-from pyragrid.templates.jac_compressors.es6_compressor import Es6Compressor
+from pyragrid.templates.jac_compressors.babel_compressor import BabelCompressor
 
 from .db import (
     DBSession,
@@ -27,12 +27,11 @@ import json
 
 from . import views_articles
 
-from jac import CompressorExtension
-
 import os.path
 
 from . import payment_systems
 
+from jac.config import Config as JacDefaultConfig
 
 # http://docs.pylonsproject.org/projects/pyramid-cookbook/en/latest/templates/templates.html
 def add_renderer_globals(event):
@@ -194,5 +193,13 @@ def main(global_config, **settings):
     #jinja2_env.compressor_output_dir = './pyragrid/static/dist'
     jinja2_env.compressor_output_dir = jac_output_dir_path
     jinja2_env.compressor_debug = True
+
+    # BabelCompressor.binary = './node_modules/.bin/babel'
+    BabelCompressor.binary = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'node_modules', '.bin', 'babel'))
+    BabelCompressor.cwd_for_presets_search = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+    jac_default_config = JacDefaultConfig()
+    jinja2_env.compressor_classes = jac_default_config.get('compressor_classes')
+    jinja2_env.compressor_classes['text/babel'] = BabelCompressor
 
     return app

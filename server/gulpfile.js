@@ -88,6 +88,7 @@ gulp.task('js-copy', function(){
             config.nodeDir + '/mobx/lib/mobx.umd*',
             config.nodeDir + '/mobx-state-tree/dist/mobx-state-tree.umd.js',
             config.nodeDir + '/react/dist/react.*js',
+            config.nodeDir + '/react-dom/dist/react-dom.*js',
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img

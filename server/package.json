@@ -30,6 +30,7 @@
     "mobx-state-tree": "^0.9.5",
     "nunjucks": "^3.0.1",
     "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "tinymce": "~4.3.1"
   }
 }

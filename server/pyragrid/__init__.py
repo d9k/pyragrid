@@ -126,6 +126,7 @@ def main(global_config, **settings):
     config.add_route('test_blocks', '/test/blocks')
     config.add_route('test_nunjucks', '/test/nunjucks')
     config.add_route('test_jac', '/test/jac')
+    config.add_route('test_mobx', '/test/mobx')
 
     config.add_route('email_check_code', '/checkEmail/{code}')
 

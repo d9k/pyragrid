@@ -1,0 +1,60 @@
+{% extends "test_base.jinja2" %}
+
+{% block content %}
+    <script src="{{ request.static_url('pyragrid:static/mobx.umd.js') }}"></script>
+    <!-- exposed as window.mobxStateTree -->
+    <script src="{{ request.static_url('pyragrid:static/mobx-state-tree.umd.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/react.js') }}"></script>
+
+    {% compress 'js' %}
+    <script type="text/babel">
+{#        import { types, onSnapshot } from "mobx-state-tree"#}
+
+        const Data = mobxStateTree.types.model("Data", {
+            number: mobxStateTree.types.number,
+          }, {
+            numberInc() {
+              this.number = this.number + 1;
+            },
+            numberSet(newNumber) {
+              this.number = newNumber;
+            }
+          }
+
+//          {
+//            toggle() {
+//                this.done = !this.done
+//            }
+//        }
+        );
+
+        const Store = mobxStateTree.types.model("Store",
+          {
+            data: Data
+          }
+//          {
+//            todos: types.array(Todo)
+//        }
+        );
+
+        const store = Store.create({
+          data: {number: 10}
+        });
+
+        mobxStateTree.onSnapshot(store, (snapshot) => {
+          console.dir(snapshot);
+        });
+
+        //store.data.number -= 1;
+        store.data.numberInc();
+        store.data.numberSet(22);
+
+        let a = 5;
+        console.log(a);
+
+
+    </script>
+    {% endcompress %}
+    {{ content }}
+
+{% endblock %}

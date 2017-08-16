@@ -227,3 +227,9 @@ class Testiews(ViewsAdmin):
         return {
             'header': 'jinja assets compiler babel (es6) test',
         }
+
+    @view_config(route_name='test_mobx', renderer='templates/test/test_mobx.jinja2')
+    def view_test_blocks(self):
+        return {
+            'header': 'mobx + react test',
+        }

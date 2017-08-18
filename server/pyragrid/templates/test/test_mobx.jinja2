@@ -5,6 +5,9 @@
     <!-- exposed as window.mobxStateTree -->
     <script src="{{ request.static_url('pyragrid:static/mobx-state-tree.umd.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/react.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/react-dom.js') }}"></script>
+
+    <div id="helloWorld"></div>
 
     {% compress 'js' %}
     <script type="text/babel">
@@ -12,14 +15,15 @@
 
         const Data = mobxStateTree.types.model("Data", {
             number: mobxStateTree.types.number,
-          }, {
-            numberInc() {
-              this.number = this.number + 1;
-            },
-            numberSet(newNumber) {
-              this.number = newNumber;
-            }
-          }
+          },
+//          {
+//            numberInc() {
+//              this.number = this.number + 1;
+//            },
+//            numberSet(newNumber) {
+//              this.number = newNumber;
+//            }
+//          }
 
 //          {
 //            toggle() {
@@ -41,17 +45,53 @@
           data: {number: 10}
         });
 
-        mobxStateTree.onSnapshot(store, (snapshot) => {
-          console.dir(snapshot);
+{#        mobxStateTree.onSnapshot(store, (snapshot) => {#}
+{#          console.dir(snapshot);#}
+{#        });#}
+
+        mobxStateTree.onPatch(store, patch => {
+            console.log("Got change: ", patch)
         });
 
+        // unreplayable by actions, BUT easy modification
+        mobxStateTree.unprotect(store);
         //store.data.number -= 1;
-        store.data.numberInc();
-        store.data.numberSet(22);
+{#        store.data.numberInc();#}
+{#        store.data.numberSet(22);#}
 
-        let a = 5;
-        console.log(a);
+        class HelloWorld extends React.Component {
+          constructor(props) {
+            super(props);
+          }
+          render() {
+            let {number} = this.props;
 
+            return (
+              <div>{number}</div>
+            );
+          }
+        }
+
+        class HelloWorldWrapper extends React.Component {
+          constructor(props) {
+            super(props);
+          }
+          render() {
+            let {store} = this.props;
+
+            return (
+              <HelloWorld number={store.data.number} />
+            );
+          }
+        }
+
+        ReactDOM.render(
+          <HelloWorldWrapper store={store} />,
+          document.getElementById('helloWorld')
+        );
+
+        store.data.number = store.data.number + 1;
+        store.data.number = 42;
 
     </script>
     {% endcompress %}

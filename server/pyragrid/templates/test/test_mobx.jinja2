@@ -6,6 +6,7 @@
     <script src="{{ request.static_url('pyragrid:static/mobx-state-tree.umd.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/react.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/react-dom.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/mobx-react.js') }}"></script>
 
     <div id="helloWorld"></div>
 
@@ -59,7 +60,7 @@
 {#        store.data.numberInc();#}
 {#        store.data.numberSet(22);#}
 
-        class HelloWorld extends React.Component {
+        class ShowNumber extends React.Component {
           constructor(props) {
             super(props);
           }
@@ -67,7 +68,7 @@
             let {number} = this.props;
 
             return (
-              <div>{number}</div>
+              <span>{number}</span>
             );
           }
         }
@@ -80,13 +81,23 @@
             let {store} = this.props;
 
             return (
-              <HelloWorld number={store.data.number} />
+              <div>
+                <button onClick={ event=> {
+                  store.data.number = store.data.number - 1;
+                } }>-</button>&nbsp;
+                <ShowNumber number={store.data.number} />&nbsp;
+                <button onClick={ event=> {
+                  store.data.number = store.data.number + 1;
+                } }>+</button>
+              </div>
             );
           }
         }
 
+        let HelloWorldWrapperWithObserver = mobxReact.observer(HelloWorldWrapper);
+
         ReactDOM.render(
-          <HelloWorldWrapper store={store} />,
+          <HelloWorldWrapperWithObserver store={store} />,
           document.getElementById('helloWorld')
         );
 

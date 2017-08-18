@@ -1599,6 +1599,10 @@ gulp-notify@*:
     node.extend "^1.1.6"
     through2 "^2.0.3"
 
+gulp-rename@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/gulp-rename/-/gulp-rename-1.2.2.tgz#3ad4428763f05e2764dec1c67d868db275687817"
+
 gulp-ruby-sass@*:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/gulp-ruby-sass/-/gulp-ruby-sass-2.1.1.tgz#e80f65092108ee4afcb4936088dc7253369adcac"

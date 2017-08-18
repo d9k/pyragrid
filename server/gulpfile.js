@@ -5,6 +5,7 @@ var gulp    = require('gulp'),
     coffee  = require('gulp-coffee'),
     gutil   = require('gulp-util'),
     babel   = require('gulp-babel'),
+    rename  = require('gulp-rename'),
     sourcemaps = require('gulp-sourcemaps');
 
 var config = {
@@ -103,6 +104,14 @@ gulp.task('js-copy', function(){
         config.nodeDir + '/jqueryfiletree/dist/**/*',
         '!' + config.nodeDir + '/jqueryfiletree/dist/connectors/**/*',
     ]).pipe(gulp.dest(config.staticDir + '/jqueryfiletree'));
+    
+    gulp.src(
+        config.nodeDir + '/mobx-react/index*.js'
+    ).pipe(rename (function (path) {
+        console.log(path);
+        path.basename = path.basename.replace('index', 'mobx-react');
+    })).pipe(gulp.dest(config.staticDir));
+    
 });
 
 

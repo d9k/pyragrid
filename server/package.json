@@ -31,8 +31,10 @@
     "mobx-react": "^4.2.2",
     "mobx-state-tree": "^0.9.5",
     "nunjucks": "^3.0.1",
+    "promise-polyfill": "^6.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "tinymce": "~4.3.1"
+    "tinymce": "~4.3.1",
+    "whatwg-fetch": "^2.0.3"
   }
 }

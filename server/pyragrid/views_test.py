@@ -1,3 +1,4 @@
+import time
 from pyramid.response import Response
 from pyramid.view import (
     view_config,
@@ -232,4 +233,10 @@ class Testiews(ViewsAdmin):
     def view_test_blocks(self):
         return {
             'header': 'mobx + react test',
+        }
+
+    @view_config(route_name='test_mobx_fetch', renderer='json')
+    def view_test_blocks(self):
+        return {
+            'server_time': time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
         }

@@ -1,6 +1,8 @@
 {% extends "test_base.jinja2" %}
 
 {% block content %}
+    <script src="{{ request.static_url('pyragrid:static/promise.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/fetch.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/mobx.umd.js') }}"></script>
     <!-- exposed as window.mobxStateTree -->
     <script src="{{ request.static_url('pyragrid:static/mobx-state-tree.umd.js') }}"></script>
@@ -16,6 +18,7 @@
 
         const Data = mobxStateTree.types.model("Data", {
             number: mobxStateTree.types.number,
+            //serverTime: mobxStateTree.types.string,
           },
 //          {
 //            numberInc() {
@@ -32,6 +35,8 @@
 //            }
 //        }
         );
+
+        fetch( "{{ request.route_url('test_mobx_fetch', _query=dict()) }}" );
 
         const Store = mobxStateTree.types.model("Store",
           {

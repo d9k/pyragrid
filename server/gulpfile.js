@@ -90,6 +90,8 @@ gulp.task('js-copy', function(){
             config.nodeDir + '/mobx-state-tree/dist/mobx-state-tree.umd.js',
             config.nodeDir + '/react/dist/react.*js',
             config.nodeDir + '/react-dom/dist/react-dom.*js',
+            config.nodeDir + '/promise-polyfill/promise.*js',
+            config.nodeDir + '/whatwg-fetch/fetch.js',            
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img
@@ -108,7 +110,7 @@ gulp.task('js-copy', function(){
     gulp.src(
         config.nodeDir + '/mobx-react/index*.js'
     ).pipe(rename (function (path) {
-        console.log(path);
+        //console.log(path);
         path.basename = path.basename.replace('index', 'mobx-react');
     })).pipe(gulp.dest(config.staticDir));
     

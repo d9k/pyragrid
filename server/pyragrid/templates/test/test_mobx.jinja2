@@ -18,7 +18,7 @@
 
         const Data = mobxStateTree.types.model("Data", {
             number: mobxStateTree.types.number,
-            //serverTime: mobxStateTree.types.string,
+            serverTime: mobxStateTree.types.string,
           },
 //          {
 //            numberInc() {
@@ -36,79 +36,113 @@
 //        }
         );
 
-        fetch( "{{ request.route_url('test_mobx_fetch', _query=dict()) }}" );
+        let getDataFromServer = (callback) => {
+          let data = fetch(
+            "{{ request.route_url('test_mobx_fetch', _query=dict()) }}",
+            {
+                credentials: "same-origin"
+            }
+          ).then( response => {
+                if (response.status === 200){
+                  return response.json()
+                }
+                return {};
+            }).then( data => {
+              callback(data);
+          });
+        };
 
-        const Store = mobxStateTree.types.model("Store",
-          {
-            data: Data
-          }
-//          {
-//            todos: types.array(Todo)
-//        }
-        );
-
-        const store = Store.create({
-          data: {number: 10}
-        });
-
-{#        mobxStateTree.onSnapshot(store, (snapshot) => {#}
-{#          console.dir(snapshot);#}
-{#        });#}
-
-        mobxStateTree.onPatch(store, patch => {
-            console.log("Got change: ", patch)
-        });
-
-        // unreplayable by actions, BUT easy modification
-        mobxStateTree.unprotect(store);
-        //store.data.number -= 1;
-{#        store.data.numberInc();#}
-{#        store.data.numberSet(22);#}
-
-        class ShowNumber extends React.Component {
-          constructor(props) {
-            super(props);
-          }
-          render() {
-            let {number} = this.props;
-
-            return (
-              <span>{number}</span>
+        getDataFromServer( data => {
+            const Store = mobxStateTree.types.model("Store",
+            {
+              data: Data
+            }
+    //          {
+    //            todos: types.array(Todo)
+    //        }
             );
-          }
-        }
 
-        class HelloWorldWrapper extends React.Component {
-          constructor(props) {
-            super(props);
-          }
-          render() {
-            let {store} = this.props;
+            const store = Store.create({
+              data: {
+                number: 10,
+                serverTime: data.serverTime
+              }
+            });
 
-            return (
-              <div>
-                <button onClick={ event=> {
-                  store.data.number = store.data.number - 1;
-                } }>-</button>&nbsp;
-                <ShowNumber number={store.data.number} />&nbsp;
-                <button onClick={ event=> {
-                  store.data.number = store.data.number + 1;
-                } }>+</button>
-              </div>
+    {#        mobxStateTree.onSnapshot(store, (snapshot) => {#}
+    {#          console.dir(snapshot);#}
+    {#        });#}
+
+            mobxStateTree.onPatch(store, patch => {
+                console.log("Got change: ", patch)
+            });
+
+            // unreplayable by actions, BUT easy modification
+            mobxStateTree.unprotect(store);
+            //store.data.number -= 1;
+    {#        store.data.numberInc();#}
+    {#        store.data.numberSet(22);#}
+
+            class ShowNumber extends React.Component {
+              constructor(props) {
+                super(props);
+              }
+              render() {
+                let {number} = this.props;
+
+                return (
+                  <span>{number}</span>
+                );
+              }
+            }
+
+            let autoUpdateFromServer = true;
+
+            class HelloWorldWrapper extends React.Component {
+              constructor(props) {
+                super(props);
+              }
+              render() {
+                let {store} = this.props;
+
+                return (
+                  <div>
+                    <button onClick={ event => {
+                      store.data.number = store.data.number - 1;
+                    } }>-</button>&nbsp;
+                    <ShowNumber number={store.data.number} />&nbsp;
+                    <button onClick={ event => {
+                      store.data.number = store.data.number + 1;
+                    } }>+</button>&nbsp;
+                    <p>updates from server: {store.data.serverTime}</p>
+                    <button onClick={ event => {
+                      autoUpdateFromServer = !autoUpdateFromServer;
+                    }}>Toggle autoupdate from server</button>
+                  </div>
+                );
+              }
+            }
+
+            setInterval(() => {
+              if (!autoUpdateFromServer){
+                  return;
+              }
+              getDataFromServer(data => {
+                  store.data.serverTime = data.serverTime;
+              });
+            }, 1000);
+
+            let HelloWorldWrapperWithObserver = mobxReact.observer(HelloWorldWrapper);
+
+            ReactDOM.render(
+              <HelloWorldWrapperWithObserver store={store} />,
+              document.getElementById('helloWorld')
             );
-          }
-        }
 
-        let HelloWorldWrapperWithObserver = mobxReact.observer(HelloWorldWrapper);
+            store.data.number = store.data.number + 1;
+            store.data.number = 42;
 
-        ReactDOM.render(
-          <HelloWorldWrapperWithObserver store={store} />,
-          document.getElementById('helloWorld')
-        );
-
-        store.data.number = store.data.number + 1;
-        store.data.number = 42;
-
+        });
     </script>
     {% endcompress %}
     {{ content }}

@@ -35,6 +35,9 @@ from sqlalchemy.exc import DBAPIError
 
 from pyragrid import helpers
 
+import logging
+log = logging.getLogger(__name__)
+
 from datatables import ColumnDT, DataTables
 
 
@@ -108,7 +111,7 @@ class Testiews(ViewsAdmin):
     def view_test_db_enum(self):
         # see http://techspot.zzzeek.org/2011/01/14/the-enum-recipe/
 
-        from pyragrid.db import (DeclEnum, SimpleEnum)
+        from pyragrid.db import (SimpleEnum)
 
         # class EmployeeType(DeclEnum):
         #     part_time = "P", "Part Time"
@@ -218,25 +221,27 @@ class Testiews(ViewsAdmin):
         }
 
     @view_config(route_name='test_nunjucks', renderer='templates/test/test_nunjucks.jinja2')
-    def view_test_blocks(self):
+    def view_test_nunjucks(self):
         return {
             'header': 'nunjucks templates test',
         }
 
     @view_config(route_name='test_jac', renderer='templates/test/test_jac.jinja2')
-    def view_test_blocks(self):
+    def view_test_jac(self):
         return {
             'header': 'jinja assets compiler babel (es6) test',
         }
 
     @view_config(route_name='test_mobx', renderer='templates/test/test_mobx.jinja2')
-    def view_test_blocks(self):
+    def view_test_mobx(self):
+        # log.debug('view_test_mobx')
         return {
             'header': 'mobx + react test',
         }
 
     @view_config(route_name='test_mobx_fetch', renderer='json')
-    def view_test_blocks(self):
+    def view_test_mobx_fetch(self):
+        # log.debug('view_test_mobx_fetch')
         return {
-            'server_time': time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+            'serverTime': time.strftime("%Y.%m.%d %H:%M:%S", time.gmtime()),
         }

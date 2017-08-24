@@ -34,6 +34,17 @@ if (typeof window.pyragrid === 'undefined') {
 pyragrid.blockHandlers = {};
 pyragrid.afterTemplateRenderHandlers = {};
 
+window.objectValues = function (obj) {
+  var values = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      values.push(obj[key]);
+      // use val
+    }
+  }
+  return values;
+};
+
 pyragrid.renderBlocks = function (element) {
   var nunjucksEnv = new nunjucks.Environment();
 
@@ -49,13 +60,28 @@ pyragrid.renderBlocks = function (element) {
     }
   });
 
-  console.log(nunjucksEnv.renderString(element.innerHTML));
+  // console.log(nunjucksEnv.renderString(
+  //   element.innerHTML
+  // ));
   element.innerHTML = nunjucksEnv.renderString(element.innerHTML);
 };
 
 window.withDefault = mobxStateTree.types.optional;
 
-pyragrid.storeTypeMixins = [];
+pyragrid.storeTypeMixins = {};
+pyragrid.onRecreateStore = {};
+
+pyragrid.storeTypeMixins.TestMixin = mobxStateTree.types.model('TestMixin', {
+  testField: withDefault(mobxStateTree.types.string, 'test value')
+});
+
+pyragrid.storeTypeMixins.RecreateCountMixin = mobxStateTree.types.model('RecreateCountMixin', {
+  storeRecreateCount: withDefault(mobxStateTree.types.number, 0)
+});
+
+pyragrid.onRecreateStore.updateRecreateCountMixin = function (snapshot) {
+  snapshot.storeRecreateCount += 1;
+};
 
 pyragrid.recreateStore = function (modifyInputDataCallback) {
   var snapshot = {};
@@ -63,26 +89,35 @@ pyragrid.recreateStore = function (modifyInputDataCallback) {
     snapshot = mobxStateTree.getSnapshot(pyragrid.store);
   }
 
-  if (typeof modifyInputDataCallback === 'function') {
-    modifyInputDataCallback(snapshot);
-  }
+  var onRecreateStore = objectValues(pyragrid.onRecreateStore);
 
-  pyragrid.StoreType = mobxStateTree.types.compose.apply(null, ['Store'].concat(_toConsumableArray(pyragrid.storeTypeMixins)));
+  pyragrid.StoreType = mobxStateTree.types.compose.apply(null, ['Store'].concat(_toConsumableArray(objectValues(pyragrid.storeTypeMixins))));
+  //   .preProcessSnapshot(snapshot => ({
+  //     // auto convert strings to booleans as part of preprocessing
+  //     done: snapshot.done === "true" ? true : snapshot.done === "false" ? false : snapshot.done
+  // }));
+  pyragrid.StoreType.preProcessSnapshot(function (snapshot) {
+    //   // if (typeof modifyInputDataCallback === 'function'){
+    //   //   modifyInputDataCallback(snapshot);
+    //   // }
+    //   //
+    //   // onRecreateStore.forEach((recreateStoreCallback) => {
+    //   //   recreateStoreCallback(snapshot);
+    //   // });
+    //
+    return snapshot;
+  });
 
   pyragrid.store = pyragrid.StoreType.create(snapshot);
 };
 
-pyragrid.storeTypeMixins.push(mobxStateTree.types.model('TestMixin', {
-  testString: withDefault(mobxStateTree.types.string, 'Test string')
-}));
-
 pyragrid.recreateStore(function (snapshot) {
-  snapshot.testString = 'Test string 2';
+  snapshot.storeRecreateCount = 0;
 });
 
-pyragrid.storeTypeMixins.push(mobxStateTree.types.model('SC2Mixin', {
+pyragrid.storeTypeMixins.SC2Mixin = mobxStateTree.types.model('SC2Mixin', {
   SC2Unit: withDefault(mobxStateTree.types.string, 'lurker')
-}));
+});
 
 pyragrid.recreateStore(function (snapshot) {
   //snapshot.SC2Unit = 'marine';

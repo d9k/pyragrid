@@ -25,12 +25,16 @@ class BabelCompressor(object):
     """
     cwd_for_presets_search = None
     presets = ['es2015', 'stage-0', 'react']
+    plugins = []
     extra_args = []
 
     @classmethod
     def compile(cls, what, mimetype='text/babel', cwd=None, uri_cwd=None,
                 debug=None):
         args = ['--presets=' + ",".join(cls.presets)]
+
+        if cls.plugins:
+            args.append('--plugins=' + ",".join(cls.plugins))
 
         if cls.extra_args:
             args.extend(cls.extra_args)

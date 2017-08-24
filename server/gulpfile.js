@@ -57,12 +57,15 @@ gulp.task('css', function() {
         //.pipe(gulp.dest(config.staticDir + '/js'));
 //});
 
-gulp.task('es6', () => {
+gulp.task('es6', function () {
 	gulp.src(
     config.es6Path + '/**/*.es6'
   )
 	.pipe(babel({
-		presets: ['es2015', 'stage-0'],
+		presets: ['es2015', 'stage-0', 'react'
+    //, 'es2016', 'es2017'
+    ],
+    // plugins: ['transform-runtime'],
 		sourceRoot: 'src',
 //    sourceRoot: src.babelSourceRoot,
 		sourceMap: true
@@ -88,6 +91,7 @@ gulp.task('js-copy', function(){
             config.nodeDir + '/nunjucks/browser/nunjucks.min.js',
             config.nodeDir + '/mobx/lib/mobx.umd*',
             config.nodeDir + '/mobx-state-tree/dist/mobx-state-tree.umd.js',
+            //config.nodeDir + '/mobx-state-tree/dist/mobx-state-tree*.js',
             config.nodeDir + '/react/dist/react.*js',
             config.nodeDir + '/react-dom/dist/react-dom.*js',
             config.nodeDir + '/promise-polyfill/promise.*js',

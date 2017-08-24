@@ -199,6 +199,10 @@ def main(global_config, **settings):
     # BabelCompressor.binary = './node_modules/.bin/babel'
     BabelCompressor.binary = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'node_modules', '.bin', 'babel'))
     BabelCompressor.cwd_for_presets_search = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    BabelCompressor.presets = ['es2015', 'stage-0', 'react', 'es2016', 'es2017']
+    # wtf? adds lines like `require("babel-runtime/core-js/object/get-prototype-of")` to the code
+    # TODO https://babeljs.io/docs/plugins/transform-runtime/
+    # BabelCompressor.plugins = ['transform-runtime']
 
     jac_default_config = JacDefaultConfig()
     jinja2_env.compressor_classes = jac_default_config.get('compressor_classes')

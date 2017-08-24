@@ -92,23 +92,34 @@ pyragrid.recreateStore = function (modifyInputDataCallback) {
   var onRecreateStore = objectValues(pyragrid.onRecreateStore);
 
   pyragrid.StoreType = mobxStateTree.types.compose.apply(null, ['Store'].concat(_toConsumableArray(objectValues(pyragrid.storeTypeMixins))));
+
+  // pyragrid.StoreType = mobxStateTree.types.model('TestMixin', {
+  //   testField: withDefault(mobxStateTree.types.string, 'test value')
+  // });
   //   .preProcessSnapshot(snapshot => ({
   //     // auto convert strings to booleans as part of preprocessing
   //     done: snapshot.done === "true" ? true : snapshot.done === "false" ? false : snapshot.done
   // }));
-  pyragrid.StoreType.preProcessSnapshot(function (snapshot) {
-    //   // if (typeof modifyInputDataCallback === 'function'){
-    //   //   modifyInputDataCallback(snapshot);
-    //   // }
-    //   //
-    //   // onRecreateStore.forEach((recreateStoreCallback) => {
-    //   //   recreateStoreCallback(snapshot);
-    //   // });
-    //
-    return snapshot;
+  pyragrid.StoreType = pyragrid.StoreType.preProcessSnapshot(function (snapshot) {
+    var s2 = mobx.toJS(snapshot);
+    // doesn't work!
+    // let snapshotCopy = mobx.toJS(snapshot);
+    var snapshotCopy = JSON.parse(JSON.stringify(snapshot));
+
+    if (typeof modifyInputDataCallback === 'function') {
+      modifyInputDataCallback(snapshotCopy);
+    }
+
+    onRecreateStore.forEach(function (recreateStoreCallback) {
+      recreateStoreCallback(snapshotCopy);
+    });
+
+    return snapshotCopy;
   });
 
   pyragrid.store = pyragrid.StoreType.create(snapshot);
+
+  mobxStateTree.unprotect(pyragrid.store);
 };
 
 pyragrid.recreateStore(function (snapshot) {

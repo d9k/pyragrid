@@ -95,7 +95,8 @@ gulp.task('js-copy', function(){
             config.nodeDir + '/react/dist/react.*js',
             config.nodeDir + '/react-dom/dist/react-dom.*js',
             config.nodeDir + '/promise-polyfill/promise.*js',
-            config.nodeDir + '/whatwg-fetch/fetch.js',            
+            config.nodeDir + '/whatwg-fetch/fetch.js',
+            config.nodeDir + '/lodash/lodash.min.js',            
         ]).pipe(gulp.dest(config.staticDir));
 
     // TODO ll bower_components/blueimp-file-upload/img

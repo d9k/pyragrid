@@ -101,10 +101,12 @@ pyragrid.recreateStore = function (modifyInputDataCallback) {
   //     done: snapshot.done === "true" ? true : snapshot.done === "false" ? false : snapshot.done
   // }));
   pyragrid.StoreType = pyragrid.StoreType.preProcessSnapshot(function (snapshot) {
-    var s2 = mobx.toJS(snapshot);
+    // let s2 = mobx.toJS(snapshot);
+    // let s2 = _.cloneDeep(snapshot);
     // doesn't work!
     // let snapshotCopy = mobx.toJS(snapshot);
-    var snapshotCopy = JSON.parse(JSON.stringify(snapshot));
+    // let snapshotCopy = JSON.parse(JSON.stringify(snapshot));
+    var snapshotCopy = _.cloneDeep(snapshot);
 
     if (typeof modifyInputDataCallback === 'function') {
       modifyInputDataCallback(snapshotCopy);

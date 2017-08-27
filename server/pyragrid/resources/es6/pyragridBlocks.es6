@@ -77,47 +77,28 @@ pyragrid.onRecreateStore.updateRecreateCountMixin = (snapshot) => {
    snapshot.storeRecreateCount += 1;
 };
 
-pyragrid.recreateStore = (modifyInputDataCallback) => {
-  let snapshot = {};
-  if (typeof pyragrid.store !== 'undefined'){
-    snapshot = mobxStateTree.getSnapshot(pyragrid.store);
-  }
-
-  let onRecreateStore = objectValues(pyragrid.onRecreateStore);
+pyragrid.recreateStore = (modifySnapshotCallback) => {
 
   pyragrid.StoreType = (mobxStateTree.types.compose.apply(null,
       ['Store', ...objectValues(pyragrid.storeTypeMixins)]
   ));
 
-  // pyragrid.StoreType = mobxStateTree.types.model('TestMixin', {
-  //   testField: withDefault(mobxStateTree.types.string, 'test value')
-  // });
-  //   .preProcessSnapshot(snapshot => ({
-  //     // auto convert strings to booleans as part of preprocessing
-  //     done: snapshot.done === "true" ? true : snapshot.done === "false" ? false : snapshot.done
-  // }));
-  pyragrid.StoreType = pyragrid.StoreType.preProcessSnapshot( snapshot => {
-    // let s2 = mobx.toJS(snapshot);
-    // let s2 = _.cloneDeep(snapshot);
-    // doesn't work!
-    // let snapshotCopy = mobx.toJS(snapshot);
-    // let snapshotCopy = JSON.parse(JSON.stringify(snapshot));
-    let snapshotCopy = _.cloneDeep(snapshot);
+  let snapshot = {};
+  if (typeof pyragrid.store !== 'undefined'){
+    snapshot = mobxStateTree.getSnapshot(pyragrid.store);
+  }
+  // snapshot is read only, need create writeable clone
+  let snapshotCopy = _.cloneDeep(snapshot);
 
+  if (typeof modifySnapshotCallback === 'function'){
+    modifySnapshotCallback(snapshotCopy);
+  }
 
-    if (typeof modifyInputDataCallback === 'function'){
-      modifyInputDataCallback(snapshotCopy);
-    }
-
-    onRecreateStore.forEach((recreateStoreCallback) => {
-      recreateStoreCallback(snapshotCopy);
-    });
-
-    return snapshotCopy;
+  objectValues(pyragrid.onRecreateStore).forEach((onRecreateStoreCallback) => {
+    onRecreateStoreCallback(snapshotCopy);
   });
 
-  pyragrid.store = pyragrid.StoreType.create(snapshot);
-
+  pyragrid.store = pyragrid.StoreType.create(snapshotCopy);
   mobxStateTree.unprotect(pyragrid.store);
 };
 
@@ -125,13 +106,13 @@ pyragrid.recreateStore((snapshot) => {
     snapshot.storeRecreateCount = 0;
 });
 
-pyragrid.storeTypeMixins.SC2Mixin = mobxStateTree.types.model('SC2Mixin', {
-    SC2Unit: withDefault(mobxStateTree.types.string, 'lurker')
-});
-
-pyragrid.recreateStore((snapshot) => {
-  //snapshot.SC2Unit = 'marine';
-});
+// pyragrid.storeTypeMixins.SC2Mixin = mobxStateTree.types.model('SC2Mixin', {
+//     SC2Unit: withDefault(mobxStateTree.types.string, 'lurker')
+// });
+//
+// pyragrid.recreateStore((snapshot) => {
+//   //snapshot.SC2Unit = 'marine';
+// });
 
 pyragrid.blockHandlers['hello_world'] = function(appealToWhom){
   return '<p class="helloWorldBlock">Hello, ' + appealToWhom + '!</p>';

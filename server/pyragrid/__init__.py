@@ -108,6 +108,38 @@ def main(global_config, **settings):
     config.add_route('register', '/register')
     config.add_route('register_success', '/register_success')
 
+    config.add_route('email_check_code', '/checkEmail/{code}')
+
+    config.add_route('article', '/article/{article_system_name}')
+    config.add_route('article_revision', '/article/{article_system_name}')
+
+    config.add_route('admin_index', '/admin')
+    config.add_route('admin_test', '/test')
+
+    config.add_route('admin_users', '/admin/users')
+    config.add_route('admin_users_grid', '/admin/users/grid')
+    config.add_route('admin_user_enable', '/admin/users/enable/{user_id}')
+    config.add_route('admin_user_disable', '/admin/users/disable/{user_id}')
+    config.add_route('admin_user_edit', '/admin/users/edit/{user_id}')
+
+    config.add_route('admin_article_edit', '/admin/article/{article_id}/edit')
+    config.add_route('admin_article_enable', '/admin/article/{article_id}/enable')
+    config.add_route('admin_article_disable', '/admin/article/{article_id}/disable')
+    config.add_route('admin_article_revisions', '/admin/article/{article_id}/revisions')
+    config.add_route('admin_article_revision', '/admin/article/{article_id}/revision/{article_revision_id}')
+    config.add_route('admin_article_revision_activate', '/admin/article/{article_id}/revision/{article_revision_id}/activate')
+    config.add_route('admin_article_new', '/admin/new/article')
+    config.add_route('admin_articles', '/admin/articles')
+    config.add_route('admin_articles_grid', '/admin/articles/grid')
+    config.add_route('admin_article_revisions_grid', '/admin/article/{article_id}/revisions/grid')
+
+    config.add_route('admin_goods', '/admin/goods')
+    config.add_route('admin_goods_grid', '/admin/goods/grid')
+    config.add_route('admin_good_new', '/admin/new/good')
+    config.add_route('admin_good_edit', '/admin/good/{id}/edit')
+    config.add_route('admin_good_enable', '/admin/good/{id}/enable')
+    config.add_route('admin_good_disable', '/admin/good/{id}/disable')
+
     config.add_route('test_mail', '/test/mail')
     config.add_route('test_render', '/test/render')
     config.add_route('test_notify', '/test/notify')
@@ -128,37 +160,6 @@ def main(global_config, **settings):
     config.add_route('test_jac', '/test/jac')
     config.add_route('test_mobx', '/test/mobx')
     config.add_route('test_mobx_fetch', '/test/mobx_fetch')
-
-    config.add_route('email_check_code', '/checkEmail/{code}')
-
-    config.add_route('admin_index', '/admin')
-
-    config.add_route('admin_users', '/admin/users')
-    config.add_route('admin_users_grid', '/admin/users/grid')
-    config.add_route('admin_user_enable', '/admin/users/enable/{user_id}')
-    config.add_route('admin_user_disable', '/admin/users/disable/{user_id}')
-    config.add_route('admin_user_edit', '/admin/users/edit/{user_id}')
-
-    config.add_route('admin_article_edit', '/admin/article/{article_id}/edit')
-    config.add_route('admin_article_enable', '/admin/article/{article_id}/enable')
-    config.add_route('admin_article_disable', '/admin/article/{article_id}/disable')
-    config.add_route('admin_article_revisions', '/admin/article/{article_id}/revisions')
-    config.add_route('admin_article_revision', '/admin/article/{article_id}/revision/{article_revision_id}')
-    config.add_route('admin_article_revision_activate', '/admin/article/{article_id}/revision/{article_revision_id}/activate')
-    config.add_route('admin_article_new', '/admin/new/article')
-    config.add_route('admin_articles', '/admin/articles')
-    config.add_route('admin_articles_grid', '/admin/articles/grid')
-    config.add_route('admin_article_revisions_grid', '/admin/article/{article_id}/revisions/grid')
-
-    config.add_route('article', '/article/{article_system_name}')
-    config.add_route('article_revision', '/article/{article_system_name}')
-
-    config.add_route('admin_goods', '/admin/goods')
-    config.add_route('admin_goods_grid', '/admin/goods/grid')
-    config.add_route('admin_good_new', '/admin/new/good')
-    config.add_route('admin_good_edit', '/admin/good/{id}/edit')
-    config.add_route('admin_good_enable', '/admin/good/{id}/enable')
-    config.add_route('admin_good_disable', '/admin/good/{id}/disable')
 
             # urlList: '/uploads/list'
             # urlInfo: '/uploads/info'

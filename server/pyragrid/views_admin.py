@@ -48,3 +48,8 @@ class ViewsAdmin(ViewsBase):
     def admin_index_view(self):
         return {}
 
+    @view_config(route_name='admin_test', renderer='templates/admin/admin_test.jinja2')
+    def admin_index_test(self):
+        return {}
+
+

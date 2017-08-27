@@ -10,8 +10,10 @@
 {#       <li><a href="{{ request.route_url('delete_user', any_data='something') }}">delete users</a></li>#}
 
     </ul>
-    <p>Tests:</p>
-    {% include '../test/_test_urls.jinja2' %}
+
+
+   <p><a href="{{ request.route_url('admin_test') }}">Tests</a></p>
+{#    {% include '../test/_test_urls.jinja2' %}#}
 
     <p><a href="{{ request.route_url('logout') }}">logout</a></p>
 {% endblock %}

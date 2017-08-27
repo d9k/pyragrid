@@ -5,20 +5,31 @@
 
     <div id="nunjucksOutput"></div>
 
-    <script>
+    {% compress 'js' %}
+    <script type="text/babel">
       document.addEventListener('DOMContentLoaded', function(){
        var nunjucksEnv = new nunjucks.Environment();
 {#        nunjucksEnv.addFilter('render_hello_world', function(appealToWhom) {#}
 {#            return 'Hello, ' + appealToWhom + '!';#}
 {#        });#}
 
-        nunjucksEnv.addGlobal('render_hello_world', function(appealToWhom) {
-            return 'Hello, ' + appealToWhom + '!';
+        nunjucksEnv.addGlobal('render_hello_world', function(args) {
+            args = (typeof args === "object") ? args : {};
+            args.appealTo = args.appealTo || "u";
+            args.number = args.number || 111;
+            return 'Hello, ' + args.appealTo + '! ' + args.number;
         });
 
         document.getElementById('nunjucksOutput').innerHTML = nunjucksEnv.renderString(
-          {% raw %}'{{ render_hello_world("dear user") }}'{% endraw %}
+          {% raw %}
+          '<p>1. {{ render_hello_world() }}</p>' +
+          '<p>2. {{ render_hello_world("test") }}</p>' +
+          '<p>3. {{ render_hello_world(number=3, appealTo="me") }}</p>' +
+          '<p>4. {{ render_hello_world(number=8) }}</p>' +
+          '<p>5. {{ render_hello_world(appealTo="guy") }}</p>'
+          {% endraw %}
         );
       });
     </script>
+    {% endcompress %}
 {% endblock %}

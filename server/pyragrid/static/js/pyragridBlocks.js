@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 if (typeof window.pyragrid === 'undefined') {
@@ -77,7 +75,7 @@ pyragrid.renderBlocks = function (element) {
       dummyElement.id = newBlockId;
       dummyElement.className = 'pyragrid_block pyragrid_block_' + blockType;
       dummyElement.setAttribute('data-block-args', JSON.stringify(blockArgs));
-      return dummyElement.outerHTML;
+      return new nunjucks.runtime.SafeString(dummyElement.outerHTML);
     } else {
       console.log('Warning: Block type ' + blockType + ' handler function was not set!');
     }
@@ -87,20 +85,41 @@ pyragrid.renderBlocks = function (element) {
   element.innerHTML = renderedString;
 
   var blockDummyElements = document.getElementsByClassName('pyragrid_block');
-  blockDummyElements.forEach(function (currentElement) {
-    var blockArgs = currentElement.getAttribute('data-block-args');
-    if ((typeof blockArgs === 'undefined' ? 'undefined' : _typeof(blockArgs)) !== string) {
-      console.log('Warning: block dummy (div with id ' + currentElement.id + ') has no data-block-args argument');
-      return;
-    }
-    // TODO JSON parse error handling?
-    blockArgs = JSON.parse(blockArgs);
-    // blockArgs.id = currentElement.id;
-    blockArgs.element = currentElement;
-    pyragrid.blockConstructors[blockArgs.type](blockArgs);
-  });
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-  //TODO pyragrid.blockConstructors[blockType](blockParams);
+  try {
+    for (var _iterator = blockDummyElements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var dummyElement = _step.value;
+
+      var blockArgs = dummyElement.getAttribute('data-block-args');
+      if (typeof blockArgs !== 'string') {
+        console.log('Warning: block dummy (div with id ' + dummyElement.id + ') has no data-block-args argument');
+        return;
+      }
+      // TODO JSON parse error handling?
+      blockArgs = JSON.parse(blockArgs);
+      // blockArgs.id = currentElement.id;
+      blockArgs.element = dummyElement;
+      pyragrid.blockConstructors[blockArgs.type](blockArgs);
+    }
+
+    //TODO pyragrid.blockConstructors[blockType](blockParams);
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
 };
 
 window.withDefault = mobxStateTree.types.optional;
@@ -158,5 +177,5 @@ pyragrid.recreateStore(function (snapshot) {
 pyragrid.blockConstructors['hello_world'] = function (blockArgs) {
   var element = blockArgs.element;
   var appealTo = blockArgs.appeal_to || 'u';
-  element.innerHtml = '<p id="' + blockArgs.id + '" class="helloWorldBlock">Hello, ' + appealTo + '!</p>';
+  element.innerHTML = '<p class="helloWorldBlock">Hello, ' + appealTo + '!</p>';
 };

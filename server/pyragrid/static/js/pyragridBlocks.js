@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 if (typeof window.pyragrid === 'undefined') {
@@ -31,9 +33,10 @@ if (typeof window.pyragrid === 'undefined') {
 //   })
 // };
 
-pyragrid.blockHandlers = {};
+pyragrid.blockConstructors = {};
 pyragrid.afterTemplateRenderHandlers = {};
 
+// define global function: get list of values without keys from object
 window.objectValues = function (obj) {
   var values = [];
   for (var key in obj) {
@@ -45,25 +48,59 @@ window.objectValues = function (obj) {
   return values;
 };
 
+pyragrid.blocks = {};
+
 pyragrid.renderBlocks = function (element) {
   var nunjucksEnv = new nunjucks.Environment();
 
-  nunjucksEnv.addGlobal('render_block', function (blockType) {
-    if (pyragrid.blockHandlers.hasOwnProperty(blockType)) {
-      for (var _len = arguments.length, blockParams = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        blockParams[_key - 1] = arguments[_key];
+  nunjucksEnv.addGlobal('render_block', function (blockArgs) {
+    if (!blockArgs.hasOwnProperty('type')) {
+      throw "Block type was not set";
+    }
+    var blockType = blockArgs.type;
+
+    if (pyragrid.blockConstructors.hasOwnProperty(blockType)) {
+      if (!pyragrid.blocks.hasOwnProperty(blockType)) {
+        pyragrid.blocks[blockType] = {
+          instances: [],
+          maxId: 0
+        };
       }
 
-      return pyragrid.blockHandlers[blockType](blockParams);
+      pyragrid.blocks[blockType].maxId += 1;
+      var newBlockId = 'block_' + blockType + '_' + pyragrid.blocks[blockType].maxId;
+      pyragrid.blocks[blockType].instances.push(newBlockId);
+
+      // first step: convert block call to html div
+      // next step would be actually render block
+      var dummyElement = document.createElement('div');
+      dummyElement.id = newBlockId;
+      dummyElement.className = 'pyragrid_block pyragrid_block_' + blockType;
+      dummyElement.setAttribute('data-block-args', JSON.stringify(blockArgs));
+      return dummyElement.outerHTML;
     } else {
-      console.log('Warning: block type ' + blockType + ' not found!');
+      console.log('Warning: Block type ' + blockType + ' handler function was not set!');
     }
   });
 
-  // console.log(nunjucksEnv.renderString(
-  //   element.innerHTML
-  // ));
-  element.innerHTML = nunjucksEnv.renderString(element.innerHTML);
+  var renderedString = nunjucksEnv.renderString(element.innerHTML);
+  element.innerHTML = renderedString;
+
+  var blockDummyElements = document.getElementsByClassName('pyragrid_block');
+  blockDummyElements.forEach(function (currentElement) {
+    var blockArgs = currentElement.getAttribute('data-block-args');
+    if ((typeof blockArgs === 'undefined' ? 'undefined' : _typeof(blockArgs)) !== string) {
+      console.log('Warning: block dummy (div with id ' + currentElement.id + ') has no data-block-args argument');
+      return;
+    }
+    // TODO JSON parse error handling?
+    blockArgs = JSON.parse(blockArgs);
+    // blockArgs.id = currentElement.id;
+    blockArgs.element = currentElement;
+    pyragrid.blockConstructors[blockArgs.type](blockArgs);
+  });
+
+  //TODO pyragrid.blockConstructors[blockType](blockParams);
 };
 
 window.withDefault = mobxStateTree.types.optional;
@@ -118,6 +155,8 @@ pyragrid.recreateStore(function (snapshot) {
 //   //snapshot.SC2Unit = 'marine';
 // });
 
-pyragrid.blockHandlers['hello_world'] = function (appealToWhom) {
-  return '<p class="helloWorldBlock">Hello, ' + appealToWhom + '!</p>';
+pyragrid.blockConstructors['hello_world'] = function (blockArgs) {
+  var element = blockArgs.element;
+  var appealTo = blockArgs.appeal_to || 'u';
+  element.innerHtml = '<p id="' + blockArgs.id + '" class="helloWorldBlock">Hello, ' + appealTo + '!</p>';
 };

@@ -154,5 +154,5 @@ pyragrid.recreateStore((snapshot) => {
 pyragrid.blockConstructors['hello_world'] = function(blockArgs){
   let element = blockArgs.element;
   let appealTo = blockArgs.appeal_to || 'u';
-  element.innerHTML  = '<p class="helloWorldBlock">Hello, ' + appealTo + '!</p>';
+  element.innerHTML  = '<p>Hello, ' + appealTo + '!</p>';
 };

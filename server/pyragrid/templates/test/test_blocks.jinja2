@@ -14,9 +14,13 @@
 
     <script src="{{ request.static_url('pyragrid:static/nunjucks.js') }}"></script>
     <script src="{{ request.static_url('pyragrid:static/js/pyragridBlocks.js') }}"></script>
+    <script src="{{ request.static_url('pyragrid:static/js/blockHelloReact.js') }}"></script>
 
     <div id="">
-        {% raw %}{{ render_block(type="hello_world", appeal_to="dear user") }}{% endraw %}
+        {% raw %}
+            {{ render_block(type="hello_world", appeal_to="dear user") }}
+            {{ render_block(type="hello_react", appeal_to="u_s_e_r") }}
+        {% endraw %}
     </div>
 
     {% if content_raw %}

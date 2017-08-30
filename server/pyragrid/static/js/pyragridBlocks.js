@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 if (typeof window.pyragrid === 'undefined') {
@@ -90,19 +92,31 @@ pyragrid.renderBlocks = function (element) {
   var _iteratorError = undefined;
 
   try {
-    for (var _iterator = blockDummyElements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    var _loop = function _loop() {
       var dummyElement = _step.value;
 
       var blockArgs = dummyElement.getAttribute('data-block-args');
       if (typeof blockArgs !== 'string') {
         console.log('Warning: block dummy (div with id ' + dummyElement.id + ') has no data-block-args argument');
-        return;
+        return {
+          v: void 0
+        };
       }
       // TODO JSON parse error handling?
       blockArgs = JSON.parse(blockArgs);
       // blockArgs.id = currentElement.id;
       blockArgs.element = dummyElement;
-      pyragrid.blockConstructors[blockArgs.type](blockArgs);
+
+      // run in parallel
+      setTimeout(function () {
+        pyragrid.blockConstructors[blockArgs.type](blockArgs);
+      }, 0);
+    };
+
+    for (var _iterator = blockDummyElements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _ret = _loop();
+
+      if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
     }
 
     //TODO pyragrid.blockConstructors[blockType](blockParams);
@@ -127,11 +141,17 @@ window.withDefault = mobxStateTree.types.optional;
 pyragrid.storeTypeMixins = {};
 pyragrid.onRecreateStore = {};
 
-pyragrid.storeTypeMixins.TestMixin = mobxStateTree.types.model('TestMixin', {
+pyragrid.addStoreTypeMixin = function (mixinName, structure) {
+  if (!pyragrid.storeTypeMixins.hasOwnProperty(mixinName)) {
+    pyragrid.storeTypeMixins[mixinName] = mobxStateTree.types.model(mixinName, structure);
+  }
+};
+
+pyragrid.addStoreTypeMixin('TestMixin', {
   testField: withDefault(mobxStateTree.types.string, 'test value')
 });
 
-pyragrid.storeTypeMixins.RecreateCountMixin = mobxStateTree.types.model('RecreateCountMixin', {
+pyragrid.addStoreTypeMixin('RecreateCountMixin', {
   storeRecreateCount: withDefault(mobxStateTree.types.number, 0)
 });
 
@@ -173,6 +193,19 @@ pyragrid.recreateStore(function (snapshot) {
 // pyragrid.recreateStore((snapshot) => {
 //   //snapshot.SC2Unit = 'marine';
 // });
+
+pyragrid.getJsonDataFromServer = function (url, callback) {
+  fetch(url, {
+    credentials: "same-origin"
+  }).then(function (response) {
+    if (response.status === 200) {
+      return response.json();
+    }
+    return {};
+  }).then(function (data) {
+    callback(data);
+  });
+};
 
 pyragrid.blockConstructors['hello_world'] = function (blockArgs) {
   var element = blockArgs.element;

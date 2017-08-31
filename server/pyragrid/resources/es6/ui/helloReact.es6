@@ -1,4 +1,3 @@
-//TODO move to ui
 //TODO envelop with umd
 
 class ShowNumber extends React.Component {

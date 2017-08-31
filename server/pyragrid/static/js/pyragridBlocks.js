@@ -4,6 +4,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 if (typeof window.pyragrid === 'undefined') {
   window.pyragrid = {};
 }
@@ -62,14 +64,16 @@ pyragrid.renderBlocks = function (element) {
     if (pyragrid.blockConstructors.hasOwnProperty(blockType)) {
       if (!pyragrid.blocks.hasOwnProperty(blockType)) {
         pyragrid.blocks[blockType] = {
-          instances: [],
+          instances: {},
           maxId: 0
         };
       }
 
       pyragrid.blocks[blockType].maxId += 1;
       var newBlockId = 'block_' + blockType + '_' + pyragrid.blocks[blockType].maxId;
-      pyragrid.blocks[blockType].instances.push(newBlockId);
+      pyragrid.blocks[blockType].instances[newBlockId] = {
+        rerender: function rerender() {}
+      };
 
       // first step: convert block call to html div
       // next step would be actually render block
@@ -141,17 +145,28 @@ window.withDefault = mobxStateTree.types.optional;
 pyragrid.storeTypeMixins = {};
 pyragrid.onRecreateStore = {};
 
-pyragrid.addStoreTypeMixin = function (mixinName, structure) {
+/**
+ * Succeeding storeRecreate call required!
+ * @param mixinName: string
+ * @param structure: object - second param for mobxStateTree.types.model
+ */
+pyragrid.storeAddTypeMixin = function (mixinName, structure) {
   if (!pyragrid.storeTypeMixins.hasOwnProperty(mixinName)) {
     pyragrid.storeTypeMixins[mixinName] = mobxStateTree.types.model(mixinName, structure);
   }
 };
 
-pyragrid.addStoreTypeMixin('TestMixin', {
+pyragrid.storeAddTypeMixinAsBranch = function (branchName, structure) {
+  if (!pyragrid.storeTypeMixins.hasOwnProperty(branchName)) {
+    pyragrid.storeTypeMixins[branchName] = mobxStateTree.types.model(branchName + 'Wrapper', _defineProperty({}, branchName, mobxStateTree.types.model(branchName, structure)));
+  }
+};
+
+pyragrid.storeAddTypeMixin('TestMixin', {
   testField: withDefault(mobxStateTree.types.string, 'test value')
 });
 
-pyragrid.addStoreTypeMixin('RecreateCountMixin', {
+pyragrid.storeAddTypeMixin('RecreateCountMixin', {
   storeRecreateCount: withDefault(mobxStateTree.types.number, 0)
 });
 
@@ -159,7 +174,16 @@ pyragrid.onRecreateStore.updateRecreateCountMixin = function (snapshot) {
   snapshot.storeRecreateCount += 1;
 };
 
-pyragrid.recreateStore = function (modifySnapshotCallback) {
+pyragrid.blocksRerender = function () {
+  for (var blockType in pyragrid.blocks) {
+    for (var id in pyragrid.blocks[blockType].instances) {
+      var block = pyragrid.blocks[blockType].instances[id];
+      block.rerender();
+    }
+  }
+};
+
+pyragrid.storeRecreate = function (modifySnapshotCallback) {
 
   pyragrid.StoreType = mobxStateTree.types.compose.apply(null, ['Store'].concat(_toConsumableArray(objectValues(pyragrid.storeTypeMixins))));
 
@@ -180,9 +204,11 @@ pyragrid.recreateStore = function (modifySnapshotCallback) {
 
   pyragrid.store = pyragrid.StoreType.create(snapshotCopy);
   mobxStateTree.unprotect(pyragrid.store);
+
+  pyragrid.blocksRerender();
 };
 
-pyragrid.recreateStore(function (snapshot) {
+pyragrid.storeRecreate(function (snapshot) {
   snapshot.storeRecreateCount = 0;
 });
 
@@ -190,7 +216,7 @@ pyragrid.recreateStore(function (snapshot) {
 //     SC2Unit: withDefault(mobxStateTree.types.string, 'lurker')
 // });
 //
-// pyragrid.recreateStore((snapshot) => {
+// pyragrid.storeRecreate((snapshot) => {
 //   //snapshot.SC2Unit = 'marine';
 // });
 

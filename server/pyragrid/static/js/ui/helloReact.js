@@ -8,42 +8,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-//TODO envelop with umd
-
-var ShowNumber = function (_React$Component) {
-  _inherits(ShowNumber, _React$Component);
-
-  function ShowNumber(props) {
-    _classCallCheck(this, ShowNumber);
-
-    return _possibleConstructorReturn(this, (ShowNumber.__proto__ || Object.getPrototypeOf(ShowNumber)).call(this, props));
-  }
-
-  _createClass(ShowNumber, [{
-    key: "render",
-    value: function render() {
-      var number = this.props.number;
-
-
-      return React.createElement(
-        "span",
-        null,
-        number
-      );
-    }
-  }]);
-
-  return ShowNumber;
-}(React.Component);
-
-var autoUpdateFromServer = true;
-
-// TODO rewrite
-// TODO add hello world line with server time and user name
-// TODO refer to component data from store by component id
-
-var HelloReact = function (_React$Component2) {
-  _inherits(HelloReact, _React$Component2);
+var HelloReact = function (_React$Component) {
+  _inherits(HelloReact, _React$Component);
 
   function HelloReact(props) {
     _classCallCheck(this, HelloReact);
@@ -54,43 +20,21 @@ var HelloReact = function (_React$Component2) {
   _createClass(HelloReact, [{
     key: "render",
     value: function render() {
-      var store = this.props.store;
+      var _props = this.props,
+          appealTo = _props.appealTo,
+          serverTime = _props.serverTime;
 
+      // if (!id){
+      //   throw "id not defined";
+      // }
 
       return React.createElement(
         "div",
         null,
-        React.createElement(
-          "button",
-          { onClick: function onClick(event) {
-              store.data.number = store.data.number - 1;
-            } },
-          "-"
-        ),
-        "\xA0",
-        React.createElement(ShowNumber, { number: store.data.number }),
-        "\xA0",
-        React.createElement(
-          "button",
-          { onClick: function onClick(event) {
-              store.data.number = store.data.number + 1;
-            } },
-          "+"
-        ),
-        "\xA0",
-        React.createElement(
-          "p",
-          null,
-          "updates from server: ",
-          store.data.serverTime
-        ),
-        React.createElement(
-          "button",
-          { onClick: function onClick(event) {
-              autoUpdateFromServer = !autoUpdateFromServer;
-            } },
-          "Toggle autoupdate from server"
-        )
+        "Hello, ",
+        appealTo,
+        "! Time at server is: ",
+        serverTime
       );
     }
   }]);

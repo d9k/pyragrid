@@ -6,7 +6,7 @@ pyragrid.blockConstructors['hello_react'] = function (blockArgs) {
 
   // TODO move abstract function to pyragrid.*
   pyragrid.getJsonDataFromServer(dataUrl, function (data) {
-    pyragrid.addStoreTypeMixin('HelloReactData', {
+    pyragrid.storeAddTypeMixin('HelloReactData', {
       serverTime: withDefault(mobxStateTree.types.string, ''),
       autoSync: withDefault(mobxStateTree.types.boolean, true)
     });
@@ -17,7 +17,7 @@ pyragrid.blockConstructors['hello_react'] = function (blockArgs) {
       throw 'Element id not provided!';
     }
 
-    // pyragrid.addStoreTypeMixin('HelloReactData', {
+    // pyragrid.storeAddTypeMixin('HelloReactData', {
     //   serverTime: withDefault(mobxStateTree.types.number, ''),
     //   autoSync: withDefault(mobxStateTree.types.boolean, true)
     // });
@@ -27,7 +27,7 @@ pyragrid.blockConstructors['hello_react'] = function (blockArgs) {
     }
 
     // recreate store: rewrite to run in parallel (?) (is it even possible?)
-    pyragrid.recreateStore(function (snapshot) {
+    pyragrid.storeRecreate(function (snapshot) {
       snapshot.serverTime = data.serverTime;
     });
 

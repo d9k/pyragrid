@@ -56,14 +56,18 @@ pyragrid.renderBlocks = function(element) {
       if (pyragrid.blockConstructors.hasOwnProperty(blockType)){
         if (!pyragrid.blocks.hasOwnProperty(blockType)){
           pyragrid.blocks[blockType] = {
-            instances: [],
+            instances: {},
             maxId: 0
           };
         }
 
         pyragrid.blocks[blockType].maxId += 1;
         let newBlockId = 'block_' + blockType + '_' + pyragrid.blocks[blockType].maxId;
-        pyragrid.blocks[blockType].instances.push(newBlockId);
+        pyragrid.blocks[blockType].instances[newBlockId] = {
+          rerender: () => {
+
+          }
+        };
 
         // first step: convert block call to html div
         // next step would be actually render block
@@ -106,17 +110,30 @@ window.withDefault = mobxStateTree.types.optional;
 pyragrid.storeTypeMixins = {};
 pyragrid.onRecreateStore = {};
 
-pyragrid.addStoreTypeMixin = (mixinName, structure) => {
+/**
+ * Succeeding storeRecreate call required!
+ * @param mixinName: string
+ * @param structure: object - second param for mobxStateTree.types.model
+ */
+pyragrid.storeAddTypeMixin = (mixinName, structure) => {
   if (!pyragrid.storeTypeMixins.hasOwnProperty(mixinName)){
     pyragrid.storeTypeMixins[mixinName] = mobxStateTree.types.model(mixinName, structure);
   }
 };
 
-pyragrid.addStoreTypeMixin('TestMixin', {
+pyragrid.storeAddTypeMixinAsBranch = (branchName, structure) => {
+  if (!pyragrid.storeTypeMixins.hasOwnProperty(branchName)){
+    pyragrid.storeTypeMixins[branchName] = mobxStateTree.types.model(branchName + 'Wrapper', {
+      [branchName]: mobxStateTree.types.model(branchName, structure)
+    })
+  }
+};
+
+pyragrid.storeAddTypeMixin('TestMixin', {
   testField: withDefault(mobxStateTree.types.string, 'test value')
 });
 
-pyragrid.addStoreTypeMixin('RecreateCountMixin', {
+pyragrid.storeAddTypeMixin('RecreateCountMixin', {
   storeRecreateCount: withDefault(mobxStateTree.types.number, 0)
 });
 
@@ -124,7 +141,16 @@ pyragrid.onRecreateStore.updateRecreateCountMixin = (snapshot) => {
    snapshot.storeRecreateCount += 1;
 };
 
-pyragrid.recreateStore = (modifySnapshotCallback) => {
+pyragrid.blocksRerender = () => {
+  for (let blockType in pyragrid.blocks){
+    for (let id in pyragrid.blocks[blockType].instances){
+      let block = pyragrid.blocks[blockType].instances[id];
+      block.rerender();
+    }
+  }
+};
+
+pyragrid.storeRecreate = (modifySnapshotCallback) => {
 
   pyragrid.StoreType = (mobxStateTree.types.compose.apply(null,
       ['Store', ...objectValues(pyragrid.storeTypeMixins)]
@@ -147,9 +173,11 @@ pyragrid.recreateStore = (modifySnapshotCallback) => {
 
   pyragrid.store = pyragrid.StoreType.create(snapshotCopy);
   mobxStateTree.unprotect(pyragrid.store);
+
+  pyragrid.blocksRerender();
 };
 
-pyragrid.recreateStore((snapshot) => {
+pyragrid.storeRecreate((snapshot) => {
     snapshot.storeRecreateCount = 0;
 });
 
@@ -157,7 +185,7 @@ pyragrid.recreateStore((snapshot) => {
 //     SC2Unit: withDefault(mobxStateTree.types.string, 'lurker')
 // });
 //
-// pyragrid.recreateStore((snapshot) => {
+// pyragrid.storeRecreate((snapshot) => {
 //   //snapshot.SC2Unit = 'marine';
 // });
 
